@@ -39,6 +39,8 @@ import com.google.android.exoplayer2.trackselection.TrackSelection;
 import java.util.HashMap;
 import java.util.Map;
 
+import jp.manse.util.DefaultEventEmitter;
+
 public class BrightcovePlayerView extends RelativeLayout implements LifecycleEventListener {
     private ThemedReactContext context;
     private ReactApplicationContext applicationContext;
@@ -299,7 +301,9 @@ public class BrightcovePlayerView extends RelativeLayout implements LifecycleEve
 
     private void loadVideo() {
         if (this.videoToken != null && !this.videoToken.equals("")) {
-            this.offlineCatalog = new OfflineCatalog(this.context, this.playerVideoView.getEventEmitter(), this.accountId, this.policyKey);
+            this.offlineCatalog = new OfflineCatalog.Builder(this.context, this.playerVideoView.getEventEmitter(), accountId)
+                    .setPolicy(policyKey)
+                    .build();
             try {
                 Video video = this.offlineCatalog.findOfflineVideoById(this.videoToken);
                 if (video != null) {
@@ -315,7 +319,9 @@ public class BrightcovePlayerView extends RelativeLayout implements LifecycleEve
                 playVideo(video);
             }
         };
-        this.catalog = new Catalog(this.playerVideoView.getEventEmitter(), this.accountId, this.policyKey);
+        this.catalog = new Catalog.Builder(this.playerVideoView.getEventEmitter(), accountId)
+                .setPolicy(policyKey)
+                .build();
         if (this.videoId != null) {
             this.catalog.findVideoByID(this.videoId, listener);
         } else if (this.referenceId != null) {

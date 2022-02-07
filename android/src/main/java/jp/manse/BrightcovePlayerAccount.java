@@ -63,8 +63,15 @@ public class BrightcovePlayerAccount implements OfflineVideoDownloadSession.OnOf
         this.policyKey = policyKey;
         this.listener = listener;
         handler = new Handler(Looper.myLooper());
-        this.catalog = new Catalog(DefaultEventEmitter.sharedEventEmitter, accountId, policyKey);
-        this.offlineCatalog = new OfflineCatalog(context, DefaultEventEmitter.sharedEventEmitter, accountId, policyKey);
+        this.catalog = new Catalog.Builder(DefaultEventEmitter.sharedEventEmitter, accountId)
+                .setBaseURL(Catalog.DEFAULT_EDGE_BASE_URL)
+                .setPolicy(policyKey)
+                .build();
+        this.offlineCatalog = new OfflineCatalog.Builder(context, DefaultEventEmitter.sharedEventEmitter, accountId)
+                .setBaseURL(Catalog.DEFAULT_EDGE_BASE_URL)
+                .setPolicy(policyKey)
+                .build();
+
         this.offlineCatalog.setMeteredDownloadAllowed(true);
         this.offlineCatalog.setMobileDownloadAllowed(true);
         this.offlineCatalog.setRoamingDownloadAllowed(true);
