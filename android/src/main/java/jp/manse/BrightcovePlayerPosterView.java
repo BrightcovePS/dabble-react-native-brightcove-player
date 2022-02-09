@@ -79,7 +79,7 @@ public class BrightcovePlayerPosterView extends RelativeLayout implements Lifecy
     }
 
     private void loadPoster() {
-
+        if(accountId == null || policyKey == null) return;
         this.offlineCatalog = new OfflineCatalog.Builder(context, DefaultEventEmitter.sharedEventEmitter, accountId)
                 .setBaseURL(Catalog.DEFAULT_EDGE_BASE_URL)
                 .setPolicy(policyKey)

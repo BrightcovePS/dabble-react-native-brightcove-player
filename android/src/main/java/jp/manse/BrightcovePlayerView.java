@@ -1,10 +1,13 @@
 package jp.manse;
 
 import android.graphics.Color;
-import android.support.v4.view.ViewCompat;
 import android.util.Log;
+import android.view.MotionEvent;
 import android.view.SurfaceView;
+import android.view.View;
 import android.widget.RelativeLayout;
+
+import androidx.core.view.ViewCompat;
 
 import com.brightcove.player.display.ExoPlayerVideoDisplayComponent;
 import com.brightcove.player.edge.Catalog;
@@ -36,6 +39,7 @@ import com.google.android.exoplayer2.trackselection.FixedTrackSelection;
 import com.google.android.exoplayer2.trackselection.MappingTrackSelector;
 import com.google.android.exoplayer2.trackselection.TrackSelection;
 
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -57,7 +61,6 @@ public class BrightcovePlayerView extends RelativeLayout implements LifecycleEve
     private boolean playing = false;
     private int bitRate = 0;
     private float playbackRate = 1;
-    private static final TrackSelection.Factory FIXED_FACTORY = new FixedTrackSelection.Factory();
 
     public BrightcovePlayerView(ThemedReactContext context, ReactApplicationContext applicationContext) {
         super(context);
@@ -67,6 +70,7 @@ public class BrightcovePlayerView extends RelativeLayout implements LifecycleEve
         this.setBackgroundColor(Color.BLACK);
 
         this.playerVideoView = new BrightcoveExoPlayerVideoView(this.context);
+
         this.addView(this.playerVideoView);
         this.playerVideoView.setLayoutParams(new RelativeLayout.LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT));
         this.playerVideoView.finishInitialization();
@@ -74,7 +78,6 @@ public class BrightcovePlayerView extends RelativeLayout implements LifecycleEve
         this.playerVideoView.setMediaController(this.mediaController);
         this.requestLayout();
         ViewCompat.setTranslationZ(this, 9999);
-
         EventEmitter eventEmitter = this.playerVideoView.getEventEmitter();
         eventEmitter.on(EventType.VIDEO_SIZE_KNOWN, new EventListener() {
             @Override
@@ -251,7 +254,7 @@ public class BrightcovePlayerView extends RelativeLayout implements LifecycleEve
         MappingTrackSelector.MappedTrackInfo mappedTrackInfo = trackSelector.getCurrentMappedTrackInfo();
         if (mappedTrackInfo == null) return;
         Integer rendererIndex = null;
-        for (int i = 0; i < mappedTrackInfo.length; i++) {
+        for (int i = 0; i < mappedTrackInfo.getRendererCount(); i++) {
             TrackGroupArray trackGroups = mappedTrackInfo.getTrackGroups(i);
             if (trackGroups.length != 0 && player.getRendererType(i) == C.TRACK_TYPE_VIDEO) {
                 rendererIndex = i;
@@ -261,7 +264,7 @@ public class BrightcovePlayerView extends RelativeLayout implements LifecycleEve
 
         if (rendererIndex == null) return;
         if (bitRate == 0) {
-            trackSelector.clearSelectionOverrides(rendererIndex);
+            trackSelector.buildUponParameters().clearSelectionOverrides(rendererIndex);
             return;
         }
         int resultBitRate = -1;
@@ -273,7 +276,7 @@ public class BrightcovePlayerView extends RelativeLayout implements LifecycleEve
             if (group != null) {
                 for (int trackIndex = 0; trackIndex < group.length; trackIndex++) {
                     Format format = group.getFormat(trackIndex);
-                    if (format != null && mappedTrackInfo.getTrackFormatSupport(rendererIndex, groupIndex, trackIndex)
+                    if (format != null && mappedTrackInfo.getTrackSupport(rendererIndex, groupIndex, trackIndex)
                             == RendererCapabilities.FORMAT_HANDLED) {
                         if (resultBitRate == -1 ||
                                 (resultBitRate > bitRate ? (format.bitrate < resultBitRate) :
@@ -287,7 +290,7 @@ public class BrightcovePlayerView extends RelativeLayout implements LifecycleEve
             }
         }
         if (targetGroupIndex != -1 && targetTrackIndex != -1) {
-            trackSelector.setSelectionOverride(rendererIndex, trackGroups,
+            trackSelector.buildUponParameters().setSelectionOverride(rendererIndex, trackGroups,
                     new DefaultTrackSelector.SelectionOverride(targetGroupIndex, targetTrackIndex));
         }
     }
@@ -300,6 +303,7 @@ public class BrightcovePlayerView extends RelativeLayout implements LifecycleEve
     }
 
     private void loadVideo() {
+        if(accountId == null || policyKey == null) return;
         if (this.videoToken != null && !this.videoToken.equals("")) {
             this.offlineCatalog = new OfflineCatalog.Builder(this.context, this.playerVideoView.getEventEmitter(), accountId)
                     .setPolicy(policyKey)
