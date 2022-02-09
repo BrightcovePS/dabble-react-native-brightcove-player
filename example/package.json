@@ -9,8 +9,6 @@
     "lint": "eslint ."
   },
   "dependencies": {
-    "i": "^0.3.7",
-    "npm": "^8.4.1",
     "react": ">=16.13.1",
     "react-native": ">=0.63.2",
     "react-native-brightcove-player": "file:../react-native-brightcove-player-1.7.0.tgz"
