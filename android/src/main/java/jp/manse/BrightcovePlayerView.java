@@ -303,7 +303,9 @@ public class BrightcovePlayerView extends RelativeLayout implements LifecycleEve
     }
 
     private void loadVideo() {
-        if(accountId == null || policyKey == null) return;
+        if (accountId == null || policyKey == null) {
+            return;
+        }
         if (this.videoToken != null && !this.videoToken.equals("")) {
             this.offlineCatalog = new OfflineCatalog.Builder(this.context, this.playerVideoView.getEventEmitter(), accountId)
                     .setPolicy(policyKey)
