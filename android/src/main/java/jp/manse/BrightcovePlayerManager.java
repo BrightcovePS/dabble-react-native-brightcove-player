@@ -26,6 +26,7 @@ public class BrightcovePlayerManager extends ViewGroupManager<BrightcovePlayerVi
     public static final String EVENT_TOGGLE_ANDROID_FULLSCREEN = "toggle_android_fullscreen";
     public static final String EVENT_CHANGE_DURATION = "change_duration";
     public static final String EVENT_UPDATE_BUFFER_PROGRESS = "update_buffer_progress";
+    public static final String EVENT_ON_PLAY_NEXT_VIDEO = "onPlayNextVideo";
 
     private ReactApplicationContext applicationContext;
 
@@ -58,6 +59,16 @@ public class BrightcovePlayerManager extends ViewGroupManager<BrightcovePlayerVi
     @ReactProp(name = "videoId")
     public void setVideoId(BrightcovePlayerView view, String videoId) {
         view.setVideoId(videoId);
+    }
+
+    @ReactProp(name = "playlistId")
+    public void setPlayListId(BrightcovePlayerView view, String playlistId) {
+        view.setPlaylistId(playlistId);
+    }
+
+    @ReactProp(name = "playlistReferenceId")
+    public void setPlayListReferenceId(BrightcovePlayerView view, String playlistReferenceId) {
+        view.setPlaylistReferenceId(playlistReferenceId);
     }
 
     @ReactProp(name = "referenceId")
@@ -147,6 +158,7 @@ public class BrightcovePlayerManager extends ViewGroupManager<BrightcovePlayerVi
         map.put(EVENT_CHANGE_DURATION, (Object) MapBuilder.of("registrationName", "onChangeDuration"));
         map.put(EVENT_UPDATE_BUFFER_PROGRESS, (Object) MapBuilder.of("registrationName", "onUpdateBufferProgress"));
         map.put(EVENT_TOGGLE_ANDROID_FULLSCREEN, (Object) MapBuilder.of("registrationName", "onToggleAndroidFullscreen"));
+        map.put(EVENT_ON_PLAY_NEXT_VIDEO, (Object) MapBuilder.of("registrationName", "onPlayNextVideo"));
         return map;
     }
 }

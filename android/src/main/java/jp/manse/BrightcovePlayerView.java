@@ -2,19 +2,25 @@ package jp.manse;
 
 import android.graphics.Color;
 import android.util.Log;
-import android.view.SurfaceView;
 import android.widget.ImageButton;
+import android.view.LayoutInflater;
+import android.view.SurfaceView;
+import android.view.ViewGroup;
+import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 
 import com.brightcove.player.display.ExoPlayerVideoDisplayComponent;
 import com.brightcove.player.edge.Catalog;
 import com.brightcove.player.edge.OfflineCatalog;
+import com.brightcove.player.edge.PlaylistListener;
 import com.brightcove.player.edge.VideoListener;
 import com.brightcove.player.event.Event;
 import com.brightcove.player.event.EventEmitter;
 import com.brightcove.player.event.EventListener;
 import com.brightcove.player.event.EventType;
 import com.brightcove.player.mediacontroller.BrightcoveMediaController;
+import com.brightcove.player.model.Playlist;
 import com.brightcove.player.model.Video;
 import com.brightcove.player.view.BaseVideoView;
 import com.brightcove.player.view.BrightcoveExoPlayerVideoView;
@@ -39,6 +45,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import jp.manse.util.AudioFocusManager;
+import jp.manse.util.ImageLoader;
 
 public class BrightcovePlayerView extends RelativeLayout implements LifecycleEventListener, AudioFocusManager.AudioFocusChangedListener {
     private final static int SEEK_OFFSET = 15000;
@@ -55,6 +62,8 @@ public class BrightcovePlayerView extends RelativeLayout implements LifecycleEve
     private String policyKey;
     private String accountId;
     private String videoId;
+    private String playlistId;
+    private String playlistReferenceId;
     private String referenceId;
     private String videoToken;
     private long seekDuration = SEEK_OFFSET;
@@ -62,6 +71,11 @@ public class BrightcovePlayerView extends RelativeLayout implements LifecycleEve
     private boolean playing = false;
     private int bitRate = 0;
     private float playbackRate = 1;
+    private Video nextVideo;
+    private Playlist playList;
+    private LinearLayout upNextContainer;
+    private ImageLoader imageLoader;
+    private Catalog catalog;
     private EventEmitter eventEmitter;
     private final OnClickListener forwardRewindClickListener = v -> {
         if (v.getId() == R.id.fast_forward_btn) {
@@ -85,6 +99,7 @@ public class BrightcovePlayerView extends RelativeLayout implements LifecycleEve
         this.addView(this.playerVideoView);
         this.playerVideoView.setLayoutParams(new RelativeLayout.LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT));
         this.playerVideoView.finishInitialization();
+        addUpNext();
         this.requestLayout();
         eventEmitter = playerVideoView.getEventEmitter();
         initMediaController(this.playerVideoView);
@@ -170,6 +185,42 @@ public class BrightcovePlayerView extends RelativeLayout implements LifecycleEve
         ((ReactContext) BrightcovePlayerView.this.getContext()).getJSModule(RCTEventEmitter.class).receiveEvent(BrightcovePlayerView.this.getId(), eventName, map);
     }
 
+    private void showUpNext() {
+        if (nextVideo != null) {
+            loadImage(nextVideo, ((ImageView) upNextContainer.findViewById(R.id.up_next_poster)));
+            upNextContainer.setVisibility(VISIBLE);
+        }
+    }
+
+    private void hideUpNext() {
+        if (upNextContainer != null) {
+            upNextContainer.setVisibility(INVISIBLE);
+        }
+    }
+
+    private void addUpNext() {
+        upNextContainer = (LinearLayout) LayoutInflater.from(getContext()).inflate(R.layout.up_next_layout, null);
+        RelativeLayout.LayoutParams params = new RelativeLayout.LayoutParams(
+                getResources().getDimensionPixelSize(R.dimen.up_next_poster_width), ViewGroup.LayoutParams.WRAP_CONTENT);
+        params.addRule(RelativeLayout.ALIGN_PARENT_RIGHT, RelativeLayout.TRUE);
+        params.addRule(RelativeLayout.ALIGN_PARENT_BOTTOM, RelativeLayout.TRUE);
+        params.rightMargin = getResources().getDimensionPixelSize(R.dimen.margin_large);
+        params.bottomMargin = getResources().getDimensionPixelSize(R.dimen.margin_xxxlarge);
+        addView(upNextContainer, params);
+        upNextContainer.setVisibility(INVISIBLE);
+        upNextContainer.findViewById(R.id.close_up_next).setOnClickListener(v -> hideUpNext());
+        upNextContainer.findViewById(R.id.up_next_poster).setOnClickListener(v -> {
+            if (nextVideo != null) {
+                playVideo(nextVideo);
+                WritableMap event = Arguments.createMap();
+                event.putString("videoId", nextVideo.getId());
+                event.putString("referenceId", nextVideo.getReferenceId());
+                ReactContext reactContext = (ReactContext) BrightcovePlayerView.this.getContext();
+                reactContext.getJSModule(RCTEventEmitter.class).receiveEvent(BrightcovePlayerView.this.getId(), BrightcovePlayerManager.EVENT_ON_PLAY_NEXT_VIDEO, event);
+            }
+        });
+    }
+
     public void setPolicyKey(String policyKey) {
         this.policyKey = policyKey;
         this.loadVideo();
@@ -184,6 +235,14 @@ public class BrightcovePlayerView extends RelativeLayout implements LifecycleEve
         this.videoId = videoId;
         this.referenceId = null;
         this.loadVideo();
+    }
+
+    public void setPlaylistId(String playlistId) {
+        this.playlistId = playlistId;
+    }
+
+    public void setPlaylistReferenceId(String playlistReferenceId) {
+        this.playlistReferenceId = playlistReferenceId;
     }
 
     public void setReferenceId(String referenceId) {
@@ -328,7 +387,7 @@ public class BrightcovePlayerView extends RelativeLayout implements LifecycleEve
                 playVideo(video);
             }
         };
-        Catalog catalog = new Catalog.Builder(this.playerVideoView.getEventEmitter(), accountId)
+        catalog = new Catalog.Builder(this.playerVideoView.getEventEmitter(), accountId)
                 .setPolicy(policyKey)
                 .build();
         if (this.videoId != null) {
@@ -339,6 +398,9 @@ public class BrightcovePlayerView extends RelativeLayout implements LifecycleEve
     }
 
     private void playVideo(Video video) {
+        hideUpNext();
+        videoId = video.getId();
+        referenceId = video.getReferenceId();
         BrightcovePlayerView.this.playerVideoView.clear();
         BrightcovePlayerView.this.playerVideoView.add(video);
         BrightcovePlayerView.this.playerVideoView.setOnPreparedListener(mp -> {
@@ -346,6 +408,7 @@ public class BrightcovePlayerView extends RelativeLayout implements LifecycleEve
                 BrightcovePlayerView.this.playerVideoView.start();
             }
         });
+        prepareNextVideo();
     }
 
     private void fixVideoLayout() {
@@ -365,6 +428,65 @@ public class BrightcovePlayerView extends RelativeLayout implements LifecycleEve
         for (Map.Entry<String, Object> entry : map.entrySet()) {
             Log.d("debug", entry.getKey());
         }
+    }
+
+    private void prepareNextVideo() {
+        nextVideo = null;
+        if ((playlistId == null || playlistId.isEmpty()) && (playlistReferenceId == null || playlistReferenceId.isEmpty())) {
+            return;
+        }
+        PlaylistListener listener = new PlaylistListener() {
+            @Override
+            public void onPlaylist(Playlist playlistRes) {
+                playList = playlistRes;
+                nextVideo = getNextVideo();
+            }
+        };
+        if (playList == null) {
+            fetchPlayList(listener);
+        } else {
+            nextVideo = getNextVideo();
+        }
+    }
+
+    private Video getNextVideo() {
+        Video nextVideo = null;
+        if (playList != null) {
+            for (int i = 0; i < playList.getVideos().size(); i++) {
+                Video video = playList.getVideos().get(i);
+                if (i < playList.getVideos().size() - 1 && (video.getId().equals(videoId) || video.getReferenceId().equals(referenceId))) {
+                    nextVideo = playList.getVideos().get(i + 1);
+                    break;
+                }
+            }
+        }
+        return nextVideo;
+    }
+
+
+    private void fetchPlayList(PlaylistListener listener) {
+        if (playlistReferenceId != null && !playlistReferenceId.isEmpty()) {
+            catalog.findPlaylistByReferenceID(playlistReferenceId, listener);
+        } else if (playlistId != null && !playlistId.isEmpty()) {
+            catalog.findPlaylistByID(playlistId, listener);
+        }
+    }
+
+    private void loadImage(Video video, ImageView imageView) {
+        if (video == null) {
+            imageView.setImageResource(android.R.color.transparent);
+            return;
+        }
+        if (video.getPosterImage() == null) {
+            imageView.setImageResource(android.R.color.transparent);
+            return;
+        }
+        if (this.imageLoader != null) {
+            this.imageLoader.cancel(true);
+        }
+        String url = video.getPosterImage().toString();
+        this.imageLoader = new ImageLoader(imageView);
+        this.imageLoader.execute(url);
     }
 
     private void initMediaController(BaseVideoView brightcoveVideoView) {

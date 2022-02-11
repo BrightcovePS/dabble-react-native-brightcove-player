@@ -73,6 +73,10 @@ class BrightcovePlayer extends Component {
           this.props.onExitFullscreen &&
           this.props.onExitFullscreen(event.nativeEvent)
         }
+        onPlayNextVideo={ event => 
+          this.props.onPlayNextVideo &&
+          this.props.onPlayNextVideo(event.nativeEvent)
+        }
         onToggleAndroidFullscreen={event => {
           const fullscreen =
             typeof event.nativeEvent.fullscreen === 'boolean'
@@ -113,6 +117,8 @@ BrightcovePlayer.propTypes = {
   ...(ViewPropTypes || View.propTypes),
   policyKey: PropTypes.string,
   accountId: PropTypes.string,
+  playlistId: PropTypes.string,
+  playlistReferenceId: PropTypes.string,
   referenceId: PropTypes.string,
   videoId: PropTypes.string,
   videoToken: PropTypes.string,
@@ -132,7 +138,8 @@ BrightcovePlayer.propTypes = {
   onChangeDuration: PropTypes.func,
   onUpdateBufferProgress: PropTypes.func,
   onEnterFullscreen: PropTypes.func,
-  onExitFullscreen: PropTypes.func
+  onExitFullscreen: PropTypes.func,
+  onPlayNextVideo:PropTypes.func
 };
 
 BrightcovePlayer.defaultProps = {};

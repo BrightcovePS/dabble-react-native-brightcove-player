@@ -100,9 +100,16 @@ export default class App extends Component {
           style={styles.video}
           accountId={ACCOUNT_ID}
           policyKey={POLICY_KEY}
+<<<<<<< HEAD
           seekDuration={15000}
+=======
+          playlistReferenceId={PLAYLIST_REF_ID}
+>>>>>>> 7d52586 (feat: Added up next overlay)
           autoPlay
           {...this.state.playback}
+          onPlayNextVideo={(event) => {
+            console.log(" On Play Next =================> ", JSON.stringify(event));
+          }}
         />
 
         <FlatList
