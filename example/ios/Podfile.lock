@@ -1,8 +1,8 @@
 PODS:
   - boost-for-react-native (1.63.0)
-  - Brightcove-Player-Core (6.4.5):
-    - Brightcove-Player-Core/default (= 6.4.5)
-  - Brightcove-Player-Core/default (6.4.5)
+  - Brightcove-Player-Core (6.10.2):
+    - Brightcove-Player-Core/Framework (= 6.10.2)
+  - Brightcove-Player-Core/Framework (6.10.2)
   - DoubleConversion (1.1.6)
   - FBLazyVector (0.61.2)
   - FBReactNativeSpec (0.61.2):
@@ -185,7 +185,7 @@ PODS:
     - React-cxxreact (= 0.61.2)
     - React-jsi (= 0.61.2)
   - React-jsinspector (0.61.2)
-  - react-native-brightcove-player (1.6.7):
+  - react-native-brightcove-player (1.7.0):
     - Brightcove-Player-Core
     - React
   - React-RCTActionSheet (0.61.2):
@@ -318,7 +318,7 @@ EXTERNAL SOURCES:
 
 SPEC CHECKSUMS:
   boost-for-react-native: 39c7adb57c4e60d6c5479dd8623128eb5b3f0f2c
-  Brightcove-Player-Core: bcd099cdc27a807ae23fcf22ecfb1eb52c72980c
+  Brightcove-Player-Core: 207189ebef308f851425fda360a149f632accf53
   DoubleConversion: 5805e889d232975c086db112ece9ed034df7a0b2
   FBLazyVector: 68b6a76960fbd8ecd9fb7ce0aadd3329c3340a99
   FBReactNativeSpec: 5a764c60abdc3336a213e5310c40b74741f32839
@@ -333,7 +333,7 @@ SPEC CHECKSUMS:
   React-jsi: 32285a21b1b24c36060493ed3057a34677d58d09
   React-jsiexecutor: 8909917ff7d8f21a57e443a866fd8d4560e50c65
   React-jsinspector: 111d7d342b07a904c400592e02a2b958f1098b60
-  react-native-brightcove-player: fe9ba2edbf8fa3b8e227f47bc69812dbb7107d6a
+  react-native-brightcove-player: 2e9616258ff8b1f4a6fa5e9b50a8072289b3b144
   React-RCTActionSheet: 89b037c0fb7d2671607cb645760164e7e0c013f6
   React-RCTAnimation: e3cefa93c38c004c318f7ec04b883eb14b8b8235
   React-RCTBlob: d26ac0e313fbf14e7203473fd593ccaaeee8329e
@@ -346,6 +346,6 @@ SPEC CHECKSUMS:
   ReactCommon: 5848032ed2f274fcb40f6b9ec24067787c42d479
   Yoga: 14927e37bd25376d216b150ab2a561773d57911f
 
-PODFILE CHECKSUM: 65ad9d78f2ffbb0eaa33be7e873cf89f69bb61ee
+PODFILE CHECKSUM: 82e4dd23a981544358678db9054d78084654531a
 
-COCOAPODS: 1.8.4
+COCOAPODS: 1.11.2
