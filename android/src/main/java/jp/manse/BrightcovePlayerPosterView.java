@@ -79,8 +79,13 @@ public class BrightcovePlayerPosterView extends RelativeLayout implements Lifecy
     }
 
     private void loadPoster() {
+        if (accountId == null || policyKey == null) {
+            return;
+        }
         if (this.videoToken != null && !this.videoToken.equals("")) {
-            this.offlineCatalog = new OfflineCatalog(this.context, DefaultEventEmitter.sharedEventEmitter, this.accountId, this.policyKey);
+            this.offlineCatalog = new OfflineCatalog.Builder(this.context, DefaultEventEmitter.sharedEventEmitter, accountId)
+                    .setPolicy(policyKey)
+                    .build();
             Video video = this.offlineCatalog.findOfflineVideoById(this.videoToken);
             loadImage(video);
             return;
@@ -91,7 +96,9 @@ public class BrightcovePlayerPosterView extends RelativeLayout implements Lifecy
                 loadImage(video);
             }
         };
-        this.catalog = new Catalog(DefaultEventEmitter.sharedEventEmitter, this.accountId, this.policyKey);
+        this.catalog = new Catalog.Builder(DefaultEventEmitter.sharedEventEmitter, accountId)
+                .setPolicy(policyKey)
+                .build();
         if (this.videoId != null) {
             this.catalog.findVideoByID(this.videoId, listener);
         } else if (this.referenceId != null) {
