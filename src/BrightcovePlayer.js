@@ -37,7 +37,6 @@ class BrightcovePlayer extends Component {
         style={[
           this.props.style,
           this.state.androidFullscreen && {
-            position: 'absolute',
             zIndex: 9999,
             top: 0,
             left: 0,
