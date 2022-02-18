@@ -1,19 +1,11 @@
 package jp.manse;
 
 import android.graphics.Color;
-import android.net.Uri;
-import android.os.Handler;
-import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.Choreographer;
-import android.view.MotionEvent;
 import android.view.SurfaceView;
 import android.view.View;
-import android.widget.Button;
 import android.widget.RelativeLayout;
-
-import androidx.core.content.ContextCompat;
-import androidx.core.view.ViewCompat;
 
 import com.brightcove.player.display.ExoPlayerVideoDisplayComponent;
 import com.brightcove.player.edge.Catalog;
@@ -25,10 +17,8 @@ import com.brightcove.player.event.EventListener;
 import com.brightcove.player.event.EventType;
 import com.brightcove.player.mediacontroller.BrightcoveMediaController;
 import com.brightcove.player.model.Video;
-import com.brightcove.player.view.BaseVideoView;
 import com.brightcove.player.view.BrightcoveExoPlayerVideoView;
 import com.facebook.react.bridge.Arguments;
-import com.facebook.react.bridge.JavaScriptModule;
 import com.facebook.react.bridge.LifecycleEventListener;
 import com.facebook.react.bridge.ReactApplicationContext;
 import com.facebook.react.bridge.ReactContext;
@@ -43,23 +33,19 @@ import com.google.android.exoplayer2.RendererCapabilities;
 import com.google.android.exoplayer2.source.TrackGroup;
 import com.google.android.exoplayer2.source.TrackGroupArray;
 import com.google.android.exoplayer2.trackselection.DefaultTrackSelector;
-import com.google.android.exoplayer2.trackselection.FixedTrackSelection;
 import com.google.android.exoplayer2.trackselection.MappingTrackSelector;
-import com.google.android.exoplayer2.trackselection.TrackSelection;
 
-import java.util.Arrays;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 import jp.manse.util.AudioFocusManager;
-import jp.manse.util.DefaultEventEmitter;
 
 public class BrightcovePlayerView extends RelativeLayout implements LifecycleEventListener, AudioFocusManager.AudioFocusChangedListener {
-    private ThemedReactContext context;
-    private ReactApplicationContext applicationContext;
-    private BrightcoveExoPlayerVideoView playerVideoView;
-    private BrightcoveMediaController mediaController;
+    private final ThemedReactContext context;
+    private final ReactApplicationContext applicationContext;
+    private final BrightcoveExoPlayerVideoView playerVideoView;
+    private final BrightcoveMediaController mediaController;
+    private final AudioFocusManager audioFocusManager;
     private String policyKey;
     private String accountId;
     private String videoId;
@@ -71,8 +57,6 @@ public class BrightcovePlayerView extends RelativeLayout implements LifecycleEve
     private boolean playing = false;
     private int bitRate = 0;
     private float playbackRate = 1;
-    private EventEmitter eventEmitter;
-    private AudioFocusManager audioFocusManager;
 
     public BrightcovePlayerView(ThemedReactContext context, ReactApplicationContext applicationContext) {
         super(context);
@@ -88,7 +72,7 @@ public class BrightcovePlayerView extends RelativeLayout implements LifecycleEve
         this.playerVideoView.setMediaController(this.mediaController);
         this.requestLayout();
         setupLayout();
-        eventEmitter = playerVideoView.getEventEmitter();
+        EventEmitter eventEmitter = playerVideoView.getEventEmitter();
         // Create AudioFocusManager instance and register BrightcovePlayerView as a listener
         this.audioFocusManager = new AudioFocusManager(this.context);
         this.audioFocusManager.registerListener(this);
