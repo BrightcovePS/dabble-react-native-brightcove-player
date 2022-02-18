@@ -51,8 +51,6 @@ public class BrightcovePlayerView extends RelativeLayout implements LifecycleEve
     private String videoId;
     private String referenceId;
     private String videoToken;
-    private Catalog catalog;
-    private OfflineCatalog offlineCatalog;
     private boolean autoPlay = true;
     private boolean playing = false;
     private int bitRate = 0;
@@ -283,11 +281,11 @@ public class BrightcovePlayerView extends RelativeLayout implements LifecycleEve
             return;
         }
         if (this.videoToken != null && !this.videoToken.equals("")) {
-            this.offlineCatalog = new OfflineCatalog.Builder(this.context, this.playerVideoView.getEventEmitter(), accountId)
+            OfflineCatalog offlineCatalog = new OfflineCatalog.Builder(this.context, this.playerVideoView.getEventEmitter(), accountId)
                     .setPolicy(policyKey)
                     .build();
             try {
-                Video video = this.offlineCatalog.findOfflineVideoById(this.videoToken);
+                Video video = offlineCatalog.findOfflineVideoById(this.videoToken);
                 if (video != null) {
                     playVideo(video);
                 }
@@ -301,13 +299,13 @@ public class BrightcovePlayerView extends RelativeLayout implements LifecycleEve
                 playVideo(video);
             }
         };
-        this.catalog = new Catalog.Builder(this.playerVideoView.getEventEmitter(), accountId)
+        Catalog catalog = new Catalog.Builder(this.playerVideoView.getEventEmitter(), accountId)
                 .setPolicy(policyKey)
                 .build();
         if (this.videoId != null) {
-            this.catalog.findVideoByID(this.videoId, listener);
+            catalog.findVideoByID(this.videoId, listener);
         } else if (this.referenceId != null) {
-            this.catalog.findVideoByReferenceID(this.referenceId, listener);
+            catalog.findVideoByReferenceID(this.referenceId, listener);
         }
     }
 
