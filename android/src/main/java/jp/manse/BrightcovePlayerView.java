@@ -69,7 +69,6 @@ public class BrightcovePlayerView extends RelativeLayout implements LifecycleEve
         this.mediaController = new BrightcoveMediaController(this.playerVideoView);
         this.playerVideoView.setMediaController(this.mediaController);
         this.requestLayout();
-        setupLayout();
         EventEmitter eventEmitter = playerVideoView.getEventEmitter();
         // Create AudioFocusManager instance and register BrightcovePlayerView as a listener
         this.audioFocusManager = new AudioFocusManager(this.context);
@@ -356,29 +355,22 @@ public class BrightcovePlayerView extends RelativeLayout implements LifecycleEve
         this.applicationContext.removeLifecycleEventListener(this);
     }
 
-    // A view with elements that have a visibility to gone on the initial render won't be displayed after you've set
-    // its visibility to visible. view.isShown() will return true, but it will not be there or it will be there but not
-    // really re-layout. This workaround somehow draws the child views manually
-    // https://github.com/facebook/react-native/issues/17968
-    private void setupLayout() {
-        Choreographer.getInstance().postFrameCallback(new Choreographer.FrameCallback() {
-            @Override
-            public void doFrame(long frameTimeNanos) {
-                manuallyLayoutChildren();
-                getViewTreeObserver().dispatchOnGlobalLayout();
-                Choreographer.getInstance().postFrameCallback(this);
-            }
-        });
+    @Override
+    public void requestLayout() {
+        super.requestLayout();
+
+        // The spinner relies on a measure + layout pass happening after it calls requestLayout().
+        // Without this, the widget never actually changes the selection and doesn't call the
+        // appropriate listeners. Since we override onLayout in our ViewGroups, a layout pass never
+        // happens after a call to requestLayout, so we simulate one here.
+        post(measureAndLayout);
     }
 
-    private void manuallyLayoutChildren() {
-        for (int i = 0; i < getChildCount(); i++) {
-            View child = getChildAt(i);
-            child.measure(MeasureSpec.makeMeasureSpec(getMeasuredWidth(), MeasureSpec.EXACTLY),
-                    MeasureSpec.makeMeasureSpec(getMeasuredHeight(), MeasureSpec.EXACTLY));
-            child.layout(0, 0, child.getMeasuredWidth(), child.getMeasuredHeight());
-        }
-    }
+    private final Runnable measureAndLayout = () -> {
+        measure(MeasureSpec.makeMeasureSpec(getWidth(), MeasureSpec.EXACTLY),
+                MeasureSpec.makeMeasureSpec(getHeight(), MeasureSpec.EXACTLY));
+        layout(getLeft(), getTop(), getRight(), getBottom());
+    };
 
     @Override
     public void audioFocusChanged(boolean hasFocus) {
