@@ -2,12 +2,10 @@ package jp.manse;
 
 import android.graphics.Color;
 import android.util.Log;
-import android.view.MotionEvent;
+import android.view.Choreographer;
 import android.view.SurfaceView;
 import android.view.View;
 import android.widget.RelativeLayout;
-
-import androidx.core.view.ViewCompat;
 
 import com.brightcove.player.display.ExoPlayerVideoDisplayComponent;
 import com.brightcove.player.edge.Catalog;
@@ -35,28 +33,24 @@ import com.google.android.exoplayer2.RendererCapabilities;
 import com.google.android.exoplayer2.source.TrackGroup;
 import com.google.android.exoplayer2.source.TrackGroupArray;
 import com.google.android.exoplayer2.trackselection.DefaultTrackSelector;
-import com.google.android.exoplayer2.trackselection.FixedTrackSelection;
 import com.google.android.exoplayer2.trackselection.MappingTrackSelector;
-import com.google.android.exoplayer2.trackselection.TrackSelection;
 
-import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
 
-import jp.manse.util.DefaultEventEmitter;
+import jp.manse.util.AudioFocusManager;
 
-public class BrightcovePlayerView extends RelativeLayout implements LifecycleEventListener {
-    private ThemedReactContext context;
-    private ReactApplicationContext applicationContext;
-    private BrightcoveExoPlayerVideoView playerVideoView;
-    private BrightcoveMediaController mediaController;
+public class BrightcovePlayerView extends RelativeLayout implements LifecycleEventListener, AudioFocusManager.AudioFocusChangedListener {
+    private final ThemedReactContext context;
+    private final ReactApplicationContext applicationContext;
+    private final BrightcoveExoPlayerVideoView playerVideoView;
+    private final BrightcoveMediaController mediaController;
+    private final AudioFocusManager audioFocusManager;
     private String policyKey;
     private String accountId;
     private String videoId;
     private String referenceId;
     private String videoToken;
-    private Catalog catalog;
-    private OfflineCatalog offlineCatalog;
     private boolean autoPlay = true;
     private boolean playing = false;
     private int bitRate = 0;
@@ -68,106 +62,88 @@ public class BrightcovePlayerView extends RelativeLayout implements LifecycleEve
         this.applicationContext = applicationContext;
         this.applicationContext.addLifecycleEventListener(this);
         this.setBackgroundColor(Color.BLACK);
-
         this.playerVideoView = new BrightcoveExoPlayerVideoView(this.context);
-
         this.addView(this.playerVideoView);
         this.playerVideoView.setLayoutParams(new RelativeLayout.LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT));
         this.playerVideoView.finishInitialization();
         this.mediaController = new BrightcoveMediaController(this.playerVideoView);
         this.playerVideoView.setMediaController(this.mediaController);
         this.requestLayout();
-        EventEmitter eventEmitter = this.playerVideoView.getEventEmitter();
-        eventEmitter.on(EventType.VIDEO_SIZE_KNOWN, new EventListener() {
-            @Override
-            public void processEvent(Event e) {
-                fixVideoLayout();
-                updateBitRate();
-                updatePlaybackRate();
+        setupLayout();
+        EventEmitter eventEmitter = playerVideoView.getEventEmitter();
+        // Create AudioFocusManager instance and register BrightcovePlayerView as a listener
+        this.audioFocusManager = new AudioFocusManager(this.context);
+        this.audioFocusManager.registerListener(this);
+        EventListener eventListener = event -> {
+            switch (event.getType()) {
+                case EventType.VIDEO_SIZE_KNOWN:
+                    fixVideoLayout();
+                    updateBitRate();
+                    updatePlaybackRate();
+                    break;
+                case EventType.READY_TO_PLAY:
+                    sendJSEvent(BrightcovePlayerManager.EVENT_READY, Arguments.createMap());
+                    break;
+                case EventType.DID_PLAY:
+                    audioFocusManager.requestFocus();
+                    BrightcovePlayerView.this.playing = true;
+                    sendJSEvent(BrightcovePlayerManager.EVENT_PLAY, Arguments.createMap());
+                    break;
+                case EventType.DID_PAUSE:
+                    audioFocusManager.abandonFocus();
+                    BrightcovePlayerView.this.playing = false;
+                    sendJSEvent(BrightcovePlayerManager.EVENT_PAUSE, Arguments.createMap());
+                    break;
+                case EventType.COMPLETED:
+                    sendJSEvent(BrightcovePlayerManager.EVENT_END, Arguments.createMap());
+                    break;
+                case EventType.PROGRESS:
+                    WritableMap progressMap = Arguments.createMap();
+                    Integer playHead = (Integer) event.properties.get(Event.PLAYHEAD_POSITION);
+                    if (playHead != null) {
+                        progressMap.putDouble("currentTime", playHead / 1000d);
+                    }
+                    sendJSEvent(BrightcovePlayerManager.EVENT_PROGRESS, progressMap);
+                    break;
+                case EventType.VIDEO_DURATION_CHANGED:
+                    Integer duration = (Integer) event.properties.get(Event.VIDEO_DURATION);
+                    WritableMap durationMap = Arguments.createMap();
+                    if (duration != null) {
+                        durationMap.putDouble("duration", duration / 1000d);
+                    }
+                    sendJSEvent(BrightcovePlayerManager.EVENT_CHANGE_DURATION, durationMap);
+                    break;
+                case EventType.BUFFERED_UPDATE:
+                    Integer percentComplete = (Integer) event.properties.get(Event.PERCENT_COMPLETE);
+                    WritableMap bufferUpdateMap = Arguments.createMap();
+                    if (percentComplete != null) {
+                        bufferUpdateMap.putDouble("bufferProgress", percentComplete / 100d);
+                    }
+                    sendJSEvent(BrightcovePlayerManager.EVENT_UPDATE_BUFFER_PROGRESS, bufferUpdateMap);
+                    break;
+                case EventType.DID_EXIT_FULL_SCREEN:
+                case EventType.DID_ENTER_FULL_SCREEN:
+                    mediaController.show();
+                    sendJSEvent(BrightcovePlayerManager.EVENT_TOGGLE_ANDROID_FULLSCREEN, Arguments.createMap());
+                    break;
             }
-        });
-        eventEmitter.on(EventType.READY_TO_PLAY, new EventListener() {
-            @Override
-            public void processEvent(Event e) {
-                WritableMap event = Arguments.createMap();
-                ReactContext reactContext = (ReactContext) BrightcovePlayerView.this.getContext();
-                reactContext.getJSModule(RCTEventEmitter.class).receiveEvent(BrightcovePlayerView.this.getId(), BrightcovePlayerManager.EVENT_READY, event);
-            }
-        });
-        eventEmitter.on(EventType.DID_PLAY, new EventListener() {
-            @Override
-            public void processEvent(Event e) {
-                BrightcovePlayerView.this.playing = true;
-                WritableMap event = Arguments.createMap();
-                ReactContext reactContext = (ReactContext) BrightcovePlayerView.this.getContext();
-                reactContext.getJSModule(RCTEventEmitter.class).receiveEvent(BrightcovePlayerView.this.getId(), BrightcovePlayerManager.EVENT_PLAY, event);
-            }
-        });
-        eventEmitter.on(EventType.DID_PAUSE, new EventListener() {
-            @Override
-            public void processEvent(Event e) {
-                BrightcovePlayerView.this.playing = false;
-                WritableMap event = Arguments.createMap();
-                ReactContext reactContext = (ReactContext) BrightcovePlayerView.this.getContext();
-                reactContext.getJSModule(RCTEventEmitter.class).receiveEvent(BrightcovePlayerView.this.getId(), BrightcovePlayerManager.EVENT_PAUSE, event);
-            }
-        });
-        eventEmitter.on(EventType.COMPLETED, new EventListener() {
-            @Override
-            public void processEvent(Event e) {
-                WritableMap event = Arguments.createMap();
-                ReactContext reactContext = (ReactContext) BrightcovePlayerView.this.getContext();
-                reactContext.getJSModule(RCTEventEmitter.class).receiveEvent(BrightcovePlayerView.this.getId(), BrightcovePlayerManager.EVENT_END, event);
-            }
-        });
-        eventEmitter.on(EventType.PROGRESS, new EventListener() {
-            @Override
-            public void processEvent(Event e) {
-                WritableMap event = Arguments.createMap();
-                Integer playhead = (Integer) e.properties.get(Event.PLAYHEAD_POSITION);
-                event.putDouble("currentTime", playhead / 1000d);
-                ReactContext reactContext = (ReactContext) BrightcovePlayerView.this.getContext();
-                reactContext.getJSModule(RCTEventEmitter.class).receiveEvent(BrightcovePlayerView.this.getId(), BrightcovePlayerManager.EVENT_PROGRESS, event);
-            }
-        });
-        eventEmitter.on(EventType.ENTER_FULL_SCREEN, new EventListener() {
-            @Override
-            public void processEvent(Event e) {
-                mediaController.show();
-                WritableMap event = Arguments.createMap();
-                ReactContext reactContext = (ReactContext) BrightcovePlayerView.this.getContext();
-                reactContext.getJSModule(RCTEventEmitter.class).receiveEvent(BrightcovePlayerView.this.getId(), BrightcovePlayerManager.EVENT_TOGGLE_ANDROID_FULLSCREEN, event);
-            }
-        });
-        eventEmitter.on(EventType.EXIT_FULL_SCREEN, new EventListener() {
-            @Override
-            public void processEvent(Event e) {
-                mediaController.show();
-                WritableMap event = Arguments.createMap();
-                ReactContext reactContext = (ReactContext) BrightcovePlayerView.this.getContext();
-                reactContext.getJSModule(RCTEventEmitter.class).receiveEvent(BrightcovePlayerView.this.getId(), BrightcovePlayerManager.EVENT_TOGGLE_ANDROID_FULLSCREEN, event);
-            }
-        });
-        eventEmitter.on(EventType.VIDEO_DURATION_CHANGED, new EventListener() {
-            @Override
-            public void processEvent(Event e) {
-                Integer duration = (Integer) e.properties.get(Event.VIDEO_DURATION);
-                WritableMap event = Arguments.createMap();
-                event.putDouble("duration", duration / 1000d);
-                ReactContext reactContext = (ReactContext) BrightcovePlayerView.this.getContext();
-                reactContext.getJSModule(RCTEventEmitter.class).receiveEvent(BrightcovePlayerView.this.getId(), BrightcovePlayerManager.EVENT_CHANGE_DURATION, event);
-            }
-        });
-        eventEmitter.on(EventType.BUFFERED_UPDATE, new EventListener() {
-            @Override
-            public void processEvent(Event e) {
-                Integer percentComplete = (Integer) e.properties.get(Event.PERCENT_COMPLETE);
-                WritableMap event = Arguments.createMap();
-                event.putDouble("bufferProgress", percentComplete / 100d);
-                ReactContext reactContext = (ReactContext) BrightcovePlayerView.this.getContext();
-                reactContext.getJSModule(RCTEventEmitter.class).receiveEvent(BrightcovePlayerView.this.getId(), BrightcovePlayerManager.EVENT_UPDATE_BUFFER_PROGRESS, event);
-            }
-        });
+        };
+        eventEmitter.on(EventType.VIDEO_SIZE_KNOWN, eventListener);
+        eventEmitter.on(EventType.READY_TO_PLAY, eventListener);
+        eventEmitter.on(EventType.DID_PLAY, eventListener);
+        eventEmitter.on(EventType.DID_PAUSE, eventListener);
+        eventEmitter.on(EventType.COMPLETED, eventListener);
+        eventEmitter.on(EventType.PROGRESS, eventListener);
+        // This event is sent by the BrightcovePlayer Activity when the onConfigurationChanged has been called.
+        eventEmitter.on(EventType.CONFIGURATION_CHANGED, eventListener);
+        eventEmitter.on(EventType.DID_EXIT_FULL_SCREEN, eventListener);
+        eventEmitter.on(EventType.DID_ENTER_FULL_SCREEN, eventListener);
+        eventEmitter.on(EventType.VIDEO_DURATION_CHANGED, eventListener);
+        eventEmitter.on(EventType.BUFFERED_UPDATE, eventListener);
+    }
+
+    private void sendJSEvent(String eventName, WritableMap map) {
+        ((ReactContext) BrightcovePlayerView.this.getContext()).getJSModule(RCTEventEmitter.class).receiveEvent(BrightcovePlayerView.this.getId(), eventName, map);
     }
 
     public void setPolicyKey(String policyKey) {
@@ -211,16 +187,15 @@ public class BrightcovePlayerView extends RelativeLayout implements LifecycleEve
     }
 
     public void setDefaultControlDisabled(boolean disabled) {
-        this.mediaController.hide();
-        this.mediaController.setShowHideTimeout(disabled ? 1 : 4000);
+        playerVideoView.getBrightcoveMediaController().hide();
+        playerVideoView.getBrightcoveMediaController().setShowHideTimeout(disabled ? 1 : 4000);
     }
 
     public void setFullscreen(boolean fullscreen) {
-        this.mediaController.show();
-        WritableMap event = Arguments.createMap();
-        event.putBoolean("fullscreen", fullscreen);
-        ReactContext reactContext = (ReactContext) BrightcovePlayerView.this.getContext();
-        reactContext.getJSModule(RCTEventEmitter.class).receiveEvent(BrightcovePlayerView.this.getId(), BrightcovePlayerManager.EVENT_TOGGLE_ANDROID_FULLSCREEN, event);
+        playerVideoView.getBrightcoveMediaController().show();
+        WritableMap fullscreenEventMap = Arguments.createMap();
+        fullscreenEventMap.putBoolean("fullscreen", fullscreen);
+        sendJSEvent(BrightcovePlayerManager.EVENT_TOGGLE_ANDROID_FULLSCREEN, fullscreenEventMap);
     }
 
     public void setVolume(float volume) {
@@ -263,7 +238,7 @@ public class BrightcovePlayerView extends RelativeLayout implements LifecycleEve
 
         if (rendererIndex == null) return;
         if (bitRate == 0) {
-            trackSelector.buildUponParameters().clearSelectionOverrides(rendererIndex);
+            trackSelector.setParameters(trackSelector.buildUponParameters().clearSelectionOverrides(rendererIndex));
             return;
         }
         int resultBitRate = -1;
@@ -289,8 +264,8 @@ public class BrightcovePlayerView extends RelativeLayout implements LifecycleEve
             }
         }
         if (targetGroupIndex != -1 && targetTrackIndex != -1) {
-            trackSelector.buildUponParameters().setSelectionOverride(rendererIndex, trackGroups,
-                    new DefaultTrackSelector.SelectionOverride(targetGroupIndex, targetTrackIndex));
+            trackSelector.setParameters(trackSelector.buildUponParameters().setSelectionOverride(rendererIndex, trackGroups,
+                    new DefaultTrackSelector.SelectionOverride(targetGroupIndex, targetTrackIndex)));
         }
     }
 
@@ -306,11 +281,11 @@ public class BrightcovePlayerView extends RelativeLayout implements LifecycleEve
             return;
         }
         if (this.videoToken != null && !this.videoToken.equals("")) {
-            this.offlineCatalog = new OfflineCatalog.Builder(this.context, this.playerVideoView.getEventEmitter(), accountId)
+            OfflineCatalog offlineCatalog = new OfflineCatalog.Builder(this.context, this.playerVideoView.getEventEmitter(), accountId)
                     .setPolicy(policyKey)
                     .build();
             try {
-                Video video = this.offlineCatalog.findOfflineVideoById(this.videoToken);
+                Video video = offlineCatalog.findOfflineVideoById(this.videoToken);
                 if (video != null) {
                     playVideo(video);
                 }
@@ -324,13 +299,13 @@ public class BrightcovePlayerView extends RelativeLayout implements LifecycleEve
                 playVideo(video);
             }
         };
-        this.catalog = new Catalog.Builder(this.playerVideoView.getEventEmitter(), accountId)
+        Catalog catalog = new Catalog.Builder(this.playerVideoView.getEventEmitter(), accountId)
                 .setPolicy(policyKey)
                 .build();
         if (this.videoId != null) {
-            this.catalog.findVideoByID(this.videoId, listener);
+            catalog.findVideoByID(this.videoId, listener);
         } else if (this.referenceId != null) {
-            this.catalog.findVideoByReferenceID(this.referenceId, listener);
+            catalog.findVideoByReferenceID(this.referenceId, listener);
         }
     }
 
@@ -363,12 +338,14 @@ public class BrightcovePlayerView extends RelativeLayout implements LifecycleEve
 
     @Override
     public void onHostResume() {
-
+        // Register to audio focus changes when the screen resumes
+        audioFocusManager.registerListener(this);
     }
 
     @Override
     public void onHostPause() {
-
+        // Unregister from audio focus changes when the screen goes in the background
+        audioFocusManager.unregisterListener();
     }
 
     @Override
@@ -377,5 +354,37 @@ public class BrightcovePlayerView extends RelativeLayout implements LifecycleEve
         this.playerVideoView.clear();
         this.removeAllViews();
         this.applicationContext.removeLifecycleEventListener(this);
+    }
+
+    // A view with elements that have a visibility to gone on the initial render won't be displayed after you've set
+    // its visibility to visible. view.isShown() will return true, but it will not be there or it will be there but not
+    // really re-layout. This workaround somehow draws the child views manually
+    // https://github.com/facebook/react-native/issues/17968
+    private void setupLayout() {
+        Choreographer.getInstance().postFrameCallback(new Choreographer.FrameCallback() {
+            @Override
+            public void doFrame(long frameTimeNanos) {
+                manuallyLayoutChildren();
+                getViewTreeObserver().dispatchOnGlobalLayout();
+                Choreographer.getInstance().postFrameCallback(this);
+            }
+        });
+    }
+
+    private void manuallyLayoutChildren() {
+        for (int i = 0; i < getChildCount(); i++) {
+            View child = getChildAt(i);
+            child.measure(MeasureSpec.makeMeasureSpec(getMeasuredWidth(), MeasureSpec.EXACTLY),
+                    MeasureSpec.makeMeasureSpec(getMeasuredHeight(), MeasureSpec.EXACTLY));
+            child.layout(0, 0, child.getMeasuredWidth(), child.getMeasuredHeight());
+        }
+    }
+
+    @Override
+    public void audioFocusChanged(boolean hasFocus) {
+        // Pause the video when it looses focus
+        if (!hasFocus && playerVideoView.isPlaying()) {
+            playerVideoView.pause();
+        }
     }
 }
