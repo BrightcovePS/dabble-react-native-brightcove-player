@@ -100,6 +100,7 @@ export default class App extends Component {
           style={styles.video}
           accountId={ACCOUNT_ID}
           policyKey={POLICY_KEY}
+          seekOffset={20000}
           autoPlay
           {...this.state.playback}
         />

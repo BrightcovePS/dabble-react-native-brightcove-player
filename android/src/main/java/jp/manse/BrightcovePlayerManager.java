@@ -114,6 +114,12 @@ public class BrightcovePlayerManager extends ViewGroupManager<BrightcovePlayerVi
         );
     }
 
+    @ReactProp(name = "seekOffset")
+    public void setSeekOffset(BrightcovePlayerView view, int seekOffset) {
+        view.setSeekOffset(seekOffset);
+    }
+
+
     @Override
     public void receiveCommand(BrightcovePlayerView view, int commandType, @Nullable ReadableArray args) {
         Assertions.assertNotNull(view);
