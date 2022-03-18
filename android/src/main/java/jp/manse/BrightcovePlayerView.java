@@ -1,6 +1,7 @@
 package jp.manse;
 
 import android.graphics.Color;
+import android.media.MediaPlayer;
 import android.util.Log;
 import android.view.SurfaceView;
 import android.widget.ImageButton;
@@ -325,9 +326,11 @@ public class BrightcovePlayerView extends RelativeLayout implements LifecycleEve
     private void playVideo(Video video) {
         BrightcovePlayerView.this.playerVideoView.clear();
         BrightcovePlayerView.this.playerVideoView.add(video);
-        if (BrightcovePlayerView.this.autoPlay) {
-            BrightcovePlayerView.this.playerVideoView.start();
-        }
+        BrightcovePlayerView.this.playerVideoView.setOnPreparedListener(mp -> {
+            if (!playerVideoView.isPlaying() && BrightcovePlayerView.this.autoPlay) {
+                BrightcovePlayerView.this.playerVideoView.start();
+            }
+        });
     }
 
     private void fixVideoLayout() {
