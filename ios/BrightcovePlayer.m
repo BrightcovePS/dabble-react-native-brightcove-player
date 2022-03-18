@@ -1,8 +1,7 @@
 #import "BrightcovePlayer.h"
 #import "BrightcovePlayerOfflineVideoManager.h"
-
+#import "react_native_brightcove_player-Swift.h"
 @interface BrightcovePlayer () <BCOVPlaybackControllerDelegate, BCOVPUIPlayerViewDelegate>
-
 @end
 
 @implementation BrightcovePlayer
@@ -17,10 +16,12 @@
 - (void)setup {
     _playbackController = [BCOVPlayerSDKManager.sharedManager createPlaybackController];
     _playbackController.delegate = self;
-    _playbackController.autoPlay = NO;
+    _playbackController.autoPlay = YES;
     _playbackController.autoAdvance = YES;
-    
-    _playerView = [[BCOVPUIPlayerView alloc] initWithPlaybackController:self.playbackController options:nil controlsView:[BCOVPUIBasicControlView basicControlViewWithVODLayout] ];
+  _playbackController.allowsExternalPlayback = YES;
+  _playbackController.allowsBackgroundAudioPlayback = YES;
+  
+  _playerView = [[PlayerView alloc] initWithPresentingView: [self parentViewController] playbackController:_playbackController player: self];
     _playerView.delegate = self;
     _playerView.autoresizingMask = UIViewAutoresizingFlexibleHeight | UIViewAutoresizingFlexibleWidth;
     _playerView.backgroundColor = UIColor.blackColor;
@@ -70,6 +71,7 @@
 
 - (void)setReferenceId:(NSString *)referenceId {
     _referenceId = referenceId;
+  _playerView.referenceId = _referenceId;
     _videoId = NULL;
     [self setupService];
     [self loadMovie];
@@ -77,6 +79,7 @@
 
 - (void)setVideoId:(NSString *)videoId {
     _videoId = videoId;
+  _playerView.videoId = _videoId;
     _referenceId = NULL;
     [self setupService];
     [self loadMovie];
@@ -89,6 +92,7 @@
 
 - (void)setAccountId:(NSString *)accountId {
     _accountId = accountId;
+  _playerView.accountId = _accountId;
     _playbackServiceDirty = YES;
     [self setupService];
     [self loadMovie];
@@ -96,11 +100,18 @@
 
 - (void)setPolicyKey:(NSString *)policyKey {
     _policyKey = policyKey;
+  _playerView.policyKey = _policyKey;
     _playbackServiceDirty = YES;
     [self setupService];
     [self loadMovie];
 }
-
+- (void)setPlaylistReferenceId:(NSString *)playlistReferenceId {
+    _playlistReferenceId = playlistReferenceId;
+   _playerView.playlistReferenceId = _playlistReferenceId;
+}
+- (void)setPlaylistId:(NSString *)playlistId {
+  _playerView.playlistId = playlistId;
+}
 - (void)setAutoPlay:(BOOL)autoPlay {
     _autoPlay = autoPlay;
 }
@@ -194,6 +205,7 @@
             self.onPause(@{});
         }
     } else if (lifecycleEvent.eventType == kBCOVPlaybackSessionLifecycleEventEnd) {
+      _playerView.controlsView.routeDetector.routeDetectionEnabled = NO;
         if (self.onEnd) {
             self.onEnd(@{});
         }
@@ -207,7 +219,12 @@
                                 });
     }
 }
-
+- (void)playbackController:(id<BCOVPlaybackController>)controller didAdvanceToPlaybackSession:(id<BCOVPlaybackSession>)session
+{
+    // Enable route detection for AirPlay
+    // https://developer.apple.com/documentation/avfoundation/avroutedetector/2915762-routedetectionenabled
+    _playerView.controlsView.routeDetector.routeDetectionEnabled = YES;
+}
 -(void)playbackController:(id<BCOVPlaybackController>)controller playbackSession:(id<BCOVPlaybackSession>)session didProgressTo:(NSTimeInterval)progress {
     if (self.onProgress && progress > 0 && progress != INFINITY) {
         self.onProgress(@{
@@ -225,10 +242,12 @@
 
 -(void)playerView:(BCOVPUIPlayerView *)playerView didTransitionToScreenMode:(BCOVPUIScreenMode)screenMode {
     if (screenMode == BCOVPUIScreenModeNormal) {
+        _playerView.screenMode = @"BCOVPUIScreenModeNormal";
         if (self.onExitFullscreen) {
             self.onExitFullscreen(@{});
         }
     } else if (screenMode == BCOVPUIScreenModeFull) {
+        _playerView.screenMode = @"BCOVPUIScreenModeFull";
         if (self.onEnterFullscreen) {
             self.onEnterFullscreen(@{});
         }
@@ -239,4 +258,40 @@
     [self.playbackController setVideos:@[]];
 }
 
+- (UIViewController *)parentViewController {
+    UIResponder *parentResponder = self;
+    while (parentResponder != nil) {
+        parentResponder = [parentResponder nextResponder];
+        if ([parentResponder isKindOfClass:[UIViewController class]]) {
+            return (UIViewController *)parentResponder;
+        }
+    }
+    return nil;
+}
+- (void)progressSliderDidChangeValue:(UISlider *)slider {
+  _playerView.slider = slider;
+}
+- (void)nextVideoPlayer:(NSDictionary *)video {
+  _referenceId =  [video valueForKey:@"referenceId"];
+  _videoId =  [video valueForKey:@"videoId"];
+  NSMutableDictionary *nextVideo = [NSMutableDictionary dictionary];
+  [nextVideo setObject: _referenceId  forKey: @"referenceId"];
+  [nextVideo setObject: _videoId  forKey: @"videoId"];
+  if (self.onPlayNextVideo) {
+  self.onPlayNextVideo(nextVideo);
+  }
+}
+
+-(void)pictureInPictureControllerWillStartPictureInPicture:(AVPictureInPictureController *)pictureInPictureController {
+  NSLog(@"PIP will start");
+}
+-(void)pictureInPictureControllerDidStartPictureInPicture:(AVPictureInPictureController *)pictureInPictureController {
+  NSLog(@"PIP Did start");
+}
+-(void)pictureInPictureControllerWillStopPictureInPicture:(AVPictureInPictureController *)pictureInPictureController{
+  NSLog(@"PIP will stop");
+}
+-(void)pictureInPictureControllerDidStopPictureInPicture:(AVPictureInPictureController *)pictureInPictureController {
+  NSLog(@"PIP did stop");
+}
 @end

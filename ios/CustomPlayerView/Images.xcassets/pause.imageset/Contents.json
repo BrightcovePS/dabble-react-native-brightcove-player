@@ -1,0 +1,12 @@
+{
+  "images" : [
+    {
+      "filename" : "Pause Fill.png",
+      "idiom" : "universal"
+    }
+  ],
+  "info" : {
+    "author" : "xcode",
+    "version" : 1
+  }
+}
