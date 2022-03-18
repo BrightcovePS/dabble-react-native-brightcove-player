@@ -123,7 +123,7 @@ BrightcovePlayer.propTypes = {
   volume: PropTypes.number,
   bitRate: PropTypes.number,
   playbackRate: PropTypes.number,
-  seekOffset: PropTypes.number,
+  seekDuration: PropTypes.number,
   onReady: PropTypes.func,
   onPlay: PropTypes.func,
   onPause: PropTypes.func,

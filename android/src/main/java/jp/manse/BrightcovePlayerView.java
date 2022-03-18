@@ -52,7 +52,7 @@ public class BrightcovePlayerView extends RelativeLayout implements LifecycleEve
     private String videoId;
     private String referenceId;
     private String videoToken;
-    private int seekOffset = SEEK_OFFSET;
+    private int seekDuration = SEEK_OFFSET;
     private boolean autoPlay = true;
     private boolean playing = false;
     private int bitRate = 0;
@@ -146,7 +146,7 @@ public class BrightcovePlayerView extends RelativeLayout implements LifecycleEve
 
     private void setSeekControlConfig(){
         HashMap<String, Object> map = new HashMap<>();
-        map.put(Event.SEEK_DEFAULT, seekOffset);
+        map.put(Event.SEEK_DEFAULT, seekDuration);
         eventEmitter.emit(EventType.SEEK_CONTROLLER_CONFIGURATION,map);
     }
 
@@ -206,8 +206,8 @@ public class BrightcovePlayerView extends RelativeLayout implements LifecycleEve
         sendJSEvent(BrightcovePlayerManager.EVENT_TOGGLE_ANDROID_FULLSCREEN, fullscreenEventMap);
     }
 
-    public void setSeekOffset(int seekOffset) {
-        this.seekOffset = seekOffset;
+    public void setSeekDuration(int seekDuration) {
+        this.seekDuration = seekDuration;
         setSeekControlConfig();
     }
 
@@ -352,7 +352,7 @@ public class BrightcovePlayerView extends RelativeLayout implements LifecycleEve
     private final OnClickListener controlsClickListener = v -> {
         if (v.getId() == R.id.fast_forward_btn) {
             long seekMax = mediaController.getBrightcoveSeekBar().getMax();
-            long seekPos = playerVideoView.getCurrentPosition() + seekOffset;
+            long seekPos = playerVideoView.getCurrentPosition() + seekDuration;
             if(seekMax > seekPos) {
                 playerVideoView.seekTo((int) seekPos);
             }
