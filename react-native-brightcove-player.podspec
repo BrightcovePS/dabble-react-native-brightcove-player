@@ -9,7 +9,7 @@ Pod::Spec.new do |s|
   s.homepage            = "https://github.com/manse/react-native-brightcove-player"
   s.license             = package['license']
   s.authors             = "Ryota Mannari"
-  s.platform            = :ios, "10.0"
+  s.platform            = :ios, "11.0"
 
   s.source              = { :git => "https://github.com/manse/react-native-brightcove-player.git" }
   s.source_files        = 'ios/**/*.{h,m,swift, plist}'

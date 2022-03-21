@@ -1,7 +1,8 @@
 import Foundation
 import BrightcovePlayerSDK
 class PlayerRepository {
-  var accountId: String? 
+  var accountId: String?
+  var policyKey: String?
   var playlistReferenceId: String? {
     didSet {
       CurrentPlayerItem.shared.playlistRefId = playlistReferenceId ?? StringConstants.kEmptyString
