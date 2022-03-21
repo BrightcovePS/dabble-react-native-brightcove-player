@@ -13,6 +13,7 @@
 		713443E3229BDB220071B8E4 /* BrightcovePlayerPoster.m in Sources */ = {isa = PBXBuildFile; fileRef = 713443DC229BDB220071B8E4 /* BrightcovePlayerPoster.m */; };
 		A523E0DC27E8663400626DFC /* AccountConfig.swift in Sources */ = {isa = PBXBuildFile; fileRef = A523E0DB27E8663400626DFC /* AccountConfig.swift */; };
 		A523E0E127E8824C00626DFC /* CurrentPlayerItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = A523E0E027E8824C00626DFC /* CurrentPlayerItem.swift */; };
+		A536BFF627E8D5E5007770B4 /* ScreenTapDecorator.swift in Sources */ = {isa = PBXBuildFile; fileRef = A536BFF527E8D5E5007770B4 /* ScreenTapDecorator.swift */; };
 		A54AFAE327E4875100658D3C /* AllVideos.swift in Sources */ = {isa = PBXBuildFile; fileRef = A54AFA7627E4875000658D3C /* AllVideos.swift */; };
 		A54AFAE427E4875100658D3C /* Videos.swift in Sources */ = {isa = PBXBuildFile; fileRef = A54AFA7727E4875000658D3C /* Videos.swift */; };
 		A54AFAE527E4875100658D3C /* TextTrackSources.swift in Sources */ = {isa = PBXBuildFile; fileRef = A54AFA7827E4875000658D3C /* TextTrackSources.swift */; };
@@ -122,6 +123,7 @@
 		713443DD229BDB220071B8E4 /* BrightcovePlayerPoster.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BrightcovePlayerPoster.h; sourceTree = "<group>"; };
 		A523E0DB27E8663400626DFC /* AccountConfig.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AccountConfig.swift; sourceTree = "<group>"; };
 		A523E0E027E8824C00626DFC /* CurrentPlayerItem.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CurrentPlayerItem.swift; sourceTree = "<group>"; };
+		A536BFF527E8D5E5007770B4 /* ScreenTapDecorator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScreenTapDecorator.swift; sourceTree = "<group>"; };
 		A54AFA6E27E4873A00658D3C /* react-native-brightcove-player-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "react-native-brightcove-player-Bridging-Header.h"; sourceTree = "<group>"; };
 		A54AFA7627E4875000658D3C /* AllVideos.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AllVideos.swift; sourceTree = "<group>"; };
 		A54AFA7727E4875000658D3C /* Videos.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Videos.swift; sourceTree = "<group>"; };
@@ -267,6 +269,14 @@
 			path = AccountConfig;
 			sourceTree = "<group>";
 		};
+		A536BFF227E8D5B8007770B4 /* ScreenTap */ = {
+			isa = PBXGroup;
+			children = (
+				A536BFF527E8D5E5007770B4 /* ScreenTapDecorator.swift */,
+			);
+			path = ScreenTap;
+			sourceTree = "<group>";
+		};
 		A54AFA7127E4875000658D3C /* CustomPlayerView */ = {
 			isa = PBXGroup;
 			children = (
@@ -341,6 +351,7 @@
 		A54AFA8427E4875000658D3C /* Decorators */ = {
 			isa = PBXGroup;
 			children = (
+				A536BFF227E8D5B8007770B4 /* ScreenTap */,
 				A54AFA8527E4875000658D3C /* Core */,
 				A54AFA8727E4875000658D3C /* PictureInPicture */,
 				A54AFA8A27E4875000658D3C /* ClosedCaptions */,
@@ -724,6 +735,7 @@
 				A54AFB0927E4875100658D3C /* PlayerView + CustomControlAction.swift in Sources */,
 				A54AFB2027E4875100658D3C /* GridViewController.swift in Sources */,
 				A54AFB2E27E4875100658D3C /* OverlayAction.swift in Sources */,
+				A536BFF627E8D5E5007770B4 /* ScreenTapDecorator.swift in Sources */,
 				A54AFB0527E4875100658D3C /* PlayerView + PictureInPicture.swift in Sources */,
 				A54AFB2827E4875100658D3C /* State.swift in Sources */,
 				A54AFB1D27E4875100658D3C /* RecommendationsCell.swift in Sources */,

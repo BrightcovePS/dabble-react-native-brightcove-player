@@ -33,9 +33,7 @@ extension PlayerView: BCOVPlaybackSessionConsumer {
       controlsFadingViewVisible = true
       self.customControlsView?.isPaused = false
     case kBCOVPlaybackSessionLifecycleEventPause:
-      DispatchQueue.main.asyncAfter(deadline: .now() + 3) {
-        self.controlsFadingViewVisible = false
-      }
+      self.screenTapDecorator.reestablishTimer()
       self.customControlsView?.isPaused = true
     case kBCOVPlaybackSessionLifecycleEventReady:
       self.customControlsView?.isPaused = false

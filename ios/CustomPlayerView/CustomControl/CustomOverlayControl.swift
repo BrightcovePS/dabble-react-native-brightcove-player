@@ -37,7 +37,8 @@ class CustomOverlayControl: UIView, CustomControlViewType {
   weak var session: BCOVPlaybackSession? = nil
   weak var currentPlayer: AVPlayer?
   var playPauseAction: ((UIButton) -> Void)?
-  private var rewindAction: ((UIButton) -> Void)?
+  var rewindAction: ((UIButton) -> Void)?
+  var forwardAction: ((UIButton) -> Void)?
   var closedCaptionsTapped: ((UIButton) -> Void)?
   var pictureInPictureTapped: ((UIButton) -> Void)?
   var controlsViewHeight: CGFloat = 0 {
@@ -45,7 +46,6 @@ class CustomOverlayControl: UIView, CustomControlViewType {
       self.addControls()
     }
   }
-  private var forwardAction: ((UIButton) -> Void)?
   private lazy var topControlsStackView: UIStackView = {
     let stackView = UIStackView()
     stackView.translatesAutoresizingMaskIntoConstraints = false

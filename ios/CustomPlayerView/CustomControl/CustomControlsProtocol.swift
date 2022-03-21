@@ -9,7 +9,11 @@ protocol CustomControlsActionable: AnyObject {
   var closedCaptionsTapped: ((UIButton) -> Void)? { get set }
   var pictureInPictureTapped: ((UIButton) -> Void)? { get set }
   var playPauseAction: ((UIButton) -> Void)? { get set }
+  var rewindAction: ((UIButton) -> Void)? { get set }
+  var forwardAction: ((UIButton) -> Void)? { get set }
 }
 protocol CustomControlsObserverable: AnyObject {
   func addPlayPauseObserver()
+  func addForwardSeekObserver()
+  func addBackwardSeekObserver()
 }

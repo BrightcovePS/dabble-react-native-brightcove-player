@@ -1,7 +1,7 @@
 import Foundation
 import BrightcovePlayerSDK
 import AVKit
-fileprivate struct ControlConstants {
+struct TimerControlConstants {
   static let hideControlsInterval: Double = 3
 }
 @objcMembers public class PlayerView: BCOVPUIPlayerView {
@@ -24,6 +24,10 @@ fileprivate struct ControlConstants {
   }()
   lazy var overlayDecorator: ViewDecoratorType = {
     let decorator = OverlayDecorator(self)
+    return decorator
+  }()
+  lazy var screenTapDecorator: ScreenTapDecorator = {
+    let decorator = ScreenTapDecorator(self)
     return decorator
   }()
   var customControlsView: CustomControlViewType?
@@ -134,7 +138,7 @@ fileprivate struct ControlConstants {
     let options = BCOVPUIPlayerViewOptions()
     // Need to revisit the impact/use of setting presentingViewController
     //options.presentingViewController = presentingView
-    options.hideControlsInterval = ControlConstants.hideControlsInterval
+    options.hideControlsInterval = TimerControlConstants.hideControlsInterval
     options.hideControlsAnimationDuration = 0.2
     //options.showPictureInPictureButton = true // Must be true
     self.player = player
@@ -149,6 +153,7 @@ fileprivate struct ControlConstants {
     configureCustomControls()
     configureRedux()
     addOrientationObserver()
+    screenTapDecorator.addTapGesture()
     self.playbackController.add(self)
   }
   private func setupControlsLayout() {
@@ -175,6 +180,8 @@ fileprivate struct ControlConstants {
     addClosedCaptionsObserver()
     addPictureInPictureObserver()
     addPlayPauseObserver()
+    addForwardSeekObserver()
+    addBackwardSeekObserver()
   }
   // MARK: - Orientations
   fileprivate func addOrientationObserver() {
