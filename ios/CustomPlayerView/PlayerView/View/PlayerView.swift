@@ -150,8 +150,6 @@ fileprivate struct ControlConstants {
     configureRedux()
     addOrientationObserver()
     self.playbackController.add(self)
-    googleCastDecorator.configureCastDecorator()
-    setupNowPlayingInfoCenter()
   }
   private func setupControlsLayout() {
     customControlLayout.playerView = self
@@ -212,8 +210,8 @@ fileprivate struct ControlConstants {
       self.playbackController.setVideos([video] as NSFastEnumeration)
       let referenceId = video.properties[kBCOVPlaylistPropertiesKeyReferenceId] as? String ?? StringConstants.kEmptyString
       let videoId = video.properties[kBCOVPlaylistPropertiesKeyId] as? String ?? StringConstants.kEmptyString
-      let dictVideoDetails = ["referenceId": referenceId,
-                              "videoId": videoId]
+      let dictVideoDetails = [NextVideoBridgeKeys.kReferenceId: referenceId,
+                              NextVideoBridgeKeys.kVideoId: videoId]
       self.player.nextVideoPlayer(dictVideoDetails)
     }
   }
@@ -224,8 +222,8 @@ fileprivate struct ControlConstants {
       self.playbackController.setVideos([video] as NSFastEnumeration)
       let referenceId = video.properties[kBCOVPlaylistPropertiesKeyReferenceId] as? String ?? StringConstants.kEmptyString
       let videoId = video.properties[kBCOVPlaylistPropertiesKeyId] as? String ?? StringConstants.kEmptyString
-      let dictVideoDetails = ["referenceId": referenceId,
-                              "videoId": videoId]
+      let dictVideoDetails = [NextVideoBridgeKeys.kReferenceId: referenceId,
+                              NextVideoBridgeKeys.kVideoId: videoId]
       self.player.nextVideoPlayer(dictVideoDetails)
     }
   }

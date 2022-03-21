@@ -46,12 +46,7 @@ class GridViewModel: GridViewModelProtocol {
     outputModel = [recommendations]
   }
   func getAnyVideoFromAccount(responseObj: AllVideos?) {
-    let allVideos = responseObj?.videos
-    let randomVideo = allVideos?.randomElement()
-    let recommendations = RecommendationsModel(thumbnailURL: randomVideo?.poster, url: randomVideo?.poster, title: randomVideo?.name, headingTitle: randomVideo?.name, referenceId: randomVideo?.reference_id, videoId: randomVideo?.id, accountId: randomVideo?.account_id)
-    outputModel = [recommendations]
-    decorator?.showOverlay = true
-    decorator?.fetchAnyBCVideo(for: randomVideo?.dictionary)
+    decorator?.fetchAnyBCVideo(for: responseObj?.videos)
   }
   func cancelAnyExisitingRequest() {
     remoteRepo.cancelAnyExisitingRequest()

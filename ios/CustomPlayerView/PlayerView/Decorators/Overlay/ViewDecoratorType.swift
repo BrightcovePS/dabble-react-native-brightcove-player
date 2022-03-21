@@ -20,5 +20,5 @@ protocol ViewDecoratorRemoteProtocol {
 }
 protocol AnyVideoProtocol {
   var nextAnyVideo: BCOVVideo? { get set }
-  func fetchAnyBCVideo(for json: [AnyHashable : Any]?)
+  func fetchAnyBCVideo(for json: [Videos]?)
 }

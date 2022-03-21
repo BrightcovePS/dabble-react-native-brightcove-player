@@ -1,6 +1,9 @@
 import Foundation
 fileprivate struct AnyVideoRequestConstants {
-   static let path = "/accounts/2779557264001/videos"
+  static let path = "/accounts/\(AccountConfig.accountId)/videos"
+  static let keyAuthorization = "Authorization"
+  static let keyLimit = "limit"
+  static let bcovPolicy = "BCOV-Policy"
 }
 class RecommendationsAnyVideoRemoteRepository: RecommendationAnyVideoType {
   var successHandler: SuccessHandler?
@@ -26,8 +29,8 @@ class RecommendationsAnyVideoRemoteRepository: RecommendationAnyVideoType {
     let apiPath = NetworkConstants.itemPath + AnyVideoRequestConstants.path
     return APIRequest(httpMethod: .get,
                       header: [
-                               "Authorization": "BCOV-Policy BCpkADawqM0T70OIeC1ysPZSWqHXGas6YhSdyfXn4Y5oBh8vMEZRAVO2Yf3sS71Kd7Ev_gt66q5TY00RbA7VT9ps2pAX_GCr5q2vhxjkqDJvy-6oxL_mAYk9tOdyo6Gkfu0kcWjGPgRaq_iK"],
-                      urlParameter: ParameterType.urlParameter(urlParameter: ["limit": 250]),
+                        AnyVideoRequestConstants.keyAuthorization: "\(AnyVideoRequestConstants.bcovPolicy) \(AccountConfig.policyKey)"],
+                      urlParameter: ParameterType.urlParameter(urlParameter: [AnyVideoRequestConstants.keyLimit: AccountConfig.allVideosLimit]),
                       path: apiPath)
   }
   deinit {

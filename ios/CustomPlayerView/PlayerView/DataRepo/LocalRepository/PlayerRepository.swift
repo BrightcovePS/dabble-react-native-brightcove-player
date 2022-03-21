@@ -2,11 +2,26 @@ import Foundation
 import BrightcovePlayerSDK
 class PlayerRepository {
   var accountId: String? 
-  var policyKey: String?
-  var playlistReferenceId: String?
-  var playlistId: String?
-  var referenceId: String?
-  var videoId: String?
+  var playlistReferenceId: String? {
+    didSet {
+      CurrentPlayerItem.shared.playlistRefId = playlistReferenceId ?? StringConstants.kEmptyString
+    }
+  }
+  var playlistId: String? {
+    didSet {
+      CurrentPlayerItem.shared.playlistId = playlistId ?? StringConstants.kEmptyString
+    }
+  }
+  var referenceId: String? {
+    didSet {
+      CurrentPlayerItem.shared.referenceId = referenceId ?? StringConstants.kEmptyString
+    }
+  }
+  var videoId: String? {
+    didSet {
+      CurrentPlayerItem.shared.videoId = videoId ?? StringConstants.kEmptyString
+    }
+  }
   var playlistVideos: [BCOVVideo]?
   init(_ accountId: String? = nil,
        policyKey: String? = nil,

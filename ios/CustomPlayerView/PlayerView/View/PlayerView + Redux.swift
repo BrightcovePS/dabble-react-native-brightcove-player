@@ -1,5 +1,5 @@
 import Foundation
-fileprivate struct NextVideoBridgeKeys {
+struct NextVideoBridgeKeys {
   static let kReferenceId = "referenceId"
   static let kVideoId = "videoId"
 }
@@ -17,8 +17,9 @@ extension PlayerView: StoreSubscriber {
   fileprivate func handleOverlaySelection(_ state: State) {
     let referenceId = (state as? OverlayReduxState)?.referenceId ?? StringConstants.kEmptyString
     let videoId = (state as? OverlayReduxState)?.videoId ?? StringConstants.kEmptyString
+    playlistRepo.referenceId = referenceId
+    playlistRepo.videoId = videoId
     if let video = playlistRepo.getVideo(with: referenceId) {
-      playlistRepo.referenceId = referenceId
       self.playbackController.setVideos([video] as NSFastEnumeration)
     } else if let nextVideo = overlayDecorator.nextAnyVideo {
       self.playbackController.setVideos([nextVideo] as NSFastEnumeration)
