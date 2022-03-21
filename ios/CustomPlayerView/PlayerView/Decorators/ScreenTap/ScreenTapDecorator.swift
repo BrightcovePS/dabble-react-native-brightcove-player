@@ -25,7 +25,6 @@ class ScreenTapDecorator: PlayerDecoratorProtocol {
   }
   func reestablishTimer() {
     cancelTimer()
-    print("Timer reestablished****")
     controlTimer = Timer.scheduledTimer(timeInterval: TimerControlConstants.hideControlsInterval, target: self, selector: #selector(fadeControlsOut), userInfo: nil, repeats: false)
   }
   func cancelTimer() {
