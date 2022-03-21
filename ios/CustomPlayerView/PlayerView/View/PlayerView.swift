@@ -52,6 +52,11 @@ fileprivate struct ControlConstants {
     }
   }
   @objc weak var player: BrightcovePlayer!
+  @objc public var seekDuration: Double = SeekDuration.timeInterval {
+    didSet {
+      SeekDuration.timeInterval = seekDuration
+    }
+  }
   @objc public var showVideoEndOverlay: Bool = false {
     didSet {
       self.overlayDecorator.showOverlay = showVideoEndOverlay
@@ -59,11 +64,13 @@ fileprivate struct ControlConstants {
   }
   @objc public var accountId: String? {
     didSet {
+      AccountConfig.accountId = accountId ?? StringConstants.kEmptyString
       self.executeRepository()
     }
   }
   @objc public var policyKey: String? {
     didSet {
+      AccountConfig.policyKey = policyKey ?? StringConstants.kEmptyString
       self.executeRepository()
     }
   }

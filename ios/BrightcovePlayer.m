@@ -150,6 +150,10 @@
     }
 }
 
+- (void)setSeekDuration:(NSNumber*)seekDuration {
+  _playerView.seekDuration = seekDuration.doubleValue;
+}
+
 - (void)refreshVolume {
     if (!_playbackSession) return;
     _playbackSession.player.volume = _targetVolume;

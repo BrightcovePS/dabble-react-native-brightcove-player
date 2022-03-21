@@ -16,12 +16,7 @@ extension OverlayDecorator: UIGestureRecognizerDelegate {
     }
   }
   fileprivate func gestureEndAnimation(_ gestureRecognizer: UIPanGestureRecognizer) {
-    print("gestureEndAnimation",SwipeConstants.yMaxThreshold)
-    print("gestureEndAnimation",SwipeConstants.yMinThreshold)
-    print("gestureEndAnimation",SwipeConstants.yMax)
-    print("gestureEndAnimation",SwipeConstants.yMin)
     guard let gestureView = gestureRecognizer.view else { return }
-    print("gestureEndAnimation -> Y", gestureView.center.y)
     let velocity = gestureRecognizer.velocity(in: self.gridContainer)
     if velocity.y > 0 { // Scrolling down
       if(gestureView.center.y <= SwipeConstants.yMinThreshold) {
@@ -49,15 +44,10 @@ extension OverlayDecorator: UIGestureRecognizerDelegate {
   }
   fileprivate func gestureChangedAnimation(_ gestureRecognizer: UIPanGestureRecognizer) {
     guard let gestureView = gestureRecognizer.view else { return }
-    print("Gestureview frame >>>>>>>>", gestureView, gestureView.frame.maxY)
     SwipeConstants.yMaxThreshold =  self.parentView!.overlayView.frame.height - 100
     SwipeConstants.yMinThreshold =  self.parentView!.overlayView.frame.height/2 + 30
     SwipeConstants.yMax =  self.parentView!.overlayView.frame.height/2
     SwipeConstants.yMin = self.parentView!.overlayView.frame.height
-//    print(SwipeConstants.yMaxThreshold)
-//    print(SwipeConstants.yMinThreshold)
-//    print(SwipeConstants.yMax)
-//    print(SwipeConstants.yMin)
     let translation = gestureRecognizer.translation(in: self.gridContainer)
     let velocity = gestureRecognizer.velocity(in: self.gridContainer)
     if velocity.y > 0 { // Scrolling down

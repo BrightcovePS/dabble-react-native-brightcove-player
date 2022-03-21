@@ -2,11 +2,16 @@ import UIKit
 import BrightcovePlayerSDK
 import AVKit
 import GoogleCast
+struct SeekDuration {
+  static var timeInterval: Double = 15
+}
 fileprivate struct ControlConstants {
   static let VisibleDuration: TimeInterval = 5.0
   static let AnimateInDuration: TimeInterval = 0.1
   static let AnimateOutDuraton: TimeInterval = 0.2
-  static let seekDuration: Double = 15
+  static var seekDuration: Double {
+    return SeekDuration.timeInterval
+  }
 }
 class CustomOverlayControl: UIView, CustomControlViewType {
   var pictureInPictureEnabled: Bool = false {
@@ -256,12 +261,12 @@ class CustomOverlayControl: UIView, CustomControlViewType {
     guard let player = self.currentPlayer else{
       return
     }
-    let playerCurrentTime = CMTimeGetSeconds(player.currentTime())
-    var newTime = playerCurrentTime - ControlConstants.seekDuration
+    let playerCurrentTime = Int(CMTimeGetSeconds(player.currentTime()))
+    var newTime = Double(playerCurrentTime - Int(ControlConstants.seekDuration))
     if newTime < 0 {
       newTime = 0
     }
-    let seekTime: CMTime = CMTimeMake(value: Int64(newTime.rounded(.awayFromZero) * 1000 as Float64), timescale: 1000)
+    let seekTime: CMTime = CMTimeMake(value: Int64(newTime * 1000 as Float64), timescale: 1000)
     self.playbackController?.seek(to: seekTime, completionHandler: { (finished: Bool) in
     })
     self.rewindAction?(sender)
@@ -271,12 +276,12 @@ class CustomOverlayControl: UIView, CustomControlViewType {
           let duration  = player.currentItem?.duration else{
       return
     }
-    let playerCurrentTime = CMTimeGetSeconds(player.currentTime())
-    var newTime = playerCurrentTime + ControlConstants.seekDuration
+    let playerCurrentTime = Int(CMTimeGetSeconds(player.currentTime()))
+    var newTime = Double(playerCurrentTime + Int(ControlConstants.seekDuration))
     if newTime >= CMTimeGetSeconds(duration) {
       newTime = CMTimeGetSeconds(duration)
     }
-    let seekTime: CMTime = CMTimeMake(value: Int64(newTime.rounded(.towardZero) * 1000 as Float64), timescale: 1000)
+    let seekTime: CMTime = CMTimeMake(value: Int64(newTime * 1000 as Float64), timescale: 1000)
     self.playbackController?.seek(to: seekTime, completionHandler: {  (finished: Bool) in
       
     })

@@ -9,9 +9,7 @@ class GridViewModel: GridViewModelProtocol {
     }
   }
   weak var decorator: ViewDecoratorType?
-  var outputModel: [GridUIModel]? = [RecommendationsModel(identifier: "Test", thumbnailURL: "https://picsum.photos/200/300", url: "Test URL", title: "Title", headingTitle: "headingTitle"),
-                                     RecommendationsModel(identifier: "Test", thumbnailURL: "https://picsum.photos/200/300", url: "Test URL", title: "Title", headingTitle: "headingTitle"),
-                                     RecommendationsModel(identifier: "Test", thumbnailURL: "https://picsum.photos/200/300", url: "Test URL", title: "Title", headingTitle: "headingTitle")]
+  var outputModel: [GridUIModel]?
   init(decorator: ViewDecoratorType) {
     self.decorator = decorator
     remoteRepo = RecommendationsAnyVideoRemoteRepository()
