@@ -51,6 +51,14 @@ class OverlayDecorator: NSObject, ViewDecoratorType {
     view.clipsToBounds = true
     return view
   }()
+  lazy private var overlayBackground: UIView = {
+    let view = UIView()
+    view.backgroundColor = UIColor.black.withAlphaComponent(0.4)
+    view.translatesAutoresizingMaskIntoConstraints = false
+    view.isUserInteractionEnabled = true
+    view.clipsToBounds = true
+    return view
+  }()
   weak var parentView: BCOVPUIPlayerView?
   required init(_ view: BCOVPUIPlayerView) {
     parentView = view
@@ -58,10 +66,18 @@ class OverlayDecorator: NSObject, ViewDecoratorType {
     NotificationCenter.default.addObserver(self, selector: #selector(resetConstraintsAndAddSubviews), name: UIDevice.orientationDidChangeNotification, object: nil)
     setOverlaySize()
   }
-  private func addContainer() {
+  private func addOverlayBg() {
     guard let view = parentView?.overlayView else {
       return
     }
+    view.addSubview(overlayBackground)
+    overlayBackground.leadingAnchor.constraint(equalTo: view.leadingAnchor).isActive = true
+    overlayBackground.trailingAnchor.constraint(equalTo: view.trailingAnchor).isActive = true
+    overlayBackground.topAnchor.constraint(equalTo: view.topAnchor).isActive = true
+    overlayBackground.bottomAnchor.constraint(equalTo: view.bottomAnchor).isActive = true
+  }
+  private func addContainer() {
+    let view = overlayBackground
     view.addSubview(gridContainer)
     NSLayoutConstraint.activate([
       gridContainer.centerXAnchor.constraint(equalTo: view.safeAreaLayoutGuide.centerXAnchor),
@@ -103,6 +119,7 @@ class OverlayDecorator: NSObject, ViewDecoratorType {
     if showOverlay {
       unHideOverylay()
       isPreviewWindowActive = true
+      addOverlayBg()
       addContainer()
       addGridView()
       performOverlayAuxillaryActions()
@@ -115,6 +132,7 @@ class OverlayDecorator: NSObject, ViewDecoratorType {
     isPreviewWindowActive = false
     CountDownTimer.shared.stopTimer()
     cancelAnyExisitingRequest()
+    overlayBackground.removeFromSuperview()
     gridContainer.removeFromSuperview()
     self.closeButton.isHidden = true
     unHideOverylay()
@@ -170,11 +188,11 @@ class OverlayDecorator: NSObject, ViewDecoratorType {
     UIView.animate(withDuration: OverlayConstants.hideOverlayAnimationDuration) {
       self.gridView.view.alpha = 0
     } completion: { _ in
-      self.gridContainer.isHidden = true
+      self.overlayBackground.isHidden = true
     }
   }
   func unHideOverylay() {
-    self.gridContainer.isHidden = false
+    self.overlayBackground.isHidden = false
   }
   func performOverlayAuxillaryActions() {
     parentView?.controlsView.isHidden = true
