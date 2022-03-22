@@ -57,6 +57,7 @@
     } else if (_referenceId) {
         [_playbackService findVideoWithReferenceID:_referenceId parameters:nil completion:^(BCOVVideo *video, NSDictionary *jsonResponse, NSError *error) {
             if (video) {
+                self.playerView.videoId = video.properties[kBCOVVideoPropertyKeyId];
                 [self.playbackController setVideos: @[ video ]];
             }
         }];

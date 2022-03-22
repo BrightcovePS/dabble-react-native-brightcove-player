@@ -16,6 +16,7 @@ protocol ViewDecoratorViewModelProtocol {
   var viewModel: GridViewModel { get set }
 }
 protocol ViewDecoratorRemoteProtocol {
+  var isConnectionWindowActive: Bool { get set }
   func connectToRemote()
 }
 protocol AnyVideoProtocol {

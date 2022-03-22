@@ -8,6 +8,13 @@ fileprivate struct OverlayConstants {
   static let hideOverlayAnimationDuration: Double = 0.15
 }
 class OverlayDecorator: NSObject, ViewDecoratorType {
+  var isConnectionWindowActive: Bool = false {
+    didSet {
+      if !isConnectionWindowActive {
+        self.nextAnyVideo = nil
+      }
+    }
+  }
   var nextAnyVideo: BCOVVideo?
   var screenMode: BCOVPUIScreenMode? = .normal {
     didSet {
@@ -71,10 +78,10 @@ class OverlayDecorator: NSObject, ViewDecoratorType {
       return
     }
     view.addSubview(overlayBackground)
-    overlayBackground.leadingAnchor.constraint(equalTo: view.leadingAnchor).isActive = true
-    overlayBackground.trailingAnchor.constraint(equalTo: view.trailingAnchor).isActive = true
-    overlayBackground.topAnchor.constraint(equalTo: view.topAnchor).isActive = true
-    overlayBackground.bottomAnchor.constraint(equalTo: view.bottomAnchor).isActive = true
+    overlayBackground.leadingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leadingAnchor).isActive = true
+    overlayBackground.trailingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.trailingAnchor).isActive = true
+    overlayBackground.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor).isActive = true
+    overlayBackground.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor).isActive = true
   }
   private func addContainer() {
     let view = overlayBackground
@@ -118,7 +125,6 @@ class OverlayDecorator: NSObject, ViewDecoratorType {
   @objc func addRecommendationsGridView(scrollFront: Bool = false) {
     if showOverlay {
       unHideOverylay()
-      isPreviewWindowActive = true
       addOverlayBg()
       addContainer()
       addGridView()
@@ -129,7 +135,6 @@ class OverlayDecorator: NSObject, ViewDecoratorType {
     }
   }
   private func removeOverlay() {
-    isPreviewWindowActive = false
     CountDownTimer.shared.stopTimer()
     cancelAnyExisitingRequest()
     overlayBackground.removeFromSuperview()

@@ -1,7 +1,8 @@
 import UIKit
 struct TimerConstants {
   static let nextVideoThumbnailDuration: Double = 5
-  static let thumbnailVideoEndOffset: Double = 6
+  static let thumbnailVideoEndOffset: Double = 5
+  static let apiCallVideoEndOffset: Double = 7.5
 }
 class RecommendationsCell: UICollectionViewCell, DynamicDataCell {
   var circularProgressBarView: PBCircularProgressView!
@@ -186,7 +187,7 @@ class RecommendationsCell: UICollectionViewCell, DynamicDataCell {
     NSLayoutConstraint.activate([
       title.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: .zero),
       title.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: .zero),
-      title.topAnchor.constraint(equalTo: thumbnail.bottomAnchor, constant: 5),
+      title.topAnchor.constraint(equalTo: thumbnail.bottomAnchor, constant: 2.5),
       title.heightAnchor.constraint(lessThanOrEqualToConstant: RecommendationOverlayConstants.kRecommendationOverlayURLHeight)
     ])
   }

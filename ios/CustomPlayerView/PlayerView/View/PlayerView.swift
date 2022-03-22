@@ -91,7 +91,7 @@ struct TimerControlConstants {
   @objc public var referenceId: String? {
     didSet {
       playlistRepo.referenceId = referenceId
-      self.updateMPCommandCenter()
+      /*self.updateMPCommandCenter()*/
     }
   }
   @objc public var slider: UISlider? {
@@ -99,7 +99,11 @@ struct TimerControlConstants {
       self.sliderChanged()
     }
   }
-  @objc public var videoId: String?
+  @objc public var videoId: String? {
+    didSet {
+      playlistRepo.videoId = videoId
+    }
+  }
   var playlistRepo = PlayerRepository()
   @objc public var session: BCOVPlaybackSession? = nil {
     didSet {
@@ -207,8 +211,12 @@ struct TimerControlConstants {
       overlayDecorator.viewModel.videoObj = [video]
       self.overlayDecorator.showOverlay = true
     } else {
-      overlayDecorator.connectToRemote()
+      self.overlayDecorator.showOverlay = overlayDecorator.nextAnyVideo != nil ? true: false
+      //overlayDecorator.connectToRemote() Commented for 10 sec buffer
     }
+  }
+  func connectToRemote() {
+    overlayDecorator.connectToRemote()
   }
   func playNextVideo() {
     if let video = playlistRepo.getNextVideo() {

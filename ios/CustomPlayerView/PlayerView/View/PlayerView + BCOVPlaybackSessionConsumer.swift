@@ -2,6 +2,7 @@ import Foundation
 import BrightcovePlayerSDK
 extension PlayerView: BCOVPlaybackSessionConsumer {
   public func playbackSession(_ session: BCOVPlaybackSession!, didReceive lifecycleEvent: BCOVPlaybackSessionLifecycleEvent!) {
+    session.selectedLegibleMediaOption = .none //Disabling captions in video
     self.session = session
     self.currentPlayer = session.player
     self.lifecycleEvent = lifecycleEvent
@@ -10,20 +11,38 @@ extension PlayerView: BCOVPlaybackSessionConsumer {
     guard let totalduration = session.player.currentItem?.duration.seconds else {
       return
     }
+    shouldResetConnectionActive(totalduration, progress)
+    processAnyVideo(totalduration, progress)
     shouldHideVideoOverlay(totalduration, progress)
     showNextVideoOverlay(totalduration, progress)
   }
   fileprivate func showNextVideoOverlay(_ totalduration: Double, _ progress: TimeInterval) {
     let threshold = totalduration - TimerConstants.thumbnailVideoEndOffset
     if progress >= threshold,
-       !self.overlayDecorator.showOverlay {
+       !self.overlayDecorator.isPreviewWindowActive {
       displayNextVideo()
+      overlayDecorator.isPreviewWindowActive = true
     }
   }
   fileprivate func shouldHideVideoOverlay(_ totalduration: Double, _ progress: TimeInterval) {
     let threshold = totalduration - TimerConstants.thumbnailVideoEndOffset
     if progress < threshold {
       self.overlayDecorator.showOverlay = false
+      overlayDecorator.isPreviewWindowActive = false
+    }
+  }
+  fileprivate func processAnyVideo(_ totalduration: Double, _ progress: TimeInterval) {
+    let threshold = totalduration - TimerConstants.apiCallVideoEndOffset
+    if progress >= threshold,
+       !playlistRepo.isNextVideoAvailable(), !overlayDecorator.isConnectionWindowActive {
+      overlayDecorator.isConnectionWindowActive = true
+      connectToRemote()
+    }
+  }
+  fileprivate func shouldResetConnectionActive(_ totalduration: Double, _ progress: TimeInterval) {
+    let threshold = totalduration - TimerConstants.apiCallVideoEndOffset
+    if progress < threshold {
+      self.overlayDecorator.isConnectionWindowActive = false
     }
   }
   // MARK: - Lifecycle events processing
@@ -55,5 +74,6 @@ extension PlayerView: BCOVPlaybackSessionConsumer {
     }
     let progress = totalduration * Double(sliderVal)
     self.shouldHideVideoOverlay(totalduration, progress)
+    self.shouldResetConnectionActive(totalduration, progress)
   }
 }

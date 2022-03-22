@@ -64,14 +64,14 @@ class PlayerRepository {
     return BCOVPlaybackService(requestFactory: playbackServiceRequestFactory)
   }
   func getNextVideo() -> BCOVVideo? {
-    guard let referenceId = self.referenceId,
+    guard let videoId = self.videoId,
           let playlist = self.playlistVideos else { return nil }
-    return PlaylistHelper.getNextVideo(with: referenceId, in: playlist)
+    return PlaylistHelper.getNextVideo(with: videoId, in: playlist)
   }
   func getPrevVideo() -> BCOVVideo? {
-    guard let referenceId = self.referenceId,
+    guard let videoId = self.videoId,
           let playlist = self.playlistVideos else { return nil }
-    return PlaylistHelper.getPreviousVideo(with: referenceId, in: playlist)
+    return PlaylistHelper.getPreviousVideo(with: videoId, in: playlist)
   }
   func getVideo(with referenceId: String) -> BCOVVideo? {
     guard let playlist = self.playlistVideos else { return nil }
@@ -90,13 +90,13 @@ class PlayerRepository {
     return BCOVPlaybackService.playlist(fromJSONDictionary: json)
   }
   func isNextVideoAvailable() -> Bool {
-    guard let referenceId = self.referenceId,
+    guard let videoId = self.videoId,
           let playlist = self.playlistVideos else { return false }
-    return PlaylistHelper.isNextVideoAvailable(with: referenceId, in: playlist)
+    return PlaylistHelper.isNextVideoAvailable(with: videoId, in: playlist)
   }
   func isPrevVideoAvailable() -> Bool {
-    guard let referenceId = self.referenceId,
+    guard let videoId = self.videoId,
           let playlist = self.playlistVideos else { return false }
-    return PlaylistHelper.isPrevVideoAvailable(with: referenceId, in: playlist)
+    return PlaylistHelper.isPrevVideoAvailable(with: videoId, in: playlist)
   }
 }

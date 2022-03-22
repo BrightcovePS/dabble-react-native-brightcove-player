@@ -7,7 +7,7 @@ extension OverlayDecorator: AnyVideoProtocol {
     } while (randomVideo?.id == CurrentPlayerItem.shared.videoId)
     let recommendations = RecommendationsModel(thumbnailURL: randomVideo?.poster, url: randomVideo?.poster, title: randomVideo?.name, headingTitle: randomVideo?.name, referenceId: randomVideo?.reference_id, videoId: randomVideo?.id, accountId: randomVideo?.account_id)
     viewModel.outputModel = [recommendations]
-    self.showOverlay = true
+    //self.showOverlay = true  Commented for 10 sec buffer
     self.fetchBCVideo(for: randomVideo?.dictionary)
   }
   func fetchBCVideo(for json: [AnyHashable : Any]?) {
