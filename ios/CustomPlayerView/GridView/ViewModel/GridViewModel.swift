@@ -27,6 +27,10 @@ class GridViewModel: GridViewModelProtocol {
       self.requesInProgress = false
       print(response as Any)
     }
+    if CurrentPlayerItem.shared.allVideosInAccount.count > 0 {
+      decorator?.fetchAnyBCVideo(for: CurrentPlayerItem.shared.allVideosInAccount)
+      return
+    }
     if !requesInProgress {
     requesInProgress = true
     remoteRepo.connectRemote()
@@ -46,6 +50,7 @@ class GridViewModel: GridViewModelProtocol {
     outputModel = [recommendations]
   }
   func getAnyVideoFromAccount(responseObj: AllVideos?) {
+    CurrentPlayerItem.shared.allVideosInAccount = responseObj?.videos ?? []
     decorator?.fetchAnyBCVideo(for: responseObj?.videos)
   }
   func cancelAnyExisitingRequest() {

@@ -5,5 +5,6 @@ struct CurrentPlayerItem {
   var referenceId: String = StringConstants.kEmptyString
   var playlistId: String = StringConstants.kEmptyString
   var playlistRefId: String = StringConstants.kEmptyString
+  var allVideosInAccount = [Videos]()
   private init () {}
 }

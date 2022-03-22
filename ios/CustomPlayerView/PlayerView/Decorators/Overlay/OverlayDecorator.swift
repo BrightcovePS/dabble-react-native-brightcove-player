@@ -78,10 +78,10 @@ class OverlayDecorator: NSObject, ViewDecoratorType {
       return
     }
     view.addSubview(overlayBackground)
-    overlayBackground.leadingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leadingAnchor).isActive = true
-    overlayBackground.trailingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.trailingAnchor).isActive = true
-    overlayBackground.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor).isActive = true
-    overlayBackground.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor).isActive = true
+    overlayBackground.safeAreaLayoutGuide.leadingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leadingAnchor).isActive = true
+    overlayBackground.safeAreaLayoutGuide.trailingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.trailingAnchor).isActive = true
+    overlayBackground.safeAreaLayoutGuide.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor).isActive = true
+    overlayBackground.safeAreaLayoutGuide.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor).isActive = true
   }
   private func addContainer() {
     let view = overlayBackground
@@ -153,17 +153,19 @@ class OverlayDecorator: NSObject, ViewDecoratorType {
   }
   @objc func resetConstraintsAndAddSubviews() {
     DispatchQueue.main.asyncAfter(deadline: .now() + 0.15) {
+      if !self.overlayBackground.isHidden {
       NSLayoutConstraint.deactivate(self.gridContainer.constraints)
       self.setOverlaySize()
       self.addRecommendationsGridView()
       self.gridView.collectionView.collectionViewLayout.invalidateLayout()
+      }
     }
   }
   @objc func resetConstraintsOnScreenModeChange() {
-    DispatchQueue.main.asyncAfter(deadline: .now() + 0) {
+    DispatchQueue.main.asyncAfter(deadline: .now() + 0.15) {
+      if !self.overlayBackground.isHidden {
       NSLayoutConstraint.deactivate(self.gridContainer.constraints)
       self.setOverlaySize()
-      if !self.showOverlay {
       self.addRecommendationsGridView()
       self.gridView.collectionView.collectionViewLayout.invalidateLayout()
       }

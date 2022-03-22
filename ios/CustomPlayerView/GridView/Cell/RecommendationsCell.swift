@@ -21,7 +21,7 @@ class RecommendationsCell: UICollectionViewCell, DynamicDataCell {
   }()
   private lazy var thumbnail: UIImageView = {
     let imageView = UIImageView()
-    imageView.contentMode = .scaleToFill
+    imageView.contentMode = .scaleAspectFit
     imageView.translatesAutoresizingMaskIntoConstraints = false
     imageView.isUserInteractionEnabled = true
     imageView.layer.borderWidth = 1.5

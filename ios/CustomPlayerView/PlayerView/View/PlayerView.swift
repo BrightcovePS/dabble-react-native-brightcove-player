@@ -90,6 +90,7 @@ struct TimerControlConstants {
   }
   @objc public var referenceId: String? {
     didSet {
+      overlayDecorator.showOverlay = false
       playlistRepo.referenceId = referenceId
       /*self.updateMPCommandCenter()*/
     }
@@ -101,6 +102,7 @@ struct TimerControlConstants {
   }
   @objc public var videoId: String? {
     didSet {
+      overlayDecorator.showOverlay = false
       playlistRepo.videoId = videoId
     }
   }
