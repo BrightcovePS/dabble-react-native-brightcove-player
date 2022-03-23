@@ -8,6 +8,11 @@ fileprivate struct OverlayConstants {
   static let hideOverlayAnimationDuration: Double = 0.15
 }
 class OverlayDecorator: NSObject, ViewDecoratorType {
+  var session: BCOVPlaybackSession? {
+    didSet {
+      setOverlaySize()
+    }
+  }
   var isConnectionWindowActive: Bool = false {
     didSet {
       if !isConnectionWindowActive {
@@ -58,7 +63,7 @@ class OverlayDecorator: NSObject, ViewDecoratorType {
     view.clipsToBounds = true
     return view
   }()
-  lazy private var overlayBackground: UIView = {
+  lazy var overlayBackground: UIView = {
     let view = UIView()
     view.backgroundColor = UIColor.black.withAlphaComponent(0.4)
     view.translatesAutoresizingMaskIntoConstraints = false
@@ -107,7 +112,7 @@ class OverlayDecorator: NSObject, ViewDecoratorType {
     guard viewModel.outputModel?.count ?? 0 > 0 else {
       return
     }
-    gridView.view.alpha = 1
+    gridView.view.alpha = 0
     gridView.collectionView.collectionViewLayout.invalidateLayout()
     self.gridContainer.addSubview(gridView.view)
     gridView.view.leadingAnchor.constraint(equalTo: self.gridContainer.leadingAnchor, constant: .zero).isActive = true
@@ -137,6 +142,8 @@ class OverlayDecorator: NSObject, ViewDecoratorType {
   }
   private func removeOverlay() {
     CountDownTimer.shared.stopTimer()
+    viewModel.outputModel?.removeAll()
+    deactivateGridContainerConstraint()
     cancelAnyExisitingRequest()
     removeAllSubviews()
     self.closeButton.isHidden = true
@@ -144,37 +151,60 @@ class OverlayDecorator: NSObject, ViewDecoratorType {
     performHideOverlayAuxillaryActions()
   }
   fileprivate func removeAllSubviews() {
+    deactivateGridContainerConstraint()
     gridView.view.removeFromSuperview()
     gridContainer.removeFromSuperview()
     overlayBackground.removeFromSuperview()
   }
   fileprivate func setOverlaySize() {
     guard UIDevice.current.orientation.rawValue != 2,
-          let referenceView =  self.parentView?.overlayView,
+          let referenceViewCGrect =  (parentView as? PlayerView)?.session?.playerLayer.videoRect,
           let screenMode = screenMode else {
       return
     }
-    OverlaySizeFactory.setupDimensions(referenceView: referenceView, screenMode: screenMode)
+    OverlaySizeFactory.setupDimensions(referenceViewCGrect: referenceViewCGrect, screenMode: screenMode)
   }
   @objc func resetConstraintsAndAddSubviews() {
     DispatchQueue.main.asyncAfter(deadline: .now() + 0.15) {
-      if !self.overlayBackground.isHidden {
-      NSLayoutConstraint.deactivate(self.gridContainer.constraints)
+      self.deactivateGridContainerConstraint()
       self.setOverlaySize()
-      self.addRecommendationsGridView()
-      self.gridView.collectionView.collectionViewLayout.invalidateLayout()
-      }
+      self.refreshContraints()
     }
   }
   @objc func resetConstraintsOnScreenModeChange() {
     DispatchQueue.main.asyncAfter(deadline: .now() + 0.15) {
-      if !self.overlayBackground.isHidden {
-      NSLayoutConstraint.deactivate(self.gridContainer.constraints)
+      self.deactivateGridContainerConstraint()
       self.setOverlaySize()
-      self.addRecommendationsGridView()
-      self.gridView.collectionView.collectionViewLayout.invalidateLayout()
-      }
+      self.refreshContraints()
     }
+  }
+  fileprivate func refreshContraints() {
+    guard showOverlay else { return }
+    deactivateGridContainerConstraint()
+    guard let view = parentView?.overlayView else {
+      return
+    }
+    
+    overlayBackground.safeAreaLayoutGuide.leadingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leadingAnchor).isActive = true
+    overlayBackground.safeAreaLayoutGuide.trailingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.trailingAnchor).isActive = true
+    overlayBackground.safeAreaLayoutGuide.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor).isActive = true
+    overlayBackground.safeAreaLayoutGuide.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor).isActive = true
+    
+    gridContainer.centerXAnchor.constraint(equalTo: overlayBackground.safeAreaLayoutGuide.centerXAnchor).isActive = true
+    gridContainer.centerYAnchor.constraint(equalTo: overlayBackground.safeAreaLayoutGuide.centerYAnchor, constant: OverlayConstants.containerYOffset).isActive = true
+    gridContainer.heightAnchor.constraint(equalToConstant: OverlaySize.height).isActive = true
+    gridContainer.widthAnchor.constraint(equalToConstant: OverlaySize.width).isActive = true
+    
+    gridContainer.addSubview(gridView.view)
+    gridView.view.leadingAnchor.constraint(equalTo: self.gridContainer.leadingAnchor, constant: .zero).isActive = true
+    gridView.view.trailingAnchor.constraint(equalTo: self.gridContainer.trailingAnchor, constant: .zero).isActive = true
+    gridView.view.topAnchor.constraint(equalTo: self.gridContainer.topAnchor, constant: .zero).isActive = true
+    gridView.view.bottomAnchor.constraint(equalTo: self.gridContainer.bottomAnchor, constant: .zero).isActive = true
+    self.parentView?.layoutIfNeeded()
+  }
+  /*Critical in resetting the constraints. Deactivate before redraw*/
+  func deactivateGridContainerConstraint() {
+    NSLayoutConstraint.deactivate(self.gridContainer.constraints)
   }
   func connectToRemote() {
     self.viewModel.connectRemote()

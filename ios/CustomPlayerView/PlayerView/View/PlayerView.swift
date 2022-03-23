@@ -111,6 +111,7 @@ struct TimerControlConstants {
     didSet {
       customControlsView?.session = session
       customControlLayout.session = session
+      overlayDecorator.session = session
       mpCommandCenterDecorator.session = session
       DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
         self.checkIfPictureInPictureEnabled()

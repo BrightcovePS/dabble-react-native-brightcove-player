@@ -2,6 +2,7 @@ import UIKit
 import BrightcovePlayerSDK
 protocol ViewDecoratorType: AnyObject, ViewDecoratorViewModelProtocol, ViewDecoratorRemoteProtocol, AnyVideoProtocol {
   var parentView: BCOVPUIPlayerView? { get set }
+  var session: BCOVPlaybackSession? { get set }
   init(_ view: BCOVPUIPlayerView)
   var showOverlay: Bool { get set }
   var isPreviewWindowActive: Bool { get set }

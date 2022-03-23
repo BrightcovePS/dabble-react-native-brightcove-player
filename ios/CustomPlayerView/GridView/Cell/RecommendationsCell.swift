@@ -161,7 +161,7 @@ class RecommendationsCell: UICollectionViewCell, DynamicDataCell {
       thumbnail.centerXAnchor.constraint(equalTo: contentView.centerXAnchor),
       thumbnail.topAnchor.constraint(equalTo: contentView.topAnchor),
       thumbnail.widthAnchor.constraint(equalTo: contentView.widthAnchor, multiplier: 1),
-      thumbnail.heightAnchor.constraint(equalTo: contentView.heightAnchor, multiplier: 0.8)
+      thumbnail.heightAnchor.constraint(equalTo: contentView.heightAnchor, multiplier: 0.785)
     ])
   }
   func addPlayImage() {
@@ -187,7 +187,7 @@ class RecommendationsCell: UICollectionViewCell, DynamicDataCell {
     NSLayoutConstraint.activate([
       title.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: .zero),
       title.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: .zero),
-      title.topAnchor.constraint(equalTo: thumbnail.bottomAnchor, constant: 2.5),
+      title.topAnchor.constraint(equalTo: thumbnail.bottomAnchor, constant: 1.5),
       title.heightAnchor.constraint(lessThanOrEqualToConstant: RecommendationOverlayConstants.kRecommendationOverlayURLHeight)
     ])
   }

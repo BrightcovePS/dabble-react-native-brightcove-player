@@ -1,48 +1,51 @@
 import UIKit
 import BrightcovePlayerSDK
+fileprivate struct OverlaySizeFactoryConstants {
+  static let titleHeight: CGFloat = 30
+}
 class OverlaySizeFactory {
-  class func setupDimensions(referenceView: UIView, screenMode: BCOVPUIScreenMode) {
+  class func setupDimensions(referenceViewCGrect: CGRect, screenMode: BCOVPUIScreenMode) {
     if UIDevice.isPad {
-      OverlaySizeFactory.setupDimensionsForIPad(referenceView: referenceView, screenMode: screenMode)
+      OverlaySizeFactory.setupDimensionsForIPad(referenceViewCGrect: referenceViewCGrect, screenMode: screenMode)
     } else if UIDevice.isPhone {
-      OverlaySizeFactory.setupDimensionsForIPhone(referenceView: referenceView, screenMode: screenMode)
+      OverlaySizeFactory.setupDimensionsForIPhone(referenceViewCGrect: referenceViewCGrect, screenMode: screenMode)
     }
   }
-  class func setupDimensionsForIPad(referenceView: UIView, screenMode: BCOVPUIScreenMode) {
+  class func setupDimensionsForIPad(referenceViewCGrect: CGRect, screenMode: BCOVPUIScreenMode) {
     if screenMode == .normal { // OK
       if UIDevice.current.orientation.isLandscape {
-        OverlaySize.height = (referenceView.frame.width) * 0.15
-        OverlaySize.width = (referenceView.frame.width) * 0.30
+        OverlaySize.width = (referenceViewCGrect.width) * 0.8
+        OverlaySize.height = OverlaySize.width * (9/16) + OverlaySizeFactoryConstants.titleHeight
       } else if UIDevice.current.orientation.isPortrait {
-        OverlaySize.height = (referenceView.frame.height) * 0.75
-        OverlaySize.width = (referenceView.frame.width) * 0.35
+        OverlaySize.width = (referenceViewCGrect.width) * 0.8
+        OverlaySize.height = OverlaySize.width * (9/16) + OverlaySizeFactoryConstants.titleHeight
       }
     } else if screenMode == .full {  // OK
       if UIDevice.current.orientation.isLandscape {
-        OverlaySize.height = (referenceView.frame.width) * 0.35
-        OverlaySize.width = (referenceView.frame.width) * 0.7
+        OverlaySize.width = (referenceViewCGrect.width) * 0.7
+        OverlaySize.height = OverlaySize.width * (9/16) + OverlaySizeFactoryConstants.titleHeight
       } else if UIDevice.current.orientation.isPortrait {
-        OverlaySize.height = (referenceView.frame.height) * 0.35
-        OverlaySize.width = (referenceView.frame.width) * 0.7
+        OverlaySize.width = (referenceViewCGrect.width) * 0.7
+        OverlaySize.height = OverlaySize.width * (9/16) + OverlaySizeFactoryConstants.titleHeight
       }
     }
   }
-  class func setupDimensionsForIPhone(referenceView: UIView, screenMode: BCOVPUIScreenMode) {
+  class func setupDimensionsForIPhone(referenceViewCGrect: CGRect, screenMode: BCOVPUIScreenMode) {
     if screenMode == .normal { // OK
       if UIDevice.current.orientation.isLandscape {
-        OverlaySize.height = (referenceView.frame.width) * 0.30
-        OverlaySize.width = (referenceView.frame.width) * 0.50
+        OverlaySize.width = (referenceViewCGrect.width) * 0.8
+        OverlaySize.height = OverlaySize.width * (9/16) + OverlaySizeFactoryConstants.titleHeight
       } else if UIDevice.current.orientation.isPortrait {
-        OverlaySize.height = (referenceView.frame.height) * 0.70
-        OverlaySize.width = (referenceView.frame.width) * 0.65
+        OverlaySize.width = (referenceViewCGrect.width) * 0.8
+        OverlaySize.height = OverlaySize.width * (9/16) + OverlaySizeFactoryConstants.titleHeight
       }
     } else if screenMode == .full {  // OK
       if UIDevice.current.orientation.isLandscape {
-        OverlaySize.height = (referenceView.frame.width) * 0.35
-        OverlaySize.width = (referenceView.frame.width) * 0.60
+        OverlaySize.width = (referenceViewCGrect.width) * 0.7
+        OverlaySize.height = OverlaySize.width * (9/16) + OverlaySizeFactoryConstants.titleHeight
       } else if UIDevice.current.orientation.isPortrait {
-        OverlaySize.height = (referenceView.frame.width) * 0.55
-        OverlaySize.width = (referenceView.frame.width) * 0.7
+        OverlaySize.width = (referenceViewCGrect.width) * 0.7
+        OverlaySize.height = OverlaySize.width * (9/16) + OverlaySizeFactoryConstants.titleHeight
       }
     }
   }
