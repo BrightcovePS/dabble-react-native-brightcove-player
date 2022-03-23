@@ -23,6 +23,7 @@ import com.brightcove.player.mediacontroller.BrightcoveMediaController;
 import com.brightcove.player.model.Playlist;
 import com.brightcove.player.model.Video;
 import com.brightcove.player.view.BaseVideoView;
+import com.brightcove.player.network.HttpRequestConfig;
 import com.brightcove.player.view.BrightcoveExoPlayerVideoView;
 import com.facebook.react.bridge.Arguments;
 import com.facebook.react.bridge.LifecycleEventListener;
@@ -40,15 +41,19 @@ import com.google.android.exoplayer2.source.TrackGroup;
 import com.google.android.exoplayer2.source.TrackGroupArray;
 import com.google.android.exoplayer2.trackselection.DefaultTrackSelector;
 import com.google.android.exoplayer2.trackselection.MappingTrackSelector;
+import com.google.gson.Gson;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Random;
 
 import jp.manse.util.AudioFocusManager;
 import jp.manse.util.ImageLoader;
+import jp.manse.webservice.ReactCatalog;
 
 public class BrightcovePlayerView extends RelativeLayout implements LifecycleEventListener, AudioFocusManager.AudioFocusChangedListener {
     private final static int SEEK_OFFSET = 15000;
+    private final static String ALL_VIDEOS_PAGE_SIZE = "250";
     private final ThemedReactContext context;
     private final ReactApplicationContext applicationContext;
     private final AudioFocusManager audioFocusManager;
@@ -69,10 +74,12 @@ public class BrightcovePlayerView extends RelativeLayout implements LifecycleEve
     private long seekDuration = SEEK_OFFSET;
     private boolean autoPlay = true;
     private boolean playing = false;
+    private boolean loadingAllVideos = false;
     private int bitRate = 0;
     private float playbackRate = 1;
     private Video nextVideo;
     private Playlist playList;
+    private Playlist allVideos;
     private LinearLayout upNextContainer;
     private ImageLoader imageLoader;
     private Catalog catalog;
@@ -128,6 +135,9 @@ public class BrightcovePlayerView extends RelativeLayout implements LifecycleEve
                     sendJSEvent(BrightcovePlayerManager.EVENT_PAUSE, Arguments.createMap());
                     break;
                 case EventType.COMPLETED:
+                    if(upNextContainer.getVisibility() != VISIBLE){
+                        showUpNext();
+                    }
                     sendJSEvent(BrightcovePlayerManager.EVENT_END, Arguments.createMap());
                     break;
                 case EventType.PROGRESS:
@@ -135,6 +145,15 @@ public class BrightcovePlayerView extends RelativeLayout implements LifecycleEve
                     Long playHead = (Long) event.properties.get(Event.PLAYHEAD_POSITION_LONG);
                     if (playHead != null) {
                         progressMap.putDouble("currentTime", playHead / 1000d);
+                        int duration  = playerVideoView.getBrightcoveMediaController().getBrightcoveSeekBar().getMax();
+                        float difference = duration - playHead;
+                        if (difference <= 10000 && nextVideo == null && !loadingAllVideos) {
+                            // Pick random video from video cloud
+                            prepareNextFromAllVideos();
+                        }
+                        if(difference <= 5000 && upNextContainer.getVisibility() != VISIBLE){
+                            showUpNext();
+                        }
                     }
                     sendJSEvent(BrightcovePlayerManager.EVENT_PROGRESS, progressMap);
                     break;
@@ -211,12 +230,12 @@ public class BrightcovePlayerView extends RelativeLayout implements LifecycleEve
         upNextContainer.findViewById(R.id.close_up_next).setOnClickListener(v -> hideUpNext());
         upNextContainer.findViewById(R.id.up_next_poster).setOnClickListener(v -> {
             if (nextVideo != null) {
-                playVideo(nextVideo);
                 WritableMap event = Arguments.createMap();
                 event.putString("videoId", nextVideo.getId());
                 event.putString("referenceId", nextVideo.getReferenceId());
                 ReactContext reactContext = (ReactContext) BrightcovePlayerView.this.getContext();
                 reactContext.getJSModule(RCTEventEmitter.class).receiveEvent(BrightcovePlayerView.this.getId(), BrightcovePlayerManager.EVENT_ON_PLAY_NEXT_VIDEO, event);
+                playVideo(nextVideo);
             }
         });
     }
@@ -238,10 +257,16 @@ public class BrightcovePlayerView extends RelativeLayout implements LifecycleEve
     }
 
     public void setPlaylistId(String playlistId) {
+        if (playlistId != null && !playlistId.equals(this.playlistId)) {
+            playList = null;
+        }
         this.playlistId = playlistId;
     }
 
     public void setPlaylistReferenceId(String playlistReferenceId) {
+        if (playlistReferenceId != null && !playlistReferenceId.equals(this.playlistReferenceId)) {
+            playList = null;
+        }
         this.playlistReferenceId = playlistReferenceId;
     }
 
@@ -368,6 +393,7 @@ public class BrightcovePlayerView extends RelativeLayout implements LifecycleEve
         if (accountId == null || policyKey == null) {
             return;
         }
+
         if (this.videoToken != null && !this.videoToken.equals("")) {
             OfflineCatalog offlineCatalog = new OfflineCatalog.Builder(this.context, this.playerVideoView.getEventEmitter(), accountId)
                     .setPolicy(policyKey)
@@ -449,6 +475,32 @@ public class BrightcovePlayerView extends RelativeLayout implements LifecycleEve
         }
     }
 
+    private void prepareNextFromAllVideos() {
+        nextVideo = null;
+        PlaylistListener listener = new PlaylistListener() {
+            @Override
+            public void onPlaylist(Playlist playlistRes) {
+                loadingAllVideos = false;
+                System.out.println("================> All Videos ==============> " + (playlistRes != null && playlistRes.getVideos() != null));
+                if (playlistRes != null && playlistRes.getVideos() != null) {
+                    System.out.println("================> All Videos Size ==============> " + playlistRes.getVideos().size());
+                    allVideos = playlistRes;
+                    nextVideo = getNextRandomVideo();
+                }
+            }
+        };
+        if (allVideos == null) {
+            try{
+                loadingAllVideos = true;
+                fetchAllVideos(listener);
+            } catch (Exception e){
+                loadingAllVideos = false;
+            }
+        } else {
+            nextVideo = getNextRandomVideo();
+        }
+    }
+
     private Video getNextVideo() {
         Video nextVideo = null;
         if (playList != null) {
@@ -463,6 +515,19 @@ public class BrightcovePlayerView extends RelativeLayout implements LifecycleEve
         return nextVideo;
     }
 
+    private Video getNextRandomVideo() {
+        Video video = null;
+        while (video == null || video.getId().equals(videoId)) {
+            video = getRandomFromAllVideos();
+        }
+        return video;
+    }
+
+    private Video getRandomFromAllVideos() {
+        Random random = new Random();
+        int randomVideoIndex = random.nextInt(allVideos.getVideos().size());
+        return allVideos.getVideos().get(randomVideoIndex);
+    }
 
     private void fetchPlayList(PlaylistListener listener) {
         if (playlistReferenceId != null && !playlistReferenceId.isEmpty()) {
@@ -470,6 +535,14 @@ public class BrightcovePlayerView extends RelativeLayout implements LifecycleEve
         } else if (playlistId != null && !playlistId.isEmpty()) {
             catalog.findPlaylistByID(playlistId, listener);
         }
+    }
+
+    private void fetchAllVideos(PlaylistListener listener) {
+        ReactCatalog reactCatalog = new ReactCatalog.Builder(this.playerVideoView.getEventEmitter(), accountId)
+                .setPolicy(policyKey)
+                .build();
+        HttpRequestConfig config = new HttpRequestConfig.Builder().addQueryParameter("limit", ALL_VIDEOS_PAGE_SIZE).build();
+        reactCatalog.getAllVideos(config, listener);
     }
 
     private void loadImage(Video video, ImageView imageView) {
