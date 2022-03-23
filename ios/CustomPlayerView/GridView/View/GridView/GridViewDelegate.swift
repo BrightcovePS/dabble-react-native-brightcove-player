@@ -3,6 +3,7 @@ protocol GridDelegate: AnyObject {
   func didSelectionOfItem(_ indexPath: IndexPath)
 }
 class GridViewDelegate: NSObject, UICollectionViewDelegate, UICollectionViewDelegateFlowLayout {
+  var insetSafePadding: CGFloat = 5
   weak var delegate: GridDelegate?
   init(delegate: GridDelegate) {
     self.delegate = delegate
@@ -11,6 +12,6 @@ class GridViewDelegate: NSObject, UICollectionViewDelegate, UICollectionViewDele
     self.delegate?.didSelectionOfItem(indexPath)
   }
   func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
-    return CGSize(width: OverlaySize.width, height: OverlaySize.height)
+    return CGSize(width: OverlaySize.width, height: OverlaySize.height - insetSafePadding)
   }
 }

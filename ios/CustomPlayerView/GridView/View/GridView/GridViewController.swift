@@ -1,12 +1,13 @@
 import UIKit
 class GridViewController<Cell: DynamicDataCell, DataType: GridUIModel>: UIViewController, UICollectionViewDelegateFlowLayout where Cell: UICollectionViewCell {
+  var insetSafePadding: CGFloat = 5
   var selectionCallBack: ((GridUIModel?) -> Void)?
   var viewModel: GridViewModelProtocol?
   var dataSource: GridViewDataSource<Cell, DataType>?
   var delegate: GridViewDelegate?
   lazy var collectionView: UICollectionView = {
     let layout: UICollectionViewFlowLayout = UICollectionViewFlowLayout()
-    layout.sectionInset = UIEdgeInsets(top: 0, left: 0, bottom: 0, right: 0)
+    //layout.sectionInset = UIEdgeInsets(top: 0, left: 0, bottom: 0, right: 0)
     layout.minimumInteritemSpacing = 0
     layout.minimumLineSpacing = 0
     let collectionView = UICollectionView(frame: .zero, collectionViewLayout: layout)
@@ -38,7 +39,7 @@ class GridViewController<Cell: DynamicDataCell, DataType: GridUIModel>: UIViewCo
     self.collectionView.showsVerticalScrollIndicator = false
     if let flowLayout = self.collectionView.collectionViewLayout as? UICollectionViewFlowLayout {
       flowLayout.scrollDirection = .horizontal
-      flowLayout.itemSize = CGSize(width: OverlaySize.width, height: OverlaySize.height)
+      flowLayout.itemSize = CGSize(width: OverlaySize.width, height: OverlaySize.height - insetSafePadding)
     }
     delegate = GridViewDelegate(delegate: self)
     dataSource = GridViewDataSource<Cell, DataType>(delegate: self)

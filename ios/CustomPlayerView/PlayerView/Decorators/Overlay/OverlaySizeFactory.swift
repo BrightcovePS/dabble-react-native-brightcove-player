@@ -41,7 +41,7 @@ class OverlaySizeFactory {
         OverlaySize.height = (referenceView.frame.width) * 0.35
         OverlaySize.width = (referenceView.frame.width) * 0.60
       } else if UIDevice.current.orientation.isPortrait {
-        OverlaySize.height = (referenceView.frame.width) * 0.6
+        OverlaySize.height = (referenceView.frame.width) * 0.55
         OverlaySize.width = (referenceView.frame.width) * 0.7
       }
     }

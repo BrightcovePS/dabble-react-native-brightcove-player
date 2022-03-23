@@ -107,7 +107,7 @@ class OverlayDecorator: NSObject, ViewDecoratorType {
     guard viewModel.outputModel?.count ?? 0 > 0 else {
       return
     }
-    gridView.view.alpha = 0
+    gridView.view.alpha = 1
     gridView.collectionView.collectionViewLayout.invalidateLayout()
     self.gridContainer.addSubview(gridView.view)
     gridView.view.leadingAnchor.constraint(equalTo: self.gridContainer.leadingAnchor, constant: .zero).isActive = true
@@ -124,6 +124,7 @@ class OverlayDecorator: NSObject, ViewDecoratorType {
   }
   @objc func addRecommendationsGridView(scrollFront: Bool = false) {
     if showOverlay {
+      removeAllSubviews()
       unHideOverylay()
       addOverlayBg()
       addContainer()
@@ -137,11 +138,15 @@ class OverlayDecorator: NSObject, ViewDecoratorType {
   private func removeOverlay() {
     CountDownTimer.shared.stopTimer()
     cancelAnyExisitingRequest()
-    overlayBackground.removeFromSuperview()
-    gridContainer.removeFromSuperview()
+    removeAllSubviews()
     self.closeButton.isHidden = true
     unHideOverylay()
     performHideOverlayAuxillaryActions()
+  }
+  fileprivate func removeAllSubviews() {
+    gridView.view.removeFromSuperview()
+    gridContainer.removeFromSuperview()
+    overlayBackground.removeFromSuperview()
   }
   fileprivate func setOverlaySize() {
     guard UIDevice.current.orientation.rawValue != 2,
