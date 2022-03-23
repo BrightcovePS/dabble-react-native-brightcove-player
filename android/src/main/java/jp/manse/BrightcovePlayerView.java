@@ -9,6 +9,7 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
+import android.widget.TextView;
 
 import com.brightcove.player.display.ExoPlayerVideoDisplayComponent;
 import com.brightcove.player.edge.Catalog;
@@ -53,7 +54,9 @@ import jp.manse.webservice.ReactCatalog;
 
 public class BrightcovePlayerView extends RelativeLayout implements LifecycleEventListener, AudioFocusManager.AudioFocusChangedListener {
     private final static int SEEK_OFFSET = 15000;
-    private final static String ALL_VIDEOS_PAGE_SIZE = "250";
+    private final static String ALL_VIDEOS_PAGE_SIZE = "1000";
+    private final static double WIDTH_PORT_PERCENT = 0.7;
+    private final static double HEIGHT_PERCENT = 0.6;
     private final ThemedReactContext context;
     private final ReactApplicationContext applicationContext;
     private final AudioFocusManager audioFocusManager;
@@ -83,6 +86,8 @@ public class BrightcovePlayerView extends RelativeLayout implements LifecycleEve
     private LinearLayout upNextContainer;
     private ImageLoader imageLoader;
     private Catalog catalog;
+    private double upNextBannerWidth;
+    private double upNextBannerHeight;
     private EventEmitter eventEmitter;
     private final OnClickListener forwardRewindClickListener = v -> {
         if (v.getId() == R.id.fast_forward_btn) {
@@ -135,7 +140,7 @@ public class BrightcovePlayerView extends RelativeLayout implements LifecycleEve
                     sendJSEvent(BrightcovePlayerManager.EVENT_PAUSE, Arguments.createMap());
                     break;
                 case EventType.COMPLETED:
-                    if(upNextContainer.getVisibility() != VISIBLE){
+                    if (upNextContainer.getVisibility() != VISIBLE) {
                         showUpNext();
                     }
                     sendJSEvent(BrightcovePlayerManager.EVENT_END, Arguments.createMap());
@@ -145,13 +150,13 @@ public class BrightcovePlayerView extends RelativeLayout implements LifecycleEve
                     Long playHead = (Long) event.properties.get(Event.PLAYHEAD_POSITION_LONG);
                     if (playHead != null) {
                         progressMap.putDouble("currentTime", playHead / 1000d);
-                        int duration  = playerVideoView.getBrightcoveMediaController().getBrightcoveSeekBar().getMax();
+                        int duration = playerVideoView.getBrightcoveMediaController().getBrightcoveSeekBar().getMax();
                         float difference = duration - playHead;
                         if (difference <= 10000 && nextVideo == null && !loadingAllVideos) {
                             // Pick random video from video cloud
                             prepareNextFromAllVideos();
                         }
-                        if(difference <= 5000 && upNextContainer.getVisibility() != VISIBLE){
+                        if (difference <= 5000 && upNextContainer.getVisibility() != VISIBLE) {
                             showUpNext();
                         }
                     }
@@ -206,7 +211,13 @@ public class BrightcovePlayerView extends RelativeLayout implements LifecycleEve
 
     private void showUpNext() {
         if (nextVideo != null) {
-            loadImage(nextVideo, ((ImageView) upNextContainer.findViewById(R.id.up_next_poster)));
+            ImageView upNextPoster = upNextContainer.findViewById(R.id.up_next_poster);
+            upNextPoster.setLayoutParams(new ViewGroup.LayoutParams((int) upNextBannerWidth, (int) upNextBannerHeight));
+            loadImage(nextVideo, upNextPoster);
+            TextView upNextTitle = upNextContainer.findViewById(R.id.up_next_title);
+//            upNextTitle.setText(nextVideo.getName());
+            upNextTitle.setText("jingle bells jingle bells jingle all the way | Xmas Music Rhymes, Again jingle bells jingle bells jingle all the way");
+            upNextTitle.setLayoutParams(new LinearLayout.LayoutParams((int) upNextBannerWidth, ViewGroup.LayoutParams.WRAP_CONTENT));
             upNextContainer.setVisibility(VISIBLE);
         }
     }
@@ -220,14 +231,14 @@ public class BrightcovePlayerView extends RelativeLayout implements LifecycleEve
     private void addUpNext() {
         upNextContainer = (LinearLayout) LayoutInflater.from(getContext()).inflate(R.layout.up_next_layout, null);
         RelativeLayout.LayoutParams params = new RelativeLayout.LayoutParams(
-                getResources().getDimensionPixelSize(R.dimen.up_next_poster_width), ViewGroup.LayoutParams.WRAP_CONTENT);
-        params.addRule(RelativeLayout.ALIGN_PARENT_RIGHT, RelativeLayout.TRUE);
-        params.addRule(RelativeLayout.ALIGN_PARENT_BOTTOM, RelativeLayout.TRUE);
-        params.rightMargin = getResources().getDimensionPixelSize(R.dimen.margin_large);
-        params.bottomMargin = getResources().getDimensionPixelSize(R.dimen.margin_xxxlarge);
+                ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
+        params.addRule(CENTER_IN_PARENT, RelativeLayout.TRUE);
+//        params.addRule(RelativeLayout.ALIGN_PARENT_BOTTOM, RelativeLayout.TRUE);
+//        params.rightMargin = getResources().getDimensionPixelSize(R.dimen.margin_large);
+//        params.bottomMargin = getResources().getDimensionPixelSize(R.dimen.margin_xxxlarge);
         addView(upNextContainer, params);
         upNextContainer.setVisibility(INVISIBLE);
-        upNextContainer.findViewById(R.id.close_up_next).setOnClickListener(v -> hideUpNext());
+        upNextContainer.findViewById(R.id.close_up_next_action).setOnClickListener(v -> hideUpNext());
         upNextContainer.findViewById(R.id.up_next_poster).setOnClickListener(v -> {
             if (nextVideo != null) {
                 WritableMap event = Arguments.createMap();
@@ -490,10 +501,10 @@ public class BrightcovePlayerView extends RelativeLayout implements LifecycleEve
             }
         };
         if (allVideos == null) {
-            try{
+            try {
                 loadingAllVideos = true;
                 fetchAllVideos(listener);
-            } catch (Exception e){
+            } catch (Exception e) {
                 loadingAllVideos = false;
             }
         } else {
@@ -580,6 +591,20 @@ public class BrightcovePlayerView extends RelativeLayout implements LifecycleEve
         ImageButton forwardBtn = playerVideoView.findViewById(R.id.fast_forward_btn);
         rewindBtn.setOnClickListener(forwardRewindClickListener);
         forwardBtn.setOnClickListener(forwardRewindClickListener);
+    }
+
+    @Override
+    protected void onSizeChanged(int width, int height, int oldw, int oldh) {
+        if (height < width) {
+            upNextBannerHeight = height * HEIGHT_PERCENT;
+            upNextBannerWidth = (upNextBannerHeight / 9) * 16;
+        } else if (width < height) {
+            upNextBannerWidth = width * WIDTH_PORT_PERCENT;
+            upNextBannerHeight = (upNextBannerWidth / 16) * 9;
+        }
+        System.out.println("Size updates ====================> " + upNextBannerWidth + " " + upNextBannerHeight);
+
+        super.onSizeChanged(width, height, oldw, oldh);
     }
 
     @Override
