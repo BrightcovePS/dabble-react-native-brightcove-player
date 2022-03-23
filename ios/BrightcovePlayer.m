@@ -1,242 +1,302 @@
 #import "BrightcovePlayer.h"
 #import "BrightcovePlayerOfflineVideoManager.h"
-
+#import "react_native_brightcove_player-Swift.h"
 @interface BrightcovePlayer () <BCOVPlaybackControllerDelegate, BCOVPUIPlayerViewDelegate>
-
 @end
 
 @implementation BrightcovePlayer
 
 - (instancetype)initWithFrame:(CGRect)frame {
-    if (self = [super initWithFrame:frame]) {
-        [self setup];
-    }
-    return self;
+  if (self = [super initWithFrame:frame]) {
+    [self setup];
+  }
+  return self;
 }
 
 - (void)setup {
-    _playbackController = [BCOVPlayerSDKManager.sharedManager createPlaybackController];
-    _playbackController.delegate = self;
-    _playbackController.autoPlay = NO;
-    _playbackController.autoAdvance = YES;
-    
-    _playerView = [[BCOVPUIPlayerView alloc] initWithPlaybackController:self.playbackController options:nil controlsView:[BCOVPUIBasicControlView basicControlViewWithVODLayout] ];
-    _playerView.delegate = self;
-    _playerView.autoresizingMask = UIViewAutoresizingFlexibleHeight | UIViewAutoresizingFlexibleWidth;
-    _playerView.backgroundColor = UIColor.blackColor;
-    
-    _targetVolume = 1.0;
-    _autoPlay = NO;
-    
-    [self addSubview:_playerView];
+  _playbackController = [BCOVPlayerSDKManager.sharedManager createPlaybackController];
+  _playbackController.delegate = self;
+  _playbackController.autoPlay = YES;
+  _playbackController.autoAdvance = YES;
+  _playbackController.allowsExternalPlayback = YES;
+  _playbackController.allowsBackgroundAudioPlayback = YES;
+  
+  _playerView = [[PlayerView alloc] initWithPresentingView: [self parentViewController] playbackController:_playbackController player: self];
+  _playerView.delegate = self;
+  _playerView.autoresizingMask = UIViewAutoresizingFlexibleHeight | UIViewAutoresizingFlexibleWidth;
+  _playerView.backgroundColor = UIColor.blackColor;
+  
+  _targetVolume = 1.0;
+  _autoPlay = NO;
+  
+  [self addSubview:_playerView];
 }
 
 - (void)setupService {
-    if ((!_playbackService || _playbackServiceDirty) && _accountId && _policyKey) {
-        _playbackServiceDirty = NO;
-        _playbackService = [[BCOVPlaybackService alloc] initWithAccountId:_accountId policyKey:_policyKey];
-    }
+  if ((!_playbackService || _playbackServiceDirty) && _accountId && _policyKey) {
+    _playbackServiceDirty = NO;
+    _playbackService = [[BCOVPlaybackService alloc] initWithAccountId:_accountId policyKey:_policyKey];
+  }
 }
 
 - (void)loadMovie {
-    if (_videoToken) {
-        BCOVVideo *video = [[BrightcovePlayerOfflineVideoManager sharedManager] videoObjectFromOfflineVideoToken:_videoToken];
-        if (video) {
-            [self.playbackController setVideos: @[ video ]];
-        }
-        return;
+  if (_videoToken) {
+    BCOVVideo *video = [[BrightcovePlayerOfflineVideoManager sharedManager] videoObjectFromOfflineVideoToken:_videoToken];
+    if (video) {
+      [self.playbackController setVideos: @[ video ]];
     }
-    if (!_playbackService) return;
-    if (_videoId) {
-        [_playbackService findVideoWithVideoID:_videoId parameters:nil completion:^(BCOVVideo *video, NSDictionary *jsonResponse, NSError *error) {
-            if (video) {
-                [self.playbackController setVideos: @[ video ]];
-            }
-        }];
-    } else if (_referenceId) {
-        [_playbackService findVideoWithReferenceID:_referenceId parameters:nil completion:^(BCOVVideo *video, NSDictionary *jsonResponse, NSError *error) {
-            if (video) {
-                [self.playbackController setVideos: @[ video ]];
-            }
-        }];
-    }
+    return;
+  }
+  if (!_playbackService) return;
+  if (_videoId) {
+    [_playbackService findVideoWithVideoID:_videoId parameters:nil completion:^(BCOVVideo *video, NSDictionary *jsonResponse, NSError *error) {
+      if (video) {
+        [self.playbackController setVideos: @[ video ]];
+      }
+    }];
+  } else if (_referenceId) {
+    [_playbackService findVideoWithReferenceID:_referenceId parameters:nil completion:^(BCOVVideo *video, NSDictionary *jsonResponse, NSError *error) {
+      if (video) {
+        self.playerView.videoId = video.properties[kBCOVVideoPropertyKeyId];
+        [self.playbackController setVideos: @[ video ]];
+      }
+    }];
+  }
 }
 
 - (id<BCOVPlaybackController>)createPlaybackController {
-    BCOVBasicSessionProviderOptions *options = [BCOVBasicSessionProviderOptions alloc];
-    BCOVBasicSessionProvider *provider = [[BCOVPlayerSDKManager sharedManager] createBasicSessionProviderWithOptions:options];
-    return [BCOVPlayerSDKManager.sharedManager createPlaybackControllerWithSessionProvider:provider viewStrategy:nil];
+  BCOVBasicSessionProviderOptions *options = [BCOVBasicSessionProviderOptions alloc];
+  BCOVBasicSessionProvider *provider = [[BCOVPlayerSDKManager sharedManager] createBasicSessionProviderWithOptions:options];
+  return [BCOVPlayerSDKManager.sharedManager createPlaybackControllerWithSessionProvider:provider viewStrategy:nil];
 }
 
 - (void)setReferenceId:(NSString *)referenceId {
-    _referenceId = referenceId;
-    _videoId = NULL;
-    [self setupService];
-    [self loadMovie];
+  _referenceId = referenceId;
+  _playerView.referenceId = _referenceId;
+  _videoId = NULL;
+  [self setupService];
+  [self loadMovie];
 }
 
 - (void)setVideoId:(NSString *)videoId {
-    _videoId = videoId;
-    _referenceId = NULL;
-    [self setupService];
-    [self loadMovie];
+  _videoId = videoId;
+  _playerView.videoId = _videoId;
+  _referenceId = NULL;
+  [self setupService];
+  [self loadMovie];
 }
 
 - (void)setVideoToken:(NSString *)videoToken {
-    _videoToken = videoToken;
-    [self loadMovie];
+  _videoToken = videoToken;
+  [self loadMovie];
 }
 
 - (void)setAccountId:(NSString *)accountId {
-    _accountId = accountId;
-    _playbackServiceDirty = YES;
-    [self setupService];
-    [self loadMovie];
+  _accountId = accountId;
+  _playerView.accountId = _accountId;
+  _playbackServiceDirty = YES;
+  [self setupService];
+  [self loadMovie];
 }
 
 - (void)setPolicyKey:(NSString *)policyKey {
-    _policyKey = policyKey;
-    _playbackServiceDirty = YES;
-    [self setupService];
-    [self loadMovie];
+  _policyKey = policyKey;
+  _playerView.policyKey = _policyKey;
+  _playbackServiceDirty = YES;
+  [self setupService];
+  [self loadMovie];
 }
-
+- (void)setPlaylistReferenceId:(NSString *)playlistReferenceId {
+  _playlistReferenceId = playlistReferenceId;
+  _playerView.playlistReferenceId = _playlistReferenceId;
+}
+- (void)setPlaylistId:(NSString *)playlistId {
+  _playerView.playlistId = playlistId;
+}
 - (void)setAutoPlay:(BOOL)autoPlay {
-    _autoPlay = autoPlay;
+  _autoPlay = autoPlay;
 }
 
 - (void)setPlay:(BOOL)play {
-    if (_playing == play) return;
-    if (play) {
-        [_playbackController play];
-    } else {
-        [_playbackController pause];
-    }
+  if (_playing == play) return;
+  if (play) {
+    [_playbackController play];
+  } else {
+    [_playbackController pause];
+  }
 }
 
 - (void)setFullscreen:(BOOL)fullscreen {
-    if (fullscreen) {
-        [_playerView performScreenTransitionWithScreenMode:BCOVPUIScreenModeFull];
-    } else {
-        [_playerView performScreenTransitionWithScreenMode:BCOVPUIScreenModeNormal];
-    }
+  if (fullscreen) {
+    [_playerView performScreenTransitionWithScreenMode:BCOVPUIScreenModeFull];
+  } else {
+    [_playerView performScreenTransitionWithScreenMode:BCOVPUIScreenModeNormal];
+  }
 }
 
 - (void)setVolume:(NSNumber*)volume {
-    _targetVolume = volume.doubleValue;
-    [self refreshVolume];
+  _targetVolume = volume.doubleValue;
+  [self refreshVolume];
 }
 
 - (void)setBitRate:(NSNumber*)bitRate {
-    _targetBitRate = bitRate.doubleValue;
-    [self refreshBitRate];
+  _targetBitRate = bitRate.doubleValue;
+  [self refreshBitRate];
 }
 
 - (void)setPlaybackRate:(NSNumber*)playbackRate {
-    _targetPlaybackRate = playbackRate.doubleValue;
-    if (_playing) {
-        [self refreshPlaybackRate];
-    }
+  _targetPlaybackRate = playbackRate.doubleValue;
+  if (_playing) {
+    [self refreshPlaybackRate];
+  }
+}
+
+- (void)setSeekDuration:(NSNumber*)seekDuration {
+  _playerView.seekDuration = seekDuration.doubleValue;
 }
 
 - (void)refreshVolume {
-    if (!_playbackSession) return;
-    _playbackSession.player.volume = _targetVolume;
+  if (!_playbackSession) return;
+  _playbackSession.player.volume = _targetVolume;
 }
 
 - (void)refreshBitRate {
-    if (!_playbackSession) return;
-    AVPlayerItem *item = _playbackSession.player.currentItem;
-    if (!item) return;
-    item.preferredPeakBitRate = _targetBitRate;
+  if (!_playbackSession) return;
+  AVPlayerItem *item = _playbackSession.player.currentItem;
+  if (!item) return;
+  item.preferredPeakBitRate = _targetBitRate;
 }
 
 - (void)refreshPlaybackRate {
-    if (!_playbackSession || !_targetPlaybackRate) return;
-    _playbackSession.player.rate = _targetPlaybackRate;
+  if (!_playbackSession || !_targetPlaybackRate) return;
+  _playbackSession.player.rate = _targetPlaybackRate;
 }
 
 - (void)setDisableDefaultControl:(BOOL)disable {
-    _playerView.controlsView.hidden = disable;
+  _playerView.controlsView.hidden = disable;
 }
 
 - (void)seekTo:(NSNumber *)time {
-    [_playbackController seekToTime:CMTimeMakeWithSeconds([time floatValue], NSEC_PER_SEC) completionHandler:^(BOOL finished) {
-    }];
+  [_playbackController seekToTime:CMTimeMakeWithSeconds([time floatValue], NSEC_PER_SEC) completionHandler:^(BOOL finished) {
+  }];
 }
 
 - (void)playbackController:(id<BCOVPlaybackController>)controller playbackSession:(id<BCOVPlaybackSession>)session didReceiveLifecycleEvent:(BCOVPlaybackSessionLifecycleEvent *)lifecycleEvent {
-    if (lifecycleEvent.eventType == kBCOVPlaybackSessionLifecycleEventPlaybackBufferEmpty || lifecycleEvent.eventType == kBCOVPlaybackSessionLifecycleEventFail ||
-        lifecycleEvent.eventType == kBCOVPlaybackSessionLifecycleEventError ||
-        lifecycleEvent.eventType == kBCOVPlaybackSessionLifecycleEventTerminate) {
-        _playbackSession = nil;
-        return;
+  if (lifecycleEvent.eventType == kBCOVPlaybackSessionLifecycleEventPlaybackBufferEmpty || lifecycleEvent.eventType == kBCOVPlaybackSessionLifecycleEventFail ||
+      lifecycleEvent.eventType == kBCOVPlaybackSessionLifecycleEventError ||
+      lifecycleEvent.eventType == kBCOVPlaybackSessionLifecycleEventTerminate) {
+    _playbackSession = nil;
+    return;
+  }
+  _playbackSession = session;
+  if (lifecycleEvent.eventType == kBCOVPlaybackSessionLifecycleEventReady) {
+    [self refreshVolume];
+    [self refreshBitRate];
+    if (self.onReady) {
+      self.onReady(@{});
     }
-    _playbackSession = session;
-    if (lifecycleEvent.eventType == kBCOVPlaybackSessionLifecycleEventReady) {
-        [self refreshVolume];
-        [self refreshBitRate];
-        if (self.onReady) {
-            self.onReady(@{});
-        }
-        if (_autoPlay) {
-            [_playbackController play];
-        }
-    } else if (lifecycleEvent.eventType == kBCOVPlaybackSessionLifecycleEventPlay) {
-        _playing = true;
-        [self refreshPlaybackRate];
-        if (self.onPlay) {
-            self.onPlay(@{});
-        }
-    } else if (lifecycleEvent.eventType == kBCOVPlaybackSessionLifecycleEventPause) {
-        _playing = false;
-        if (self.onPause) {
-            self.onPause(@{});
-        }
-    } else if (lifecycleEvent.eventType == kBCOVPlaybackSessionLifecycleEventEnd) {
-        if (self.onEnd) {
-            self.onEnd(@{});
-        }
+    if (_autoPlay) {
+      [_playbackController play];
     }
+  } else if (lifecycleEvent.eventType == kBCOVPlaybackSessionLifecycleEventPlay) {
+    _playing = true;
+    [self refreshPlaybackRate];
+    if (self.onPlay) {
+      self.onPlay(@{});
+    }
+  } else if (lifecycleEvent.eventType == kBCOVPlaybackSessionLifecycleEventPause) {
+    _playing = false;
+    if (self.onPause) {
+      self.onPause(@{});
+    }
+  } else if (lifecycleEvent.eventType == kBCOVPlaybackSessionLifecycleEventEnd) {
+    _playerView.controlsView.routeDetector.routeDetectionEnabled = NO;
+    if (self.onEnd) {
+      self.onEnd(@{});
+    }
+  }
 }
 
 - (void)playbackController:(id<BCOVPlaybackController>)controller playbackSession:(id<BCOVPlaybackSession>)session didChangeDuration:(NSTimeInterval)duration {
-    if (self.onChangeDuration) {
-        self.onChangeDuration(@{
-                                @"duration": @(duration)
-                                });
-    }
-}
-
--(void)playbackController:(id<BCOVPlaybackController>)controller playbackSession:(id<BCOVPlaybackSession>)session didProgressTo:(NSTimeInterval)progress {
-    if (self.onProgress && progress > 0 && progress != INFINITY) {
-        self.onProgress(@{
-                          @"currentTime": @(progress)
+  if (self.onChangeDuration) {
+    self.onChangeDuration(@{
+      @"duration": @(duration)
                           });
-    }
-    float bufferProgress = _playerView.controlsView.progressSlider.bufferProgress;
-    if (_lastBufferProgress != bufferProgress) {
-        _lastBufferProgress = bufferProgress;
-        self.onUpdateBufferProgress(@{
-                                      @"bufferProgress": @(bufferProgress),
-                                      });
-    }
+  }
+}
+- (void)playbackController:(id<BCOVPlaybackController>)controller didAdvanceToPlaybackSession:(id<BCOVPlaybackSession>)session
+{
+  // Enable route detection for AirPlay
+  // https://developer.apple.com/documentation/avfoundation/avroutedetector/2915762-routedetectionenabled
+  _playerView.controlsView.routeDetector.routeDetectionEnabled = YES;
+}
+-(void)playbackController:(id<BCOVPlaybackController>)controller playbackSession:(id<BCOVPlaybackSession>)session didProgressTo:(NSTimeInterval)progress {
+  if (self.onProgress && progress > 0 && progress != INFINITY) {
+    self.onProgress(@{
+      @"currentTime": @(progress)
+                    });
+  }
+  float bufferProgress = _playerView.controlsView.progressSlider.bufferProgress;
+  if (_lastBufferProgress != bufferProgress) {
+    _lastBufferProgress = bufferProgress;
+    self.onUpdateBufferProgress(@{
+      @"bufferProgress": @(bufferProgress),
+                                });
+  }
 }
 
 -(void)playerView:(BCOVPUIPlayerView *)playerView didTransitionToScreenMode:(BCOVPUIScreenMode)screenMode {
-    if (screenMode == BCOVPUIScreenModeNormal) {
-        if (self.onExitFullscreen) {
-            self.onExitFullscreen(@{});
-        }
-    } else if (screenMode == BCOVPUIScreenModeFull) {
-        if (self.onEnterFullscreen) {
-            self.onEnterFullscreen(@{});
-        }
+  if (screenMode == BCOVPUIScreenModeNormal) {
+    _playerView.screenMode = @"BCOVPUIScreenModeNormal";
+    if (self.onExitFullscreen) {
+      self.onExitFullscreen(@{});
     }
+  } else if (screenMode == BCOVPUIScreenModeFull) {
+    _playerView.screenMode = @"BCOVPUIScreenModeFull";
+    if (self.onEnterFullscreen) {
+      self.onEnterFullscreen(@{});
+    }
+  }
 }
 
 -(void)dispose {
-    [self.playbackController setVideos:@[]];
+  [self.playbackController setVideos:@[]];
 }
 
+- (UIViewController *)parentViewController {
+  UIResponder *parentResponder = self;
+  while (parentResponder != nil) {
+    parentResponder = [parentResponder nextResponder];
+    if ([parentResponder isKindOfClass:[UIViewController class]]) {
+      return (UIViewController *)parentResponder;
+    }
+  }
+  return nil;
+}
+- (void)progressSliderDidChangeValue:(UISlider *)slider {
+  _playerView.slider = slider;
+}
+- (void)nextVideoPlayer:(NSDictionary *)video {
+  _referenceId =  [video valueForKey:@"referenceId"];
+  _videoId =  [video valueForKey:@"videoId"];
+  NSMutableDictionary *nextVideo = [NSMutableDictionary dictionary];
+  [nextVideo setObject: _referenceId  forKey: @"referenceId"];
+  [nextVideo setObject: _videoId  forKey: @"videoId"];
+  if (self.onPlayNextVideo) {
+    self.onPlayNextVideo(nextVideo);
+  }
+}
+
+-(void)pictureInPictureControllerWillStartPictureInPicture:(AVPictureInPictureController *)pictureInPictureController {
+  NSLog(@"PIP will start");
+}
+-(void)pictureInPictureControllerDidStartPictureInPicture:(AVPictureInPictureController *)pictureInPictureController {
+  NSLog(@"PIP Did start");
+}
+-(void)pictureInPictureControllerWillStopPictureInPicture:(AVPictureInPictureController *)pictureInPictureController{
+  NSLog(@"PIP will stop");
+}
+-(void)pictureInPictureControllerDidStopPictureInPicture:(AVPictureInPictureController *)pictureInPictureController {
+  NSLog(@"PIP did stop");
+}
 @end

@@ -11,19 +11,20 @@
 #import <BrightcovePlayerSDK/BCOVOfflineVideoManager.h>
 #import <React/RCTBridge.h>
 #import <React/UIView+React.h>
-
+@class PlayerView;
 @interface BrightcovePlayer : UIView<BCOVOfflineVideoManagerDelegate>
 
 @property (nonatomic) BCOVPlaybackService *playbackService;
 @property (nonatomic) id<BCOVPlaybackController> playbackController;
 @property (nonatomic) id<BCOVPlaybackSession> playbackSession;
-@property (nonatomic) BCOVPUIPlayerView *playerView;
+@property (nonatomic) PlayerView *playerView;
 @property (nonatomic) BOOL playing;
 @property (nonatomic) BOOL autoPlay;
 @property (nonatomic) float lastBufferProgress;
 @property (nonatomic) float targetVolume;
 @property (nonatomic) float targetBitRate;
 @property (nonatomic) float targetPlaybackRate;
+@property (nonatomic) float seekDuration;
 @property (nonatomic) BOOL playbackServiceDirty;
 
 @property (nonatomic, copy) NSString *referenceId;
@@ -31,6 +32,8 @@
 @property (nonatomic, copy) NSString *videoToken;
 @property (nonatomic, copy) NSString *accountId;
 @property (nonatomic, copy) NSString *policyKey;
+@property (nonatomic, copy) NSString *playlistReferenceId;
+@property (nonatomic, copy) NSString *playlistId;
 @property (nonatomic, copy) RCTDirectEventBlock onReady;
 @property (nonatomic, copy) RCTDirectEventBlock onPlay;
 @property (nonatomic, copy) RCTDirectEventBlock onPause;
@@ -40,8 +43,10 @@
 @property (nonatomic, copy) RCTDirectEventBlock onUpdateBufferProgress;
 @property (nonatomic, copy) RCTDirectEventBlock onEnterFullscreen;
 @property (nonatomic, copy) RCTDirectEventBlock onExitFullscreen;
+@property (nonatomic, copy) RCTDirectEventBlock onPlayNextVideo;
 
 -(void) seekTo:(NSNumber *)time;
 -(void)dispose;
+-(void)nextVideoPlayer:(NSDictionary *)video;
 
 @end
