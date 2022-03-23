@@ -129,7 +129,6 @@ class OverlayDecorator: NSObject, ViewDecoratorType {
   }
   @objc func addRecommendationsGridView(scrollFront: Bool = false) {
     if showOverlay {
-      removeAllSubviews()
       unHideOverylay()
       addOverlayBg()
       addContainer()
@@ -142,7 +141,6 @@ class OverlayDecorator: NSObject, ViewDecoratorType {
   }
   private func removeOverlay() {
     CountDownTimer.shared.stopTimer()
-    viewModel.outputModel?.removeAll()
     deactivateGridContainerConstraint()
     cancelAnyExisitingRequest()
     removeAllSubviews()
@@ -166,36 +164,41 @@ class OverlayDecorator: NSObject, ViewDecoratorType {
   }
   @objc func resetConstraintsAndAddSubviews() {
     DispatchQueue.main.asyncAfter(deadline: .now() + 0.15) {
-      self.deactivateGridContainerConstraint()
+      self.gridView.collectionView.collectionViewLayout.invalidateLayout()
       self.setOverlaySize()
       self.refreshContraints()
     }
   }
   @objc func resetConstraintsOnScreenModeChange() {
     DispatchQueue.main.asyncAfter(deadline: .now() + 0.15) {
-      self.deactivateGridContainerConstraint()
+      self.gridView.collectionView.collectionViewLayout.invalidateLayout()
       self.setOverlaySize()
       self.refreshContraints()
     }
   }
   fileprivate func refreshContraints() {
-    guard showOverlay else { return }
-    deactivateGridContainerConstraint()
-    guard let view = parentView?.overlayView else {
+    guard showOverlay,
+          let view = parentView?.overlayView,
+          overlayBackground.isDescendant(of: view),
+          gridContainer.isDescendant(of: overlayBackground),
+          gridView.view.isDescendant(of: gridContainer) else {
       return
     }
+    deactivateGridContainerConstraint()
     
+    //view.addSubview(overlayBackground)
     overlayBackground.safeAreaLayoutGuide.leadingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leadingAnchor).isActive = true
     overlayBackground.safeAreaLayoutGuide.trailingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.trailingAnchor).isActive = true
     overlayBackground.safeAreaLayoutGuide.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor).isActive = true
     overlayBackground.safeAreaLayoutGuide.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor).isActive = true
     
+    //overlayBackground.addSubview(gridContainer)
     gridContainer.centerXAnchor.constraint(equalTo: overlayBackground.safeAreaLayoutGuide.centerXAnchor).isActive = true
     gridContainer.centerYAnchor.constraint(equalTo: overlayBackground.safeAreaLayoutGuide.centerYAnchor, constant: OverlayConstants.containerYOffset).isActive = true
     gridContainer.heightAnchor.constraint(equalToConstant: OverlaySize.height).isActive = true
     gridContainer.widthAnchor.constraint(equalToConstant: OverlaySize.width).isActive = true
     
-    gridContainer.addSubview(gridView.view)
+    //gridContainer.addSubview(gridView.view)
     gridView.view.leadingAnchor.constraint(equalTo: self.gridContainer.leadingAnchor, constant: .zero).isActive = true
     gridView.view.trailingAnchor.constraint(equalTo: self.gridContainer.trailingAnchor, constant: .zero).isActive = true
     gridView.view.topAnchor.constraint(equalTo: self.gridContainer.topAnchor, constant: .zero).isActive = true
