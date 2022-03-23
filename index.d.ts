@@ -16,6 +16,7 @@ export type BrightcovePlayerProps = {
   volume?: number;
   bitRate?: number;
   playbackRate?: number;
+  seekDuration?: number;
   onReady?: () => void;
   onPlay?: () => void;
   onPause?: () => void;

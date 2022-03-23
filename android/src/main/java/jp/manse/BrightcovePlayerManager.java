@@ -7,7 +7,6 @@ import com.facebook.infer.annotation.Assertions;
 import com.facebook.react.bridge.ReactApplicationContext;
 import com.facebook.react.bridge.ReadableArray;
 import com.facebook.react.common.MapBuilder;
-import com.facebook.react.uimanager.SimpleViewManager;
 import com.facebook.react.uimanager.ThemedReactContext;
 import com.facebook.react.uimanager.ViewGroupManager;
 import com.facebook.react.uimanager.annotations.ReactProp;
@@ -114,13 +113,19 @@ public class BrightcovePlayerManager extends ViewGroupManager<BrightcovePlayerVi
         );
     }
 
+    @ReactProp(name = "seekDuration")
+    public void setSeekDuration(BrightcovePlayerView view, double seekDuration) {
+        view.setSeekDuration((long) seekDuration);
+    }
+
+
     @Override
     public void receiveCommand(BrightcovePlayerView view, int commandType, @Nullable ReadableArray args) {
         Assertions.assertNotNull(view);
         Assertions.assertNotNull(args);
         switch (commandType) {
             case COMMAND_SEEK_TO: {
-                view.seekTo((int)(args.getDouble(0) * 1000));
+                view.seekTo((long) (args.getDouble(0) * 1000));
                 return;
             }
         }

@@ -2,9 +2,8 @@ package jp.manse;
 
 import android.graphics.Color;
 import android.util.Log;
-import android.view.Choreographer;
 import android.view.SurfaceView;
-import android.view.View;
+import android.widget.ImageButton;
 import android.widget.RelativeLayout;
 
 import com.brightcove.player.display.ExoPlayerVideoDisplayComponent;
@@ -17,6 +16,7 @@ import com.brightcove.player.event.EventListener;
 import com.brightcove.player.event.EventType;
 import com.brightcove.player.mediacontroller.BrightcoveMediaController;
 import com.brightcove.player.model.Video;
+import com.brightcove.player.view.BaseVideoView;
 import com.brightcove.player.view.BrightcoveExoPlayerVideoView;
 import com.facebook.react.bridge.Arguments;
 import com.facebook.react.bridge.LifecycleEventListener;
@@ -41,20 +41,39 @@ import java.util.Map;
 import jp.manse.util.AudioFocusManager;
 
 public class BrightcovePlayerView extends RelativeLayout implements LifecycleEventListener, AudioFocusManager.AudioFocusChangedListener {
+    private final static int SEEK_OFFSET = 15000;
     private final ThemedReactContext context;
     private final ReactApplicationContext applicationContext;
-    private final BrightcoveExoPlayerVideoView playerVideoView;
-    private final BrightcoveMediaController mediaController;
     private final AudioFocusManager audioFocusManager;
+    private final Runnable measureAndLayout = () -> {
+        measure(MeasureSpec.makeMeasureSpec(getWidth(), MeasureSpec.EXACTLY),
+                MeasureSpec.makeMeasureSpec(getHeight(), MeasureSpec.EXACTLY));
+        layout(getLeft(), getTop(), getRight(), getBottom());
+    };
+    private BrightcoveExoPlayerVideoView playerVideoView;
+    private BrightcoveMediaController mediaController;
     private String policyKey;
     private String accountId;
     private String videoId;
     private String referenceId;
     private String videoToken;
+    private long seekDuration = SEEK_OFFSET;
     private boolean autoPlay = true;
     private boolean playing = false;
     private int bitRate = 0;
     private float playbackRate = 1;
+    private EventEmitter eventEmitter;
+    private final OnClickListener forwardRewindClickListener = v -> {
+        if (v.getId() == R.id.fast_forward_btn) {
+            long seekMax = mediaController.getBrightcoveSeekBar().getMax();
+            long seekPos = playerVideoView.getCurrentPositionLong() + seekDuration;
+            if (seekMax > seekPos) {
+                playerVideoView.seekTo(seekPos);
+            }
+        } else if (v.getId() == R.id.rewind_btn) {
+            eventEmitter.emit(EventType.REWIND);
+        }
+    };
 
     public BrightcovePlayerView(ThemedReactContext context, ReactApplicationContext applicationContext) {
         super(context);
@@ -66,10 +85,10 @@ public class BrightcovePlayerView extends RelativeLayout implements LifecycleEve
         this.addView(this.playerVideoView);
         this.playerVideoView.setLayoutParams(new RelativeLayout.LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT));
         this.playerVideoView.finishInitialization();
-        this.mediaController = new BrightcoveMediaController(this.playerVideoView);
-        this.playerVideoView.setMediaController(this.mediaController);
         this.requestLayout();
-        EventEmitter eventEmitter = playerVideoView.getEventEmitter();
+        eventEmitter = playerVideoView.getEventEmitter();
+        initMediaController(this.playerVideoView);
+        this.mediaController = this.playerVideoView.getBrightcoveMediaController();
         // Create AudioFocusManager instance and register BrightcovePlayerView as a listener
         this.audioFocusManager = new AudioFocusManager(this.context);
         this.audioFocusManager.registerListener(this);
@@ -98,14 +117,14 @@ public class BrightcovePlayerView extends RelativeLayout implements LifecycleEve
                     break;
                 case EventType.PROGRESS:
                     WritableMap progressMap = Arguments.createMap();
-                    Integer playHead = (Integer) event.properties.get(Event.PLAYHEAD_POSITION);
+                    Long playHead = (Long) event.properties.get(Event.PLAYHEAD_POSITION_LONG);
                     if (playHead != null) {
                         progressMap.putDouble("currentTime", playHead / 1000d);
                     }
                     sendJSEvent(BrightcovePlayerManager.EVENT_PROGRESS, progressMap);
                     break;
                 case EventType.VIDEO_DURATION_CHANGED:
-                    Integer duration = (Integer) event.properties.get(Event.VIDEO_DURATION);
+                    Long duration = (Long) event.properties.get(Event.VIDEO_DURATION_LONG);
                     WritableMap durationMap = Arguments.createMap();
                     if (duration != null) {
                         durationMap.putDouble("duration", duration / 1000d);
@@ -134,11 +153,17 @@ public class BrightcovePlayerView extends RelativeLayout implements LifecycleEve
         eventEmitter.on(EventType.COMPLETED, eventListener);
         eventEmitter.on(EventType.PROGRESS, eventListener);
         // This event is sent by the BrightcovePlayer Activity when the onConfigurationChanged has been called.
-        eventEmitter.on(EventType.CONFIGURATION_CHANGED, eventListener);
         eventEmitter.on(EventType.DID_EXIT_FULL_SCREEN, eventListener);
         eventEmitter.on(EventType.DID_ENTER_FULL_SCREEN, eventListener);
         eventEmitter.on(EventType.VIDEO_DURATION_CHANGED, eventListener);
         eventEmitter.on(EventType.BUFFERED_UPDATE, eventListener);
+        setSeekControlConfig();
+    }
+
+    private void setSeekControlConfig() {
+        HashMap<String, Object> map = new HashMap<>();
+        map.put(Event.SEEK_DEFAULT_LONG, seekDuration);
+        eventEmitter.emit(EventType.SEEK_CONTROLLER_CONFIGURATION, map);
     }
 
     private void sendJSEvent(String eventName, WritableMap map) {
@@ -197,6 +222,11 @@ public class BrightcovePlayerView extends RelativeLayout implements LifecycleEve
         sendJSEvent(BrightcovePlayerManager.EVENT_TOGGLE_ANDROID_FULLSCREEN, fullscreenEventMap);
     }
 
+    public void setSeekDuration(long seekDuration) {
+        this.seekDuration = seekDuration;
+        setSeekControlConfig();
+    }
+
     public void setVolume(float volume) {
         Map<String, Object> details = new HashMap<>();
         details.put(Event.VOLUME, volume);
@@ -214,7 +244,7 @@ public class BrightcovePlayerView extends RelativeLayout implements LifecycleEve
         this.updatePlaybackRate();
     }
 
-    public void seekTo(int time) {
+    public void seekTo(long time) {
         this.playerVideoView.seekTo(time);
     }
 
@@ -311,9 +341,11 @@ public class BrightcovePlayerView extends RelativeLayout implements LifecycleEve
     private void playVideo(Video video) {
         BrightcovePlayerView.this.playerVideoView.clear();
         BrightcovePlayerView.this.playerVideoView.add(video);
-        if (BrightcovePlayerView.this.autoPlay) {
-            BrightcovePlayerView.this.playerVideoView.start();
-        }
+        BrightcovePlayerView.this.playerVideoView.setOnPreparedListener(mp -> {
+            if (!playerVideoView.isPlaying() && BrightcovePlayerView.this.autoPlay) {
+                BrightcovePlayerView.this.playerVideoView.start();
+            }
+        });
     }
 
     private void fixVideoLayout() {
@@ -333,6 +365,26 @@ public class BrightcovePlayerView extends RelativeLayout implements LifecycleEve
         for (Map.Entry<String, Object> entry : map.entrySet()) {
             Log.d("debug", entry.getKey());
         }
+    }
+
+    private void initMediaController(BaseVideoView brightcoveVideoView) {
+        brightcoveVideoView.setMediaController(
+                new BrightcoveMediaController(
+                        brightcoveVideoView,
+                        R.layout.player_controls
+                )
+        );
+        initButtons();
+
+        // This event is sent by the BrightcovePlayer Activity when the onConfigurationChanged has been called.
+        eventEmitter.on(EventType.CONFIGURATION_CHANGED, event -> initButtons());
+    }
+
+    private void initButtons() {
+        ImageButton rewindBtn = playerVideoView.findViewById(R.id.rewind_btn);
+        ImageButton forwardBtn = playerVideoView.findViewById(R.id.fast_forward_btn);
+        rewindBtn.setOnClickListener(forwardRewindClickListener);
+        forwardBtn.setOnClickListener(forwardRewindClickListener);
     }
 
     @Override
@@ -365,12 +417,6 @@ public class BrightcovePlayerView extends RelativeLayout implements LifecycleEve
         // happens after a call to requestLayout, so we simulate one here.
         post(measureAndLayout);
     }
-
-    private final Runnable measureAndLayout = () -> {
-        measure(MeasureSpec.makeMeasureSpec(getWidth(), MeasureSpec.EXACTLY),
-                MeasureSpec.makeMeasureSpec(getHeight(), MeasureSpec.EXACTLY));
-        layout(getLeft(), getTop(), getRight(), getBottom());
-    };
 
     @Override
     public void audioFocusChanged(boolean hasFocus) {

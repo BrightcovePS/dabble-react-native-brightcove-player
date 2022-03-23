@@ -1,0 +1,141 @@
+<?xml version="1.0" encoding="utf-8"?>
+<com.brightcove.player.mediacontroller.BrightcoveControlBar xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/brightcove_control_bar"
+    style="@style/BrightcoveControlBar"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/bmc_background"
+    android:orientation="vertical"
+    android:padding="@dimen/margin_xsmall"
+    tools:ignore="Overdraw">
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <ImageButton
+            android:id="@+id/rewind_btn"
+            style="@style/BorderlessButton"
+            android:layout_width="@dimen/action_icon_size"
+            android:layout_height="@dimen/action_icon_size"
+            android:layout_toEndOf="@id/play"
+            android:src="@drawable/ic_rewind"
+            android:visibility="visible"
+            app:layout_constraintBottom_toBottomOf="@id/center_bottom_guideline"
+            app:layout_constraintStart_toEndOf="@+id/rewind_guideline"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <include
+            layout="@layout/brightcove_play_button"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:layout_constraintBottom_toBottomOf="@id/center_bottom_guideline"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <ImageButton
+            android:id="@+id/fast_forward_btn"
+            style="@style/BorderlessButton"
+            android:layout_width="@dimen/action_icon_size"
+            android:layout_height="@dimen/action_icon_size"
+            android:layout_marginStart="@dimen/margin_xlarge"
+            android:layout_toStartOf="@id/play"
+            android:src="@drawable/ic_fast_forward"
+            android:visibility="visible"
+            app:layout_constraintBottom_toBottomOf="@id/center_bottom_guideline"
+            app:layout_constraintEnd_toStartOf="@id/forward_guideline"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <!-- bottom first line -->
+        <LinearLayout
+            android:id="@+id/bottom_first"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:baselineAligned="false"
+            android:orientation="horizontal"
+            android:screenReaderFocusable="true"
+            app:layout_constraintBottom_toTopOf="@id/bottom_second"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent">
+
+            <include layout="@layout/brightcove_current_time_button" />
+
+            <TextView
+                android:id="@id/time_separator"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
+                android:text="@string/time_separator"
+                android:textColor="@color/bmc_time_text"
+                android:visibility="visible" />
+
+            <include layout="@layout/brightcove_end_time_button" />
+
+            <include
+                layout="@layout/brightcove_seek_bar"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1" />
+
+            <include layout="@layout/brightcove_full_screen_button" />
+
+        </LinearLayout>
+
+        <!-- bottom second line -->
+        <LinearLayout
+            android:id="@+id/bottom_second"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="bottom"
+            android:orientation="horizontal"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            android:visibility="gone">
+
+            <View
+                android:id="@id/two_line_spacer"
+                android:layout_width="0dp"
+                android:layout_height="0dp"
+                android:layout_weight="1"
+                android:visibility="gone"
+                tools:ignore="InconsistentLayout"
+                tools:visibility="visible" />
+
+            <include layout="@layout/brightcove_picture_in_picture_button" />
+
+            <include layout="@layout/brightcove_vr_button" />
+
+            <include layout="@layout/brightcove_captions_button" />
+
+            <include layout="@layout/brightcove_audio_tracks_button" />
+
+            <include layout="@layout/brightcove_live_button" />
+        </LinearLayout>
+
+        <androidx.constraintlayout.widget.Guideline
+            android:id="@+id/center_bottom_guideline"
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:orientation="horizontal"
+            app:layout_constraintGuide_percent="0.87" />
+
+        <androidx.constraintlayout.widget.Guideline
+            android:id="@+id/rewind_guideline"
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:orientation="vertical"
+            app:layout_constraintGuide_percent="0.25" />
+
+        <androidx.constraintlayout.widget.Guideline
+            android:id="@+id/forward_guideline"
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:orientation="vertical"
+            app:layout_constraintGuide_percent="0.75" />
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+</com.brightcove.player.mediacontroller.BrightcoveControlBar>
