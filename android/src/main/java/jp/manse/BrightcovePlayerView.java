@@ -1,7 +1,6 @@
 package jp.manse;
 
 import android.graphics.Color;
-import android.media.MediaPlayer;
 import android.util.Log;
 import android.view.SurfaceView;
 import android.widget.ImageButton;
@@ -45,20 +44,36 @@ public class BrightcovePlayerView extends RelativeLayout implements LifecycleEve
     private final static int SEEK_OFFSET = 15000;
     private final ThemedReactContext context;
     private final ReactApplicationContext applicationContext;
+    private final AudioFocusManager audioFocusManager;
+    private final Runnable measureAndLayout = () -> {
+        measure(MeasureSpec.makeMeasureSpec(getWidth(), MeasureSpec.EXACTLY),
+                MeasureSpec.makeMeasureSpec(getHeight(), MeasureSpec.EXACTLY));
+        layout(getLeft(), getTop(), getRight(), getBottom());
+    };
     private BrightcoveExoPlayerVideoView playerVideoView;
     private BrightcoveMediaController mediaController;
-    private final AudioFocusManager audioFocusManager;
     private String policyKey;
     private String accountId;
     private String videoId;
     private String referenceId;
     private String videoToken;
-    private int seekDuration = SEEK_OFFSET;
+    private long seekDuration = SEEK_OFFSET;
     private boolean autoPlay = true;
     private boolean playing = false;
     private int bitRate = 0;
     private float playbackRate = 1;
     private EventEmitter eventEmitter;
+    private final OnClickListener forwardRewindClickListener = v -> {
+        if (v.getId() == R.id.fast_forward_btn) {
+            long seekMax = mediaController.getBrightcoveSeekBar().getMax();
+            long seekPos = playerVideoView.getCurrentPositionLong() + seekDuration;
+            if (seekMax > seekPos) {
+                playerVideoView.seekTo(seekPos);
+            }
+        } else if (v.getId() == R.id.rewind_btn) {
+            eventEmitter.emit(EventType.REWIND);
+        }
+    };
 
     public BrightcovePlayerView(ThemedReactContext context, ReactApplicationContext applicationContext) {
         super(context);
@@ -102,14 +117,14 @@ public class BrightcovePlayerView extends RelativeLayout implements LifecycleEve
                     break;
                 case EventType.PROGRESS:
                     WritableMap progressMap = Arguments.createMap();
-                    Integer playHead = (Integer) event.properties.get(Event.PLAYHEAD_POSITION);
+                    Long playHead = (Long) event.properties.get(Event.PLAYHEAD_POSITION_LONG);
                     if (playHead != null) {
                         progressMap.putDouble("currentTime", playHead / 1000d);
                     }
                     sendJSEvent(BrightcovePlayerManager.EVENT_PROGRESS, progressMap);
                     break;
                 case EventType.VIDEO_DURATION_CHANGED:
-                    Integer duration = (Integer) event.properties.get(Event.VIDEO_DURATION);
+                    Long duration = (Long) event.properties.get(Event.VIDEO_DURATION_LONG);
                     WritableMap durationMap = Arguments.createMap();
                     if (duration != null) {
                         durationMap.putDouble("duration", duration / 1000d);
@@ -145,10 +160,10 @@ public class BrightcovePlayerView extends RelativeLayout implements LifecycleEve
         setSeekControlConfig();
     }
 
-    private void setSeekControlConfig(){
+    private void setSeekControlConfig() {
         HashMap<String, Object> map = new HashMap<>();
-        map.put(Event.SEEK_DEFAULT, seekDuration);
-        eventEmitter.emit(EventType.SEEK_CONTROLLER_CONFIGURATION,map);
+        map.put(Event.SEEK_DEFAULT_LONG, seekDuration);
+        eventEmitter.emit(EventType.SEEK_CONTROLLER_CONFIGURATION, map);
     }
 
     private void sendJSEvent(String eventName, WritableMap map) {
@@ -207,7 +222,7 @@ public class BrightcovePlayerView extends RelativeLayout implements LifecycleEve
         sendJSEvent(BrightcovePlayerManager.EVENT_TOGGLE_ANDROID_FULLSCREEN, fullscreenEventMap);
     }
 
-    public void setSeekDuration(int seekDuration) {
+    public void setSeekDuration(long seekDuration) {
         this.seekDuration = seekDuration;
         setSeekControlConfig();
     }
@@ -229,7 +244,7 @@ public class BrightcovePlayerView extends RelativeLayout implements LifecycleEve
         this.updatePlaybackRate();
     }
 
-    public void seekTo(int time) {
+    public void seekTo(long time) {
         this.playerVideoView.seekTo(time);
     }
 
@@ -352,18 +367,6 @@ public class BrightcovePlayerView extends RelativeLayout implements LifecycleEve
         }
     }
 
-    private final OnClickListener controlsClickListener = v -> {
-        if (v.getId() == R.id.fast_forward_btn) {
-            long seekMax = mediaController.getBrightcoveSeekBar().getMax();
-            long seekPos = playerVideoView.getCurrentPosition() + seekDuration;
-            if(seekMax > seekPos) {
-                playerVideoView.seekTo((int) seekPos);
-            }
-        }else if (v.getId() == R.id.rewind_btn) {
-            eventEmitter.emit(EventType.REWIND);
-        }
-    };
-
     private void initMediaController(BaseVideoView brightcoveVideoView) {
         brightcoveVideoView.setMediaController(
                 new BrightcoveMediaController(
@@ -380,8 +383,8 @@ public class BrightcovePlayerView extends RelativeLayout implements LifecycleEve
     private void initButtons() {
         ImageButton rewindBtn = playerVideoView.findViewById(R.id.rewind_btn);
         ImageButton forwardBtn = playerVideoView.findViewById(R.id.fast_forward_btn);
-        rewindBtn.setOnClickListener(controlsClickListener);
-        forwardBtn.setOnClickListener(controlsClickListener);
+        rewindBtn.setOnClickListener(forwardRewindClickListener);
+        forwardBtn.setOnClickListener(forwardRewindClickListener);
     }
 
     @Override
@@ -414,12 +417,6 @@ public class BrightcovePlayerView extends RelativeLayout implements LifecycleEve
         // happens after a call to requestLayout, so we simulate one here.
         post(measureAndLayout);
     }
-
-    private final Runnable measureAndLayout = () -> {
-        measure(MeasureSpec.makeMeasureSpec(getWidth(), MeasureSpec.EXACTLY),
-                MeasureSpec.makeMeasureSpec(getHeight(), MeasureSpec.EXACTLY));
-        layout(getLeft(), getTop(), getRight(), getBottom());
-    };
 
     @Override
     public void audioFocusChanged(boolean hasFocus) {

@@ -114,8 +114,8 @@ public class BrightcovePlayerManager extends ViewGroupManager<BrightcovePlayerVi
     }
 
     @ReactProp(name = "seekDuration")
-    public void setSeekDuration(BrightcovePlayerView view, int seekDuration) {
-        view.setSeekDuration(seekDuration);
+    public void setSeekDuration(BrightcovePlayerView view, double seekDuration) {
+        view.setSeekDuration((long) seekDuration);
     }
 
 
@@ -125,7 +125,7 @@ public class BrightcovePlayerManager extends ViewGroupManager<BrightcovePlayerVi
         Assertions.assertNotNull(args);
         switch (commandType) {
             case COMMAND_SEEK_TO: {
-                view.seekTo((int)(args.getDouble(0) * 1000));
+                view.seekTo((long) (args.getDouble(0) * 1000));
                 return;
             }
         }
