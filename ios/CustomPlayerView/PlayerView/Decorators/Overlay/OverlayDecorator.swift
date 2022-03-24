@@ -3,7 +3,7 @@ import BrightcovePlayerSDK
 fileprivate struct OverlayConstants {
   static let closeButtonTrailing: CGFloat = 10
   static let closeButtonTop: CGFloat = -20
-  static let containerYOffset: CGFloat = 10
+  static let containerYOffset: CGFloat = 5
   static let showOverlayAnimationDuration: Double = 0.25
   static let hideOverlayAnimationDuration: Double = 0.15
 }
