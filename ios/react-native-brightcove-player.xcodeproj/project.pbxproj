@@ -97,6 +97,8 @@
 		A54AFB3327E4875100658D3C /* CustomOverlayControl.swift in Sources */ = {isa = PBXBuildFile; fileRef = A54AFAE227E4875100658D3C /* CustomOverlayControl.swift */; };
 		A54AFB3827E4877F00658D3C /* BrightcovePlayer.m in Sources */ = {isa = PBXBuildFile; fileRef = A54AFB3427E4877E00658D3C /* BrightcovePlayer.m */; };
 		A54AFB3927E4877F00658D3C /* BrightcovePlayerManager.m in Sources */ = {isa = PBXBuildFile; fileRef = A54AFB3527E4877E00658D3C /* BrightcovePlayerManager.m */; };
+		A563917227ECB08700276D91 /* PlayerView + Tapgesture.swift in Sources */ = {isa = PBXBuildFile; fileRef = A563917127ECB08700276D91 /* PlayerView + Tapgesture.swift */; };
+		A563917427ECB15700276D91 /* ScreenTapDecoratorType.swift in Sources */ = {isa = PBXBuildFile; fileRef = A563917327ECB15700276D91 /* ScreenTapDecoratorType.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXCopyFilesBuildPhase section */
@@ -211,6 +213,8 @@
 		A54AFB3627E4877E00658D3C /* BrightcovePlayerManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BrightcovePlayerManager.h; sourceTree = "<group>"; };
 		A54AFB3727E4877F00658D3C /* BrightcovePlayer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BrightcovePlayer.h; sourceTree = "<group>"; };
 		A54AFB3A27E48B0000658D3C /* Images.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Images.xcassets; sourceTree = "<group>"; };
+		A563917127ECB08700276D91 /* PlayerView + Tapgesture.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "PlayerView + Tapgesture.swift"; sourceTree = "<group>"; };
+		A563917327ECB15700276D91 /* ScreenTapDecoratorType.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScreenTapDecoratorType.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -273,6 +277,7 @@
 			isa = PBXGroup;
 			children = (
 				A536BFF527E8D5E5007770B4 /* ScreenTapDecorator.swift */,
+				A563917327ECB15700276D91 /* ScreenTapDecoratorType.swift */,
 			);
 			path = ScreenTap;
 			sourceTree = "<group>";
@@ -442,6 +447,7 @@
 				A54AFAA627E4875000658D3C /* PlayerView + CustomControlAction.swift */,
 				A54AFAA727E4875000658D3C /* PlayerView + Redux.swift */,
 				A54AFAA827E4875000658D3C /* PlayerView + AnyVideo.swift */,
+				A563917127ECB08700276D91 /* PlayerView + Tapgesture.swift */,
 			);
 			path = View;
 			sourceTree = "<group>";
@@ -685,6 +691,7 @@
 				A54AFB1527E4875100658D3C /* NetworkConstants.swift in Sources */,
 				A54AFAF427E4875100658D3C /* ClosedCaptionsDecorator.swift in Sources */,
 				A54AFAF727E4875100658D3C /* GoogleCastManager.swift in Sources */,
+				A563917227ECB08700276D91 /* PlayerView + Tapgesture.swift in Sources */,
 				A54AFB3327E4875100658D3C /* CustomOverlayControl.swift in Sources */,
 				A54AFAE927E4875100658D3C /* Text_tracks.swift in Sources */,
 				713443E1229BDB220071B8E4 /* BrightcovePlayerPosterManager.m in Sources */,
@@ -766,6 +773,7 @@
 				A54AFB0627E4875100658D3C /* PlayerView + MPRemoteCommandCenter.swift in Sources */,
 				713443DF229BDB220071B8E4 /* BrightcovePlayerOfflineVideoManager.m in Sources */,
 				A54AFAEA27E4875100658D3C /* Cue_points.swift in Sources */,
+				A563917427ECB15700276D91 /* ScreenTapDecoratorType.swift in Sources */,
 				A54AFAED27E4875100658D3C /* RecommendationsRemoteRepository.swift in Sources */,
 				A54AFAEE27E4875100658D3C /* RecommendationAnyVideo.swift in Sources */,
 				A54AFAEB27E4875100658D3C /* Poster_sources.swift in Sources */,

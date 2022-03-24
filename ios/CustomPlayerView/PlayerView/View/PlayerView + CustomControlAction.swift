@@ -27,6 +27,6 @@ extension PlayerView: CustomControlsObserverable {
   }
   func restablishTapTimer() {
     controlsFadingViewVisible = true
-    screenTapDecorator.reestablishTimer()
+    reestablishTimer()
   }
 }

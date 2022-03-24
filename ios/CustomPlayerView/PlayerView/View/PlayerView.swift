@@ -26,7 +26,7 @@ struct TimerControlConstants {
     let decorator = OverlayDecorator(self)
     return decorator
   }()
-  lazy var screenTapDecorator: ScreenTapDecorator = {
+  lazy var screenTapDecorator: ScreenTapDecoratorType = {
     let decorator = ScreenTapDecorator(self)
     return decorator
   }()
@@ -210,13 +210,18 @@ struct TimerControlConstants {
   // MARK: - Player controls
   func displayNextVideo() {
     if let video = playlistRepo.getNextVideo() {
-      // TODO: - Violating law of Demeter. Need to refactor
-      overlayDecorator.viewModel.videoObj = [video]
-      self.overlayDecorator.showOverlay = true
+      setNextPlaylistVideo(video)
     } else {
-      self.overlayDecorator.showOverlay = overlayDecorator.nextAnyVideo != nil ? true: false
+      if CurrentPlayerItem.shared.allVideosInAccount.count > 0 {
+        connectToRemote()
+      }
+      overlayDecorator.showOverlay = overlayDecorator.nextAnyVideo != nil ? true: false
       //overlayDecorator.connectToRemote() Commented for 10 sec buffer
     }
+  }
+  func setNextPlaylistVideo(_ nextVideo: BCOVVideo) {
+    overlayDecorator.nextPlaylistVideo = nextVideo
+    overlayDecorator.showOverlay = true
   }
   func connectToRemote() {
     overlayDecorator.connectToRemote()

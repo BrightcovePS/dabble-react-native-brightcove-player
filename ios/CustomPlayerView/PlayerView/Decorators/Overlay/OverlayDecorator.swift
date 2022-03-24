@@ -8,6 +8,13 @@ fileprivate struct OverlayConstants {
   static let hideOverlayAnimationDuration: Double = 0.15
 }
 class OverlayDecorator: NSObject, ViewDecoratorType {
+  var nextPlaylistVideo: BCOVVideo? {
+    didSet {
+      if let video = nextPlaylistVideo {
+      self.viewModel.videoObj = [video]
+      }
+    }
+  }
   var session: BCOVPlaybackSession? {
     didSet {
       setOverlaySize()
@@ -156,7 +163,7 @@ class OverlayDecorator: NSObject, ViewDecoratorType {
   }
   fileprivate func setOverlaySize() {
     guard UIDevice.current.orientation.rawValue != 2,
-          let referenceViewCGrect =  (parentView as? PlayerView)?.session?.playerLayer.videoRect,
+          let referenceViewCGrect = parentView?.contentContainerView.frame,
           let screenMode = screenMode else {
       return
     }

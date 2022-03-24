@@ -1,5 +1,5 @@
 import Foundation
-class ScreenTapDecorator: PlayerDecoratorProtocol {
+class ScreenTapDecorator: ScreenTapDecoratorType {
   weak var playerView: PlayerView?
   private var controlTimer: Timer?
   lazy var controlsContainerView = playerView?.controlsContainerView
@@ -15,13 +15,13 @@ class ScreenTapDecorator: PlayerDecoratorProtocol {
     self.handleTap()
   }
   private func handleTap() {
-      UIView.animate(withDuration: 0.1, animations: {
-        self.showCustomControls()
-      }) { [weak self](finished: Bool) in
-        if finished {
-          self?.reestablishTimer()
-        }
+    UIView.animate(withDuration: 0.1, animations: {
+      self.showCustomControls()
+    }) { [weak self](finished: Bool) in
+      if finished {
+        self?.reestablishTimer()
       }
+    }
   }
   func reestablishTimer() {
     cancelTimer()
