@@ -68,7 +68,7 @@ public final class ReactCatalogError implements BrightcoveError {
         if (this == o) {
             return true;
         } else if (o != null && this.getClass() == o.getClass()) {
-            ReactCatalogError that = (ReactCatalogError)o;
+            ReactCatalogError that = (ReactCatalogError) o;
             return this.mCatalogErrorCode.equals(that.mCatalogErrorCode) && this.mCatalogErrorSubcode.equals(that.mCatalogErrorSubcode) && this.mMessage.equals(that.mMessage) && Objects.equals(this.mError, that.mError);
         } else {
             return false;
@@ -98,17 +98,17 @@ public final class ReactCatalogError implements BrightcoveError {
         }
 
         ReactCatalogError.Builder setCatalogErrorCode(@NonNull String catalogErrorCode) {
-            this.catalogErrorCode = (String)com.brightcove.player.util.Objects.requireNonNull(catalogErrorCode, "Catalog error code cannot be null");
+            this.catalogErrorCode = (String) com.brightcove.player.util.Objects.requireNonNull(catalogErrorCode, "Catalog error code cannot be null");
             return this;
         }
 
         ReactCatalogError.Builder setCatalogErrorSubcode(@NonNull String catalogErrorSubcode) {
-            this.catalogErrorSubcode = (String)com.brightcove.player.util.Objects.requireNonNull(catalogErrorSubcode, "Catalog error subcode cannot be null");
+            this.catalogErrorSubcode = (String) com.brightcove.player.util.Objects.requireNonNull(catalogErrorSubcode, "Catalog error subcode cannot be null");
             return this;
         }
 
         ReactCatalogError.Builder setMessage(@NonNull String message) {
-            this.message = (String)com.brightcove.player.util.Objects.requireNonNull(message, "Message cannot be null");
+            this.message = (String) com.brightcove.player.util.Objects.requireNonNull(message, "Message cannot be null");
             return this;
         }
 

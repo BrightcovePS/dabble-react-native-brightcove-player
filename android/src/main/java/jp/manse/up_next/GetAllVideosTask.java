@@ -45,7 +45,7 @@ public class GetAllVideosTask extends ReactEdgeTask<Playlist> implements Compone
 
         try {
             URI uri = this.createURI("accounts", this.account, "videos");
-            System.out.println("GetVideos =================URL ===============> "+ uri.toString());
+            System.out.println("GetVideos =================URL ===============> " + uri.toString());
             this.execute(uri);
         } catch (URISyntaxException var4) {
             var4.printStackTrace();
@@ -60,7 +60,7 @@ public class GetAllVideosTask extends ReactEdgeTask<Playlist> implements Compone
             List<CatalogError> errorList = result.getErrorList();
             this.playlistListener.onError(errorList);
             if (errorList.size() == 1) {
-                this.callDeprecatedOnErrorStringCallback(this.playlistListener, ((CatalogError)errorList.get(0)).getMessage());
+                this.callDeprecatedOnErrorStringCallback(this.playlistListener, ((CatalogError) errorList.get(0)).getMessage());
             }
         }
 

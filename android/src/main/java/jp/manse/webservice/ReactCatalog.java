@@ -78,28 +78,28 @@ public class ReactCatalog extends AbstractComponent {
         @NonNull
         private Map<String, String> properties;
 
-        protected abstract T self();
-
         protected AbstractBuilder(@NonNull EventEmitter eventEmitter, @NonNull String account) {
-            this.eventEmitter = (EventEmitter)Objects.requireNonNull(eventEmitter, "EventEmitter cannot be null");
-            this.account = (String)Objects.requireNonNull(account, "Account cannot be null");
+            this.eventEmitter = (EventEmitter) Objects.requireNonNull(eventEmitter, "EventEmitter cannot be null");
+            this.account = (String) Objects.requireNonNull(account, "Account cannot be null");
             this.policy = "";
             this.baseURL = "";
             this.properties = new HashMap();
         }
 
+        protected abstract T self();
+
         public T setPolicy(@NonNull String policy) {
-            this.policy = (String)Objects.requireNonNull(policy, "Policy cannot be null");
+            this.policy = (String) Objects.requireNonNull(policy, "Policy cannot be null");
             return this.self();
         }
 
         public T setBaseURL(@NonNull String baseURL) {
-            this.baseURL = (String)Objects.requireNonNull(baseURL, "Base URL cannot be null");
+            this.baseURL = (String) Objects.requireNonNull(baseURL, "Base URL cannot be null");
             return this.self();
         }
 
         public T setProperties(@NonNull Map<String, String> properties) {
-            this.properties = (Map)Objects.requireNonNull(properties, "properties Map cannot be null");
+            this.properties = (Map) Objects.requireNonNull(properties, "properties Map cannot be null");
             return this.self();
         }
 

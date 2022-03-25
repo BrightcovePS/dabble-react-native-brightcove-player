@@ -42,27 +42,29 @@ import java.util.Map;
         events = {}
 )
 public abstract class ReactEdgeTask<T> extends AsyncTask<URI, Void, EdgeTaskResult<T>> implements Component {
-    private long startResponseTimeMs;
+    public static final int CONNECT_TIMEOUT = 30000;
+    public static final int READ_TIMEOUT = 30000;
     static final Gson GSON_ERROR_PARSER = (new GsonBuilder()).excludeFieldsWithoutExposeAnnotation().create();
     private static final String BRIGHTCOVE_POLICY_HEADER_KEY = "BCOV-POLICY";
+    protected final HttpRequestConfig httpRequestConfig;
     protected EventEmitter eventEmitter;
     @NonNull
     protected String baseURL;
     @NonNull
     protected String account;
-    @NonNull
-    private String policy;
     protected URI uri;
     protected HttpService httpService;
     protected List<String> errors;
-    protected final HttpRequestConfig httpRequestConfig;
+    private long startResponseTimeMs;
+    @NonNull
+    private String policy;
 
     public ReactEdgeTask(@NonNull EventEmitter eventEmitter, @NonNull String baseURL, @NonNull HttpRequestConfig httpRequestConfig, @NonNull String account, @NonNull String policy) {
         this.eventEmitter = RegisteringEventEmitter.build(eventEmitter, ReactEdgeTask.class);
         this.baseURL = baseURL;
         this.account = account;
         this.policy = policy;
-        this.httpService = new HttpService();
+        this.httpService = new HttpService(CONNECT_TIMEOUT, READ_TIMEOUT);
         this.errors = new ArrayList();
         this.httpRequestConfig = httpRequestConfig;
     }
@@ -127,12 +129,12 @@ public abstract class ReactEdgeTask<T> extends AsyncTask<URI, Void, EdgeTaskResu
     protected abstract T processData(@NonNull JSONObject var1) throws Exception;
 
     private List<CatalogError> processError(@NonNull String arrayData) {
-        List<CatalogError> catalogErrorList = (List)GSON_ERROR_PARSER.fromJson(arrayData, (new TypeToken<List<CatalogError>>() {
+        List<CatalogError> catalogErrorList = (List) GSON_ERROR_PARSER.fromJson(arrayData, (new TypeToken<List<CatalogError>>() {
         }).getType());
         Iterator var3 = catalogErrorList.iterator();
 
-        while(var3.hasNext()) {
-            CatalogError catalogError = (CatalogError)var3.next();
+        while (var3.hasNext()) {
+            CatalogError catalogError = (CatalogError) var3.next();
             Map<String, Object> properties = new HashMap();
             properties.put("error_code", catalogError.getCatalogErrorCode());
             properties.put("error_subcode", catalogError.getCatalogErrorSubcode());
@@ -173,7 +175,7 @@ public abstract class ReactEdgeTask<T> extends AsyncTask<URI, Void, EdgeTaskResu
             String[] paramsTemp = params;
             int paramsLength = params.length;
 
-            for(int i = 0; i < paramsLength; ++i) {
+            for (int i = 0; i < paramsLength; ++i) {
                 key = paramsTemp[i];
                 urlBuilder.append('/');
                 urlBuilder.append(key);
@@ -183,10 +185,10 @@ public abstract class ReactEdgeTask<T> extends AsyncTask<URI, Void, EdgeTaskResu
         int counter = 0;
         Iterator queryParamsIterator = this.httpRequestConfig.getQueryParameters().entrySet().iterator();
 
-        while(queryParamsIterator.hasNext()) {
-            Map.Entry<String, String> entry = (Map.Entry)queryParamsIterator.next();
-            key = (String)entry.getKey();
-            String value = (String)entry.getValue();
+        while (queryParamsIterator.hasNext()) {
+            Map.Entry<String, String> entry = (Map.Entry) queryParamsIterator.next();
+            key = (String) entry.getKey();
+            String value = (String) entry.getValue();
             if (key != null && value != null) {
                 if (counter == 0) {
                     urlBuilder.append('?');
@@ -206,13 +208,13 @@ public abstract class ReactEdgeTask<T> extends AsyncTask<URI, Void, EdgeTaskResu
     private String getThrowableMessage(Throwable throwable, String... params) {
         String message = "";
         if (throwable instanceof JSONException) {
-            message = String.format(Locale.getDefault(), ErrorUtil.getMessage("mediaRequestInvalidJSON"), (Object[])params);
+            message = String.format(Locale.getDefault(), ErrorUtil.getMessage("mediaRequestInvalidJSON"), (Object[]) params);
         } else if (throwable instanceof IllegalArgumentException) {
-            message = String.format(Locale.getDefault(), ErrorUtil.getMessage("mediaRequestNoJSON"), (Object[])params);
+            message = String.format(Locale.getDefault(), ErrorUtil.getMessage("mediaRequestNoJSON"), (Object[]) params);
         } else if (throwable instanceof VideoParseException) {
-            message = String.format(Locale.getDefault(), ErrorUtil.getMessage("videoParseException"), (Object[])params);
+            message = String.format(Locale.getDefault(), ErrorUtil.getMessage("videoParseException"), (Object[]) params);
         } else if (throwable instanceof IOException) {
-            message = String.format(Locale.getDefault(), ErrorUtil.getMessage("uriError"), (Object[])params);
+            message = String.format(Locale.getDefault(), ErrorUtil.getMessage("uriError"), (Object[]) params);
         } else if (throwable.getLocalizedMessage() != null) {
             message = throwable.getLocalizedMessage();
         }
