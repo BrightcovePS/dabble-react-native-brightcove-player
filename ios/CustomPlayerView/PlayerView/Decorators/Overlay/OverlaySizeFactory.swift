@@ -15,7 +15,7 @@ class OverlaySizeFactory {
   }
   class func setupDimensionsForIPad(referenceViewCGrect: CGRect, screenMode: BCOVPUIScreenMode) {
     let widthRatio: CGFloat = 0.7
-    let heightRatio: CGFloat = 0.6
+    let heightRatio: CGFloat = 0.7
     if screenMode == .normal { // OK
       if referenceViewCGrect.height < referenceViewCGrect.width { // take height for landscape
         OverlaySize.height = (referenceViewCGrect.height) * heightRatio + OverlaySizeFactoryConstants.titleHeight

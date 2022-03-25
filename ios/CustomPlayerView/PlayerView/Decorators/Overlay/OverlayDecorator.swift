@@ -163,7 +163,7 @@ class OverlayDecorator: NSObject, ViewDecoratorType {
   }
   fileprivate func setOverlaySize() {
     guard UIDevice.current.orientation.rawValue != 2,
-          let referenceViewCGrect = parentView?.contentContainerView.frame,
+          let referenceViewCGrect = parentView?.controlsContainerView.frame,
           let screenMode = screenMode else {
       return
     }

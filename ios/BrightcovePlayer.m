@@ -273,7 +273,7 @@
   }
   return nil;
 }
-- (void)progressSliderDidChangeValue:(UISlider *)slider {
+- (void)progressSliderDidTouchUp:(UISlider *)slider {
   _playerView.slider = slider;
 }
 - (void)nextVideoPlayer:(NSDictionary *)video {
