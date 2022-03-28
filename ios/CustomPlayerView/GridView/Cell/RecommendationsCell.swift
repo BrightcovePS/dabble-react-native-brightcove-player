@@ -2,10 +2,11 @@ import UIKit
 struct TimerConstants {
   static let nextVideoThumbnailDuration: Double = 5
   static let thumbnailVideoEndOffset: Double = 5
-  static let apiCallVideoEndOffset: Double = 10
+  static let apiCallVideoEndOffset: Double = 15
 }
 class RecommendationsCell: UICollectionViewCell, DynamicDataCell {
   let thumbnailHeightMultiplier: CGFloat = 0.785
+  let titleHeight: CGFloat = 36
   let closeButtonEdgeInset = UIEdgeInsets(top: 3, left: 3, bottom: 3, right: 3)
   var circularProgressBarView: PBCircularProgressView!
   private var timerView: TimerView!
@@ -76,6 +77,15 @@ class RecommendationsCell: UICollectionViewCell, DynamicDataCell {
     label.translatesAutoresizingMaskIntoConstraints = false
     return label
   }()
+  private lazy var stackView: UIStackView = {
+    let stackView = UIStackView()
+    stackView.translatesAutoresizingMaskIntoConstraints = false
+    stackView.axis = .vertical
+    stackView.backgroundColor = .clear
+    stackView.distribution = .fillProportionally
+   // stackView.spacing = RBPlayerControl.Metrics.smallSpacing
+    return stackView
+  }()
   // TODO: Based on the final design, can be converted to a simple string object
   private lazy var url: UILabel = {
     let label = UILabel()
@@ -113,14 +123,30 @@ class RecommendationsCell: UICollectionViewCell, DynamicDataCell {
     selectionActionDispatch()
   }
   func addSubviews() {
-    addThumbnailImage()
+    addStackView()
+    addThumbnailToStack()
     addTimerView()
     addCloseButton()
-    addTitleLabel()
+    addTitleToStack()
     addPlayButton()
     //addHeadingTitleLabel()
     //addTapgesture()
     //setUpCircularProgressBarView()
+  }
+  private func addStackView() {
+    contentView.addSubview(stackView)
+    stackView.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: .zero).isActive = true
+    stackView.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: .zero).isActive = true
+    stackView.topAnchor.constraint(equalTo: contentView.topAnchor).isActive = true
+    stackView.bottomAnchor.constraint(equalTo: contentView.bottomAnchor).isActive = true
+  }
+  func addThumbnailToStack() {
+    thumbnail.heightAnchor.constraint(greaterThanOrEqualToConstant: contentView.frame.height*thumbnailHeightMultiplier).isActive = true
+    stackView.addArrangedSubview(thumbnail)
+  }
+  func addTitleToStack() {
+    title.heightAnchor.constraint(greaterThanOrEqualToConstant: titleHeight).isActive = true
+    stackView.addArrangedSubview(title)
   }
   func addTapgesture() {
     ///self.contentView.isUserInteractionEnabled = true
@@ -131,6 +157,7 @@ class RecommendationsCell: UICollectionViewCell, DynamicDataCell {
       eachSubView.removeFromSuperview()
     }
     thumbnail.image = nil
+    thumbnail.backgroundColor = .darkGray
   }
   private func addTimerView() {
     let nextVideoDuration = Int(TimerConstants.nextVideoThumbnailDuration)
@@ -186,12 +213,10 @@ class RecommendationsCell: UICollectionViewCell, DynamicDataCell {
   }
   func addTitleLabel() {
     contentView.addSubview(title)
-    NSLayoutConstraint.activate([
-      title.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: .zero),
-      title.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: .zero),
-      title.topAnchor.constraint(equalTo: thumbnail.bottomAnchor, constant: 1.5),
-      title.heightAnchor.constraint(lessThanOrEqualToConstant: RecommendationOverlayConstants.kRecommendationOverlayURLHeight)
-    ])
+    title.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: .zero).isActive = true
+    title.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: .zero).isActive = true
+    title.topAnchor.constraint(equalTo: thumbnail.bottomAnchor, constant: 1.5).isActive = true
+    title.heightAnchor.constraint(lessThanOrEqualToConstant: titleHeight).isActive = true
   }
   func addHeadingTitleLabel() {
     contentView.addSubview(headingLabel)
@@ -204,7 +229,9 @@ class RecommendationsCell: UICollectionViewCell, DynamicDataCell {
   }
   func configure(_ dataType: RecommendationsModel?) {
     if let imageUrl = dataType?.thumbnailURL {
-      self.thumbnail.setImage(url: imageUrl, completion: nil)
+      self.thumbnail.setImage(url: imageUrl,
+                              placeholderImage: UIColor.darkGray.image(),
+                              completion: nil)
     }
     self.model = dataType
     title.text = dataType?.title

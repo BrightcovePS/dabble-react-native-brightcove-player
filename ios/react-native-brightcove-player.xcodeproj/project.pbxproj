@@ -13,6 +13,7 @@
 		713443E3229BDB220071B8E4 /* BrightcovePlayerPoster.m in Sources */ = {isa = PBXBuildFile; fileRef = 713443DC229BDB220071B8E4 /* BrightcovePlayerPoster.m */; };
 		A523E0DC27E8663400626DFC /* AccountConfig.swift in Sources */ = {isa = PBXBuildFile; fileRef = A523E0DB27E8663400626DFC /* AccountConfig.swift */; };
 		A523E0E127E8824C00626DFC /* CurrentPlayerItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = A523E0E027E8824C00626DFC /* CurrentPlayerItem.swift */; };
+		A52E120027F2054F003393D4 /* UIColor+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = A52E11FF27F2054F003393D4 /* UIColor+Extension.swift */; };
 		A536BFF627E8D5E5007770B4 /* ScreenTapDecorator.swift in Sources */ = {isa = PBXBuildFile; fileRef = A536BFF527E8D5E5007770B4 /* ScreenTapDecorator.swift */; };
 		A54AFAE327E4875100658D3C /* AllVideos.swift in Sources */ = {isa = PBXBuildFile; fileRef = A54AFA7627E4875000658D3C /* AllVideos.swift */; };
 		A54AFAE427E4875100658D3C /* Videos.swift in Sources */ = {isa = PBXBuildFile; fileRef = A54AFA7727E4875000658D3C /* Videos.swift */; };
@@ -125,6 +126,7 @@
 		713443DD229BDB220071B8E4 /* BrightcovePlayerPoster.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BrightcovePlayerPoster.h; sourceTree = "<group>"; };
 		A523E0DB27E8663400626DFC /* AccountConfig.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AccountConfig.swift; sourceTree = "<group>"; };
 		A523E0E027E8824C00626DFC /* CurrentPlayerItem.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CurrentPlayerItem.swift; sourceTree = "<group>"; };
+		A52E11FF27F2054F003393D4 /* UIColor+Extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIColor+Extension.swift"; sourceTree = "<group>"; };
 		A536BFF527E8D5E5007770B4 /* ScreenTapDecorator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScreenTapDecorator.swift; sourceTree = "<group>"; };
 		A54AFA6E27E4873A00658D3C /* react-native-brightcove-player-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "react-native-brightcove-player-Bridging-Header.h"; sourceTree = "<group>"; };
 		A54AFA7627E4875000658D3C /* AllVideos.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AllVideos.swift; sourceTree = "<group>"; };
@@ -481,6 +483,7 @@
 			isa = PBXGroup;
 			children = (
 				A54AFAB627E4875000658D3C /* UIView+Extension.swift */,
+				A52E11FF27F2054F003393D4 /* UIColor+Extension.swift */,
 			);
 			path = Extensions;
 			sourceTree = "<group>";
@@ -727,6 +730,7 @@
 				A54AFB3127E4875100658D3C /* CustomControlsProtocol.swift in Sources */,
 				A54AFB0A27E4875100658D3C /* PlayerView + Redux.swift in Sources */,
 				A54AFB2927E4875100658D3C /* Store.swift in Sources */,
+				A52E120027F2054F003393D4 /* UIColor+Extension.swift in Sources */,
 				A54AFB1A27E4875100658D3C /* GridViewModel.swift in Sources */,
 				A54AFAE827E4875100658D3C /* Custom_fields.swift in Sources */,
 				A54AFB0D27E4875100658D3C /* UIDevice.swift in Sources */,
