@@ -51,8 +51,20 @@ public class BrightcovePlayerView extends RelativeLayout implements LifecycleEve
                 MeasureSpec.makeMeasureSpec(getHeight(), MeasureSpec.EXACTLY));
         layout(getLeft(), getTop(), getRight(), getBottom());
     };
-    private BrightcoveExoPlayerVideoView playerVideoView;
-    private BrightcoveMediaController mediaController;
+    private final EventEmitter eventEmitter;
+    private final BrightcoveExoPlayerVideoView playerVideoView;
+    private final BrightcoveMediaController mediaController;
+    private final UpNextView.UpNextStatusListener onUpNextStatusListener = new UpNextView.UpNextStatusListener() {
+        @Override
+        public void onShow(Video video) {
+            mediaController.hide();
+        }
+
+        @Override
+        public void onClose(Video video) {
+            mediaController.show();
+        }
+    };
     private String policyKey;
     private String accountId;
     private String videoId;
@@ -61,27 +73,19 @@ public class BrightcovePlayerView extends RelativeLayout implements LifecycleEve
     private String referenceId;
     private String videoToken;
     private long seekDuration = SEEK_OFFSET;
+    private final OnClickListener forwardRewindClickListener = v -> {
+        if (v.getId() == R.id.fast_forward_btn) {
+            fastForward();
+        } else if (v.getId() == R.id.rewind_btn) {
+            rewind();
+        }
+    };
     private boolean autoPlay = true;
     private boolean playing = false;
     private int bitRate = 0;
     private float playbackRate = 1;
-    private Catalog catalog;
     private UpNextView upNextView;
-
-    private EventEmitter eventEmitter;
-    private final OnClickListener forwardRewindClickListener = v -> {
-        if (v.getId() == R.id.fast_forward_btn) {
-            long seekMax = mediaController.getBrightcoveSeekBar().getMax();
-            long seekPos = playerVideoView.getCurrentPositionLong() + seekDuration;
-            if (seekMax > seekPos) {
-                playerVideoView.seekTo(seekPos);
-            }
-        } else if (v.getId() == R.id.rewind_btn) {
-            eventEmitter.emit(EventType.REWIND);
-        }
-    };
-
-    private UpNextView.OnPlayUpNextListener onPlayUpNextListener = new UpNextView.OnPlayUpNextListener() {
+    private final UpNextView.OnPlayUpNextListener onPlayUpNextListener = new UpNextView.OnPlayUpNextListener() {
         @Override
         public void onPlayNext(Video video) {
             WritableMap event = Arguments.createMap();
@@ -185,6 +189,7 @@ public class BrightcovePlayerView extends RelativeLayout implements LifecycleEve
         this.upNextView = new UpNextView(context, accountId, policyKey);
         addView(upNextView.getUpNextContainer());
         upNextView.setOnClickUpNextListener(onPlayUpNextListener);
+        upNextView.setUpNextStatusListener(onUpNextStatusListener);
     }
 
     private void setSeekControlConfig() {
@@ -382,7 +387,7 @@ public class BrightcovePlayerView extends RelativeLayout implements LifecycleEve
                 playVideo(video);
             }
         };
-        catalog = new Catalog.Builder(this.playerVideoView.getEventEmitter(), accountId)
+        Catalog catalog = new Catalog.Builder(this.playerVideoView.getEventEmitter(), accountId)
                 .setPolicy(policyKey)
                 .build();
         if (this.videoId != null) {
@@ -446,6 +451,21 @@ public class BrightcovePlayerView extends RelativeLayout implements LifecycleEve
         ImageButton forwardBtn = playerVideoView.findViewById(R.id.fast_forward_btn);
         rewindBtn.setOnClickListener(forwardRewindClickListener);
         forwardBtn.setOnClickListener(forwardRewindClickListener);
+    }
+
+    private void fastForward() {
+        long seekMax = mediaController.getBrightcoveSeekBar().getMax();
+        long seekPos = playerVideoView.getCurrentPositionLong() + seekDuration;
+        if (seekMax > seekPos) {
+            playerVideoView.seekTo(seekPos);
+        }
+    }
+
+    private void rewind() {
+        long seekPos = mediaController.getBrightcoveSeekBar().getProgress() - seekDuration;
+        if (seekPos > 0) {
+            playerVideoView.seekTo(seekPos);
+        }
     }
 
     @Override

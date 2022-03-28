@@ -53,6 +53,7 @@ public class UpNextView {
     private ImageLoader imageLoader;
     private ReactContext context;
     private OnPlayUpNextListener onPlayUpNextListener;
+    private UpNextStatusListener onUpNextStatusListener;
     private String accountId;
     private String policyKey;
     private Catalog catalog;
@@ -73,7 +74,7 @@ public class UpNextView {
             public void onTick(long millisUntilFinished) {
                 if (upNextContainer != null) {
                     ((TextView) upNextContainer.findViewById(R.id.count_down_txt)).setText(String.valueOf(downSecondCounter));
-                    downSecondCounter --;
+                    downSecondCounter--;
                 }
             }
 
@@ -129,6 +130,9 @@ public class UpNextView {
     public void showUpNext() {
         if (nextVideo != null) {
             startUpNextTimer();
+            if (onUpNextStatusListener != null) {
+                onUpNextStatusListener.onShow(nextVideo);
+            }
             ImageView upNextPoster = upNextContainer.findViewById(R.id.up_next_poster);
             upNextPoster.setLayoutParams(new ViewGroup.LayoutParams((int) upNextBannerWidth, (int) upNextBannerHeight));
             View upNextPosterBorder = upNextContainer.findViewById(R.id.up_next_poster_border);
@@ -142,6 +146,9 @@ public class UpNextView {
     }
 
     private void onClose() {
+        if (onUpNextStatusListener != null) {
+            onUpNextStatusListener.onClose(nextVideo);
+        }
         upNextOverlayCancelled = true;
         hideUpNext();
     }
@@ -362,6 +369,7 @@ public class UpNextView {
         videoDuration = 0;
         videoReferenceId = null;
         onPlayUpNextListener = null;
+        onUpNextStatusListener = null;
         accountId = null;
         policyKey = null;
         catalog = null;
@@ -369,10 +377,21 @@ public class UpNextView {
     }
 
     public void setOnClickUpNextListener(@NonNull OnPlayUpNextListener onPlayUpNextListener) {
-        this.onPlayUpNextListener = (OnPlayUpNextListener) Objects.requireNonNull(onPlayUpNextListener, "Policy cannot be null");
+        this.onPlayUpNextListener = Objects.requireNonNull(onPlayUpNextListener, "OnPlayUpNextListener cannot be null");
     }
+
+    public void setUpNextStatusListener(@NonNull UpNextStatusListener upNextStatusListener) {
+        this.onUpNextStatusListener = upNextStatusListener;
+    }
+
 
     public interface OnPlayUpNextListener {
         void onPlayNext(Video video);
+    }
+
+    public interface UpNextStatusListener {
+        void onShow(Video video);
+
+        void onClose(Video video);
     }
 }

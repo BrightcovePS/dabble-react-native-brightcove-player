@@ -45,7 +45,6 @@ public class GetAllVideosTask extends ReactEdgeTask<Playlist> implements Compone
 
         try {
             URI uri = this.createURI("accounts", this.account, "videos");
-            System.out.println("GetVideos =================URL ===============> " + uri.toString());
             this.execute(uri);
         } catch (URISyntaxException var4) {
             var4.printStackTrace();

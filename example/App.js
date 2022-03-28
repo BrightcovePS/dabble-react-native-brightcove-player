@@ -29,6 +29,7 @@ export default class App extends Component {
     playback: {
       referenceId: null,
       videoToken: null,
+      videoId: null,
     },
   };
 
@@ -80,6 +81,7 @@ export default class App extends Component {
             }
           : {
               referenceId: item.referenceId,
+              videoId: item.videoId
             },
     });
   }
@@ -117,7 +119,7 @@ export default class App extends Component {
           style={styles.list}
           extraData={this.state.offlineVideos}
           data={this.state.videos}
-          keyExtractor={item => item.referenceId}
+          keyExtractor={item => item.videoId}
           renderItem={({item}) => {
             const downloadStatus = this.state.offlineVideos.find(
               video => video.videoId === item.videoId,
