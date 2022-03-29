@@ -58,7 +58,7 @@ struct TimerControlConstants {
   @objc weak var player: BrightcovePlayer!
   @objc public var seekDuration: Double = SeekDuration.timeInterval {
     didSet {
-      SeekDuration.timeInterval = seekDuration
+      SeekDuration.timeInterval = seekDuration/1000
     }
   }
   @objc public var showVideoEndOverlay: Bool = false {

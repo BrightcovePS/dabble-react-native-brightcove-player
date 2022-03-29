@@ -39,7 +39,7 @@ class OverlaySizeFactory {
   class func setupDimensionsForIPhone(referenceViewCGrect: CGRect, screenMode: BCOVPUIScreenMode) {
     if screenMode == .normal { // OK
       let widthRatio: CGFloat = 0.7
-      let heightRatio: CGFloat = 0.65
+      let heightRatio: CGFloat = UIDevice.current.orientation.isLandscape ? 0.7 : 0.65 
       if referenceViewCGrect.height < referenceViewCGrect.width { // take height for landscape
         OverlaySize.height = ((referenceViewCGrect.height) * heightRatio) + OverlaySizeFactoryConstants.titleHeight
         OverlaySize.width = ((referenceViewCGrect.height) * heightRatio * OverlaySizeFactory.aspectRatioInverse) - OverlaySizeFactoryConstants.titleHeight
