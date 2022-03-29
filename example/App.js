@@ -27,6 +27,7 @@ export default class App extends Component {
     videos: [],
     offlineVideos: [],
     playback: {
+      play: false,
       referenceId: null,
       videoToken: null,
       videoId: null,
@@ -78,10 +79,12 @@ export default class App extends Component {
         downloadStatus && downloadStatus.downloadProgress === 1
           ? {
               videoToken: downloadStatus.videoToken,
+              play: true
             }
           : {
               referenceId: item.referenceId,
-              videoId: item.videoId
+              videoId: item.videoId,
+              play: true
             },
     });
   }
@@ -96,6 +99,18 @@ export default class App extends Component {
 
   componentWillUnmount() {
     this.disposer && this.disposer();
+  }
+
+  onPressPlayPause = () => {
+    this.setState((state, props) => {
+      return {
+        state,
+        playback: {
+                ...state.playback,
+                play: !state.playback.play
+              }
+      };
+    });
   }
 
   render() {
@@ -114,7 +129,11 @@ export default class App extends Component {
             console.log(" On Play Next =================> ", JSON.stringify(event));
           }}
         />
-
+        <TouchableOpacity
+          style={styles.playPauseButton}
+          onPress={this.onPressPlayPause}>
+            <Text> Playing status: {this.state.playback.play ? "Playing": "Paused"} </Text>
+        </TouchableOpacity>
         <FlatList
           style={styles.list}
           extraData={this.state.offlineVideos}
@@ -231,4 +250,9 @@ const styles = StyleSheet.create({
     marginLeft: 'auto',
     alignSelf: 'center',
   },
+  playPauseButton: {
+    alignItems: "center",
+    backgroundColor: "#DDDDDD",
+    padding: 10
+  }
 });
