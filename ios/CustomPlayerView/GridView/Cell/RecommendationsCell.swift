@@ -2,7 +2,7 @@ import UIKit
 struct TimerConstants {
   static let nextVideoThumbnailDuration: Double = 5
   static let thumbnailVideoEndOffset: Double = 5
-  static let apiCallVideoEndOffset: Double = 15
+  static let apiCallVideoEndOffset: Double = 20
 }
 class RecommendationsCell: UICollectionViewCell, DynamicDataCell {
   let thumbnailHeightMultiplier: CGFloat = 0.785
