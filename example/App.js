@@ -79,12 +79,12 @@ export default class App extends Component {
         downloadStatus && downloadStatus.downloadProgress === 1
           ? {
               videoToken: downloadStatus.videoToken,
-              play: true
+              play: true,
             }
           : {
               referenceId: item.referenceId,
               videoId: item.videoId,
-              play: true
+              play: true,
             },
     });
   }
@@ -106,12 +106,12 @@ export default class App extends Component {
       return {
         state,
         playback: {
-                ...state.playback,
-                play: !state.playback.play
-              }
+          ...state.playback,
+          play: !state.playback.play,
+        },
       };
     });
-  }
+  };
 
   render() {
     return (
@@ -125,14 +125,22 @@ export default class App extends Component {
           playlistReferenceId={PLAYLIST_REF_ID}
           autoPlay
           {...this.state.playback}
-          onPlayNextVideo={(event) => {
-            console.log(" On Play Next =================> ", JSON.stringify(event));
+          onPlayNextVideo={event => {
+            console.log(
+              ' On Play Next =================> ',
+              JSON.stringify(event),
+            );
           }}
         />
         <TouchableOpacity
           style={styles.playPauseButton}
           onPress={this.onPressPlayPause}>
-            <Text> Playing status: {this.state.playback.play ? "Playing": "Paused"} </Text>
+          <Text>
+            {' '}
+            Playing status: {this.state.playback.play
+              ? 'Playing'
+              : 'Paused'}{' '}
+          </Text>
         </TouchableOpacity>
         <FlatList
           style={styles.list}
@@ -251,8 +259,8 @@ const styles = StyleSheet.create({
     alignSelf: 'center',
   },
   playPauseButton: {
-    alignItems: "center",
-    backgroundColor: "#DDDDDD",
-    padding: 10
-  }
+    alignItems: 'center',
+    backgroundColor: '#DDDDDD',
+    padding: 10,
+  },
 });
