@@ -3,7 +3,7 @@ import BrightcovePlayerSDK
 struct OverlayConstants {
   static let closeButtonTrailing: CGFloat = 10
   static let closeButtonTop: CGFloat = -20
-  static var containerYOffset: CGFloat = 10
+  static var containerYOffset: CGFloat = 5
   static let normalScreencontainerYOffset: CGFloat = 5
   static let fullScreencontainerYOffset: CGFloat = 15
   static let showOverlayAnimationDuration: Double = 0.25
@@ -166,12 +166,8 @@ class OverlayDecorator: NSObject, ViewDecoratorType {
     gridContainer.removeFromSuperview()
     overlayBackground.removeFromSuperview()
   }
-  /*2,5,6 - Flat orientations*/
   fileprivate func setOverlaySize() {
-    guard UIDevice.current.orientation.rawValue != 2,
-          UIDevice.current.orientation.rawValue != 5,
-          UIDevice.current.orientation.rawValue != 6,
-          let referenceViewCGrect = parentView?.overlayView.frame,
+    guard let referenceViewCGrect = parentView?.overlayView.frame,
           let screenMode = screenMode else {
       return
     }
@@ -192,9 +188,11 @@ class OverlayDecorator: NSObject, ViewDecoratorType {
     }
   }
   fileprivate func updateCenterYOffset() {
-    if let screenMode = screenMode {
-      OverlaySizeFactory.setupOverlayCentreYOffset(screenMode: screenMode)
-    }
+    guard let referenceViewCGrect = parentView?.overlayView.frame,
+          let screenMode = screenMode else {
+            return
+          }
+    OverlaySizeFactory.setupOverlayCentreYOffset(referenceViewCGrect: referenceViewCGrect, screenMode: screenMode)
   }
   fileprivate func refreshContraints() {
     updateCenterYOffset()
