@@ -141,7 +141,7 @@ class RecommendationsCell: UICollectionViewCell, DynamicDataCell {
     stackView.bottomAnchor.constraint(equalTo: contentView.bottomAnchor).isActive = true
   }
   func addThumbnailToStack() {
-    thumbnail.heightAnchor.constraint(greaterThanOrEqualToConstant: contentView.frame.height*thumbnailHeightMultiplier).isActive = true
+    thumbnail.heightAnchor.constraint(greaterThanOrEqualToConstant: 0).isActive = true
     stackView.addArrangedSubview(thumbnail)
   }
   func addTitleToStack() {
