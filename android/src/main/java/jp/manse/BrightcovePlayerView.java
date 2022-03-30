@@ -38,11 +38,15 @@ import com.google.android.exoplayer2.trackselection.MappingTrackSelector;
 import java.util.HashMap;
 import java.util.Map;
 
-import jp.manse.up_next.UpNextView;
+import jp.manse.up_next.UpNextViewOverlay;
 import jp.manse.util.AudioFocusManager;
 
 public class BrightcovePlayerView extends RelativeLayout implements LifecycleEventListener, AudioFocusManager.AudioFocusChangedListener {
     private final static int SEEK_OFFSET = 15000;
+    private final static double ONE_SEC_DOUBLE = 1000d;
+    private final static String CURRENT_TIME = "currentTime";
+    private final static String DURATION = "duration";
+    private final static String BUFFER_PROGRESS = "bufferProgress";
     private final ThemedReactContext context;
     private final ReactApplicationContext applicationContext;
     private final AudioFocusManager audioFocusManager;
@@ -54,7 +58,7 @@ public class BrightcovePlayerView extends RelativeLayout implements LifecycleEve
     private final EventEmitter eventEmitter;
     private final BrightcoveExoPlayerVideoView playerVideoView;
     private final BrightcoveMediaController mediaController;
-    private final UpNextView.UpNextStatusListener onUpNextStatusListener = new UpNextView.UpNextStatusListener() {
+    private final UpNextViewOverlay.UpNextStatusListener onUpNextStatusListener = new UpNextViewOverlay.UpNextStatusListener() {
         @Override
         public void onShow(Video video) {
             mediaController.hide();
@@ -84,13 +88,13 @@ public class BrightcovePlayerView extends RelativeLayout implements LifecycleEve
     private boolean playing = false;
     private int bitRate = 0;
     private float playbackRate = 1;
-    private UpNextView upNextView;
-    private final UpNextView.OnPlayUpNextListener onPlayUpNextListener = new UpNextView.OnPlayUpNextListener() {
+    private UpNextViewOverlay upNextViewOverlay;
+    private final UpNextViewOverlay.OnPlayUpNextListener onPlayUpNextListener = new UpNextViewOverlay.OnPlayUpNextListener() {
         @Override
         public void onPlayNext(Video video) {
             WritableMap event = Arguments.createMap();
-            event.putString("videoId", video.getId());
-            event.putString("referenceId", video.getReferenceId());
+            event.putString(BrightcovePlayerManager.VIDEO_ID, video.getId());
+            event.putString(BrightcovePlayerManager.REFERENCE_ID, video.getReferenceId());
             context.getJSModule(RCTEventEmitter.class).receiveEvent(BrightcovePlayerView.this.getId(), BrightcovePlayerManager.EVENT_ON_PLAY_NEXT_VIDEO, event);
             playVideo(video);
         }
@@ -106,11 +110,11 @@ public class BrightcovePlayerView extends RelativeLayout implements LifecycleEve
         this.addView(this.playerVideoView);
         this.playerVideoView.setLayoutParams(new RelativeLayout.LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT));
         this.playerVideoView.finishInitialization();
-        this.upNextView = new UpNextView(context, accountId, policyKey);
-        addUpNext();
+        this.upNextViewOverlay = new UpNextViewOverlay(context, accountId, policyKey);
+        addUpNextOverlay();
         this.requestLayout();
         eventEmitter = playerVideoView.getEventEmitter();
-        upNextView.setEventEmitter(eventEmitter);
+        upNextViewOverlay.setEventEmitter(eventEmitter);
         initMediaController(this.playerVideoView);
         this.mediaController = this.playerVideoView.getBrightcoveMediaController();
         // Create AudioFocusManager instance and register BrightcovePlayerView as a listener
@@ -143,7 +147,7 @@ public class BrightcovePlayerView extends RelativeLayout implements LifecycleEve
                     WritableMap progressMap = Arguments.createMap();
                     Long playHead = (Long) event.properties.get(Event.PLAYHEAD_POSITION_LONG);
                     if (playHead != null) {
-                        progressMap.putDouble("currentTime", playHead / 1000d);
+                        progressMap.putDouble(CURRENT_TIME, playHead / ONE_SEC_DOUBLE);
                     }
                     sendJSEvent(BrightcovePlayerManager.EVENT_PROGRESS, progressMap);
                     break;
@@ -151,8 +155,8 @@ public class BrightcovePlayerView extends RelativeLayout implements LifecycleEve
                     Long duration = (Long) event.properties.get(Event.VIDEO_DURATION_LONG);
                     WritableMap durationMap = Arguments.createMap();
                     if (duration != null) {
-                        durationMap.putDouble("duration", duration / 1000d);
-                        upNextView.setVideoDuration(duration);
+                        durationMap.putDouble(DURATION, duration / ONE_SEC_DOUBLE);
+                        upNextViewOverlay.setVideoDuration(duration);
                     }
                     sendJSEvent(BrightcovePlayerManager.EVENT_CHANGE_DURATION, durationMap);
                     break;
@@ -160,7 +164,7 @@ public class BrightcovePlayerView extends RelativeLayout implements LifecycleEve
                     Integer percentComplete = (Integer) event.properties.get(Event.PERCENT_COMPLETE);
                     WritableMap bufferUpdateMap = Arguments.createMap();
                     if (percentComplete != null) {
-                        bufferUpdateMap.putDouble("bufferProgress", percentComplete / 100d);
+                        bufferUpdateMap.putDouble(BUFFER_PROGRESS, percentComplete / 100d);
                     }
                     sendJSEvent(BrightcovePlayerManager.EVENT_UPDATE_BUFFER_PROGRESS, bufferUpdateMap);
                     break;
@@ -185,11 +189,11 @@ public class BrightcovePlayerView extends RelativeLayout implements LifecycleEve
         setSeekControlConfig();
     }
 
-    private void addUpNext() {
-        this.upNextView = new UpNextView(context, accountId, policyKey);
-        addView(upNextView.getUpNextContainer());
-        upNextView.setOnClickUpNextListener(onPlayUpNextListener);
-        upNextView.setUpNextStatusListener(onUpNextStatusListener);
+    private void addUpNextOverlay() {
+        this.upNextViewOverlay = new UpNextViewOverlay(context, accountId, policyKey);
+        addView(upNextViewOverlay.getUpNextContainer());
+        upNextViewOverlay.setOnClickUpNextListener(onPlayUpNextListener);
+        upNextViewOverlay.setUpNextStatusListener(onUpNextStatusListener);
     }
 
     private void setSeekControlConfig() {
@@ -204,48 +208,48 @@ public class BrightcovePlayerView extends RelativeLayout implements LifecycleEve
 
     public void setPolicyKey(String policyKey) {
         this.policyKey = policyKey;
-        upNextView.setPolicyKey(policyKey);
+        upNextViewOverlay.setPolicyKey(policyKey);
         this.loadVideo();
     }
 
     public void setAccountId(String accountId) {
         this.accountId = accountId;
-        upNextView.setAccountId(accountId);
+        upNextViewOverlay.setAccountId(accountId);
         this.loadVideo();
     }
 
     public void setVideoId(String videoId) {
         this.videoId = videoId;
         this.referenceId = null;
-        upNextView.setVideoId(videoId);
-        upNextView.setVideoReferenceId(null);
+        upNextViewOverlay.setVideoId(videoId);
+        upNextViewOverlay.setVideoReferenceId(null);
         this.loadVideo();
     }
 
     public void setPlaylistId(String playlistId) {
         if (playlistId != null && !playlistId.equals(this.playlistId)) {
-            upNextView.clearPlaylist();
+            upNextViewOverlay.clearPlaylist();
         }
-        upNextView.setPlayListId(playlistId);
-        upNextView.setPlayListReferenceId(null);
+        upNextViewOverlay.setPlayListId(playlistId);
+        upNextViewOverlay.setPlayListReferenceId(null);
         this.playlistId = playlistId;
         this.playlistReferenceId = null;
     }
 
     public void setPlaylistReferenceId(String playlistReferenceId) {
         if (playlistReferenceId != null && !playlistReferenceId.equals(this.playlistReferenceId)) {
-            upNextView.clearPlaylist();
+            upNextViewOverlay.clearPlaylist();
         }
-        upNextView.setPlayListReferenceId(playlistReferenceId);
-        upNextView.setPlayListId(null);
+        upNextViewOverlay.setPlayListReferenceId(playlistReferenceId);
+        upNextViewOverlay.setPlayListId(null);
         this.playlistReferenceId = playlistReferenceId;
         this.playlistId = null;
     }
 
     public void setReferenceId(String referenceId) {
         this.referenceId = referenceId;
-        upNextView.setVideoReferenceId(referenceId);
-        upNextView.setVideoId(null);
+        upNextViewOverlay.setVideoReferenceId(referenceId);
+        upNextViewOverlay.setVideoId(null);
         this.videoId = null;
         this.loadVideo();
     }
@@ -276,7 +280,7 @@ public class BrightcovePlayerView extends RelativeLayout implements LifecycleEve
     public void setFullscreen(boolean fullscreen) {
         playerVideoView.getBrightcoveMediaController().show();
         WritableMap fullscreenEventMap = Arguments.createMap();
-        fullscreenEventMap.putBoolean("fullscreen", fullscreen);
+        fullscreenEventMap.putBoolean(BrightcovePlayerManager.FULLSCREEN, fullscreen);
         sendJSEvent(BrightcovePlayerManager.EVENT_TOGGLE_ANDROID_FULLSCREEN, fullscreenEventMap);
     }
 
@@ -377,7 +381,7 @@ public class BrightcovePlayerView extends RelativeLayout implements LifecycleEve
                 if (video != null) {
                     playVideo(video);
                 }
-            } catch (Exception e) {
+            } catch (Exception ignored) {
             }
             return;
         }
@@ -398,11 +402,11 @@ public class BrightcovePlayerView extends RelativeLayout implements LifecycleEve
     }
 
     private void playVideo(Video video) {
-        upNextView.hideUpNext();
+        upNextViewOverlay.hideUpNext();
         videoId = video.getId();
         referenceId = video.getReferenceId();
-        upNextView.setVideoId(videoId);
-        upNextView.setVideoReferenceId(referenceId);
+        upNextViewOverlay.setVideoId(videoId);
+        upNextViewOverlay.setVideoReferenceId(referenceId);
         BrightcovePlayerView.this.playerVideoView.clear();
         BrightcovePlayerView.this.playerVideoView.add(video);
         BrightcovePlayerView.this.playerVideoView.setOnPreparedListener(mp -> {
@@ -410,20 +414,22 @@ public class BrightcovePlayerView extends RelativeLayout implements LifecycleEve
                 BrightcovePlayerView.this.playerVideoView.start();
             }
         });
-        upNextView.resetUpNextCancel();
-        upNextView.prepareNextVideo();
+        upNextViewOverlay.resetUpNextCancel();
+        upNextViewOverlay.prepareNextVideo();
     }
 
     private void fixVideoLayout() {
         int viewWidth = this.getMeasuredWidth();
         int viewHeight = this.getMeasuredHeight();
         SurfaceView surfaceView = (SurfaceView) this.playerVideoView.getRenderView();
-        surfaceView.measure(viewWidth, viewHeight);
-        int surfaceWidth = surfaceView.getMeasuredWidth();
-        int surfaceHeight = surfaceView.getMeasuredHeight();
-        int leftOffset = (viewWidth - surfaceWidth) / 2;
-        int topOffset = (viewHeight - surfaceHeight) / 2;
-        surfaceView.layout(leftOffset, topOffset, leftOffset + surfaceWidth, topOffset + surfaceHeight);
+        if (surfaceView != null) {
+            surfaceView.measure(viewWidth, viewHeight);
+            int surfaceWidth = surfaceView.getMeasuredWidth();
+            int surfaceHeight = surfaceView.getMeasuredHeight();
+            int leftOffset = (viewWidth - surfaceWidth) / 2;
+            int topOffset = (viewHeight - surfaceHeight) / 2;
+            surfaceView.layout(leftOffset, topOffset, leftOffset + surfaceWidth, topOffset + surfaceHeight);
+        }
     }
 
     private void printKeys(Map<String, Object> map) {
@@ -470,7 +476,7 @@ public class BrightcovePlayerView extends RelativeLayout implements LifecycleEve
 
     @Override
     protected void onSizeChanged(int width, int height, int oldw, int oldh) {
-        upNextView.onPlayerSizeChanged(width, height);
+        upNextViewOverlay.onPlayerSizeChanged(width, height);
         super.onSizeChanged(width, height, oldw, oldh);
     }
 
@@ -490,7 +496,7 @@ public class BrightcovePlayerView extends RelativeLayout implements LifecycleEve
     public void onHostDestroy() {
         this.playerVideoView.destroyDrawingCache();
         this.playerVideoView.clear();
-        upNextView.dispose();
+        upNextViewOverlay.dispose();
         this.removeAllViews();
         this.applicationContext.removeLifecycleEventListener(this);
     }

@@ -31,12 +31,15 @@ import jp.manse.util.ImageLoader;
 import jp.manse.R;
 import jp.manse.webservice.ReactCatalog;
 
-public class UpNextView {
+public class UpNextViewOverlay {
     private final static String ALL_VIDEOS_PAGE_SIZE = "1000";
     private final static double WIDTH_PORT_PERCENT = 0.7;
     private final static double HEIGHT_PERCENT = 0.6;
     private final static int UP_NEXT_COUNT_DOWN_TIME = 5000;
+    private final static int GET_ALL_VIDEOS_PRE_FETCH_OFFSET = 30000;
     private final static int ONE_SEC = 1000;
+    private final static int POSTER_RATIO_WIDTH = 16;
+    private final static int POSTER_RATIO_HEIGHT = 9;
     private LinearLayout upNextContainer;
     private EventEmitter eventEmitter;
     private boolean loadingAllVideos = false;
@@ -61,7 +64,7 @@ public class UpNextView {
     private boolean upNextOverlayCancelled = false;
     private int downSecondCounter = 5;
 
-    public UpNextView(@NonNull ReactContext context, @NonNull String account, @NonNull String policyKey) {
+    public UpNextViewOverlay(@NonNull ReactContext context, @NonNull String account, @NonNull String policyKey) {
         this.context = context;
         this.accountId = account;
         this.policyKey = policyKey;
@@ -137,7 +140,7 @@ public class UpNextView {
             upNextPoster.setLayoutParams(new ViewGroup.LayoutParams((int) upNextBannerWidth, (int) upNextBannerHeight));
             View upNextPosterBorder = upNextContainer.findViewById(R.id.up_next_poster_border);
             upNextPosterBorder.setLayoutParams(new ViewGroup.LayoutParams((int) upNextBannerWidth, (int) upNextBannerHeight));
-            loadImage(nextVideo, upNextPoster);
+            loadVideoPosterImage(nextVideo, upNextPoster);
             TextView upNextTitle = upNextContainer.findViewById(R.id.up_next_title);
             upNextTitle.setText(nextVideo.getName());
             upNextTitle.setLayoutParams(new LinearLayout.LayoutParams((int) upNextBannerWidth, ViewGroup.LayoutParams.WRAP_CONTENT));
@@ -165,7 +168,10 @@ public class UpNextView {
         }
     }
 
-    private void loadImage(Video video, ImageView imageView) {
+    /**
+     * Load video poster image from video cloud
+     */
+    private void loadVideoPosterImage(Video video, ImageView imageView) {
         if (video == null) {
             imageView.setImageResource(android.R.color.transparent);
             return;
@@ -329,11 +335,11 @@ public class UpNextView {
                     Long progress = (Long) event.properties.get(Event.PLAYHEAD_POSITION_LONG);
                     if (progress != null) {
                         float difference = videoDuration - progress;
-                        if (difference <= 10000 && nextVideo == null && !loadingAllVideos) {
+                        if (difference <= GET_ALL_VIDEOS_PRE_FETCH_OFFSET && nextVideo == null && !loadingAllVideos) {
                             // Pick random video from video cloud
                             prepareNextFromAllVideos();
                         }
-                        if (difference <= 5000 && upNextContainer.getVisibility() != View.VISIBLE && !upNextOverlayCancelled) {
+                        if (difference <= UP_NEXT_COUNT_DOWN_TIME && upNextContainer.getVisibility() != View.VISIBLE && !upNextOverlayCancelled) {
                             showUpNext();
                         }
                     }
@@ -348,10 +354,10 @@ public class UpNextView {
     public void onPlayerSizeChanged(int width, int height) {
         if (height < width) {
             upNextBannerHeight = height * HEIGHT_PERCENT;
-            upNextBannerWidth = (upNextBannerHeight / 9) * 16;
+            upNextBannerWidth = (upNextBannerHeight / POSTER_RATIO_HEIGHT) * POSTER_RATIO_WIDTH;
         } else if (width < height) {
             upNextBannerWidth = width * WIDTH_PORT_PERCENT;
-            upNextBannerHeight = (upNextBannerWidth / 16) * 9;
+            upNextBannerHeight = (upNextBannerWidth / POSTER_RATIO_WIDTH) * POSTER_RATIO_HEIGHT;
         }
     }
 
