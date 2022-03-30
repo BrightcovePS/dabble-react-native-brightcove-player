@@ -1,39 +1,37 @@
 package jp.manse.webservice;
 
-import android.os.AsyncTask;
-import android.text.TextUtils;
-
 import androidx.annotation.NonNull;
 
-import com.brightcove.player.edge.CatalogError;
-import com.brightcove.player.edge.ErrorListener;
 import com.brightcove.player.edge.VideoParseException;
 import com.brightcove.player.event.Component;
 import com.brightcove.player.event.Emits;
 import com.brightcove.player.event.EventEmitter;
+import com.brightcove.player.event.EventType;
 import com.brightcove.player.event.ListensFor;
 import com.brightcove.player.event.RegisteringEventEmitter;
-import com.brightcove.player.network.HttpRequestConfig;
 import com.brightcove.player.network.HttpService;
 import com.brightcove.player.util.ErrorUtil;
 import com.brightcove.player.util.EventEmitterUtil;
-import com.brightcove.player.util.Objects;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import com.google.gson.JsonElement;
 import com.google.gson.reflect.TypeToken;
 
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.IOException;
-import java.net.URI;
 import java.net.URISyntaxException;
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
+
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 @Emits(
         events = {"analyticsCatalogRequest", "analyticsCatalogResponse", "error"}
@@ -41,71 +39,108 @@ import java.util.Map;
 @ListensFor(
         events = {}
 )
-public abstract class ReactEdgeTask<T> extends AsyncTask<URI, Void, EdgeTaskResult<T>> implements Component {
-    public static final int CONNECT_TIMEOUT = 30000;
-    public static final int READ_TIMEOUT = 30000;
-    static final Gson GSON_ERROR_PARSER = (new GsonBuilder()).excludeFieldsWithoutExposeAnnotation().create();
-    private static final String BRIGHTCOVE_POLICY_HEADER_KEY = "BCOV-POLICY";
-    protected final HttpRequestConfig httpRequestConfig;
-    protected EventEmitter eventEmitter;
-    @NonNull
-    protected String baseURL;
-    @NonNull
-    protected String account;
-    protected URI uri;
-    protected HttpService httpService;
-    protected List<String> errors;
-    private long startResponseTimeMs;
-    @NonNull
-    private String policy;
+public abstract class ReactEdgeTask<T>  implements Component {
+    private static final String ERROR_CODE = "error_code";
+    private static final String ERROR_SUB_CODE = "error_subcode";
+    private static final String CATALOG_URL = "catalogUrl";
+    private static final String RESPONSE_TIME_MS = "responseTimeMs";
+    private static final String ANALYTICS_CATALOG_REQUEST = "analyticsCatalogRequest";
+    private static final String ANALYTICS_CATALOG_RESPONSE = "analyticsCatalogResponse";
+    private static final String MESSAGE = "message";
+    private static final String MEDIA_REQUEST_INVALID_JSON = "mediaRequestInvalidJSON";
+    private static final String MEDIA_REQUEST_NO_JSON = "mediaRequestNoJSON";
+    private static final String VIDEO_PARSER_EXCEPTION = "videoParseException";
+    private static final String URI_ERROR = "uriError";
 
-    public ReactEdgeTask(@NonNull EventEmitter eventEmitter, @NonNull String baseURL, @NonNull HttpRequestConfig httpRequestConfig, @NonNull String account, @NonNull String policy) {
+    static final Gson GSON_ERROR_PARSER = (new GsonBuilder()).excludeFieldsWithoutExposeAnnotation().create();
+    protected EventEmitter eventEmitter;
+    protected List<String> errors;
+    private final Call<JsonElement> apiCall;
+    private long startResponseTimeMs;
+    private final URL url;
+
+    public ReactEdgeTask(@NonNull Call<JsonElement> apiCall, EventEmitter eventEmitter) {
+        this.apiCall = apiCall;
+        // Assign URL to send on analytics
+        url = apiCall.request().url().url();
         this.eventEmitter = RegisteringEventEmitter.build(eventEmitter, ReactEdgeTask.class);
-        this.baseURL = baseURL;
-        this.account = account;
-        this.policy = policy;
-        this.httpService = new HttpService(CONNECT_TIMEOUT, READ_TIMEOUT);
-        this.errors = new ArrayList();
-        this.httpRequestConfig = httpRequestConfig;
+        this.errors = new ArrayList<>();
     }
 
-    @NonNull
-    protected EdgeTaskResult<T> doInBackground(URI... params) {
-        if (params != null && params.length == 1) {
-            this.uri = params[0];
-            Map<String, String> headers = new HashMap();
-            if (this.policy.equals("")) {
-                this.maybeAddAuthTokenToHeaders(headers, this.httpRequestConfig.getBrightcoveAuthorizationToken());
-            } else {
-                headers.put(BRIGHTCOVE_POLICY_HEADER_KEY, this.policy);
-            }
+    /**
+    * Do the API call which is requested with retrofit Call object and process the response string into
+     * [EdgeTaskResult] as return of response
+    * */
+    public void doCallAPICall() {
+        // Put analytics entry while API call
+        emitAnalyticsCatalogRequest(url);
 
-            headers.putAll(this.httpRequestConfig.getRequestHeaders());
-
-            EdgeTaskResult result;
-            try {
-                this.emitAnalyticsCatalogRequest(this.uri);
-                String data = this.httpService.doGetRequest(this.uri, headers);
-                data = data == null ? null : data.trim();
-                this.emitAnalyticsCatalogResponse();
-                if (TextUtils.isEmpty(data)) {
-                    result = this.createErrorResult((new ReactCatalogError.Builder()).setMessage("No data was found that matched your request: " + this.uri).build());
-                } else if (this.isArray(data)) {
-                    result = this.createErrorResult(this.processError(data));
-                } else {
-                    JSONObject jsonData = HttpService.parseToJSONObject(data);
-                    result = this.createSuccessfulResult(this.processData(jsonData));
+        apiCall.enqueue(new Callback<JsonElement>() {
+            @Override
+            public void onResponse(@NonNull Call<JsonElement> call, @NonNull Response<JsonElement> response) {
+                emitAnalyticsCatalogResponse(url);
+                EdgeTaskResult<T> result;
+                try {
+                    if (response.body() == null) {
+                        result = createErrorResult((new ReactCatalogError.Builder()).setMessage("No data was found that matched your request: " + url).build());
+                        onPostExecute(result);
+                        return;
+                    }
+                    String data = response.body().toString();
+                    data = data.trim();
+                    if (data.length() == 0) {
+                        result = createErrorResult((new ReactCatalogError.Builder()).setMessage("No data was found that matched your request: " + url).build());
+                    } else if (isArray(data)) {
+                        result = createErrorResult(processError(data));
+                    } else {
+                        JSONObject jsonData = HttpService.parseToJSONObject(data);
+                        result = createSuccessfulResult(processData(jsonData));
+                    }
+                    onPostExecute(result);
+                }catch (Exception exception){
+                    onFailureResponse(url, exception);
                 }
-            } catch (Exception var6) {
-                String errorMessage = this.getThrowableMessage(var6, this.uri.toString());
-                result = this.createErrorResult((new ReactCatalogError.Builder()).setMessage(errorMessage).setError(var6).build());
-                EventEmitterUtil.emitError(this.eventEmitter, errorMessage, var6);
             }
 
-            return result;
-        } else {
-            throw new IllegalArgumentException(ErrorUtil.getMessage("uriRequired"));
+            @Override
+            public void onFailure(@NonNull Call<JsonElement> call, @NonNull Throwable exception) {
+                onFailureResponse(url, exception);
+            }
+        });
+    }
+
+    private void emitAnalyticsCatalogRequest(URL uri) {
+        Map<String, Object> properties = new HashMap<>();
+        try {
+            properties.put(CATALOG_URL, uri.toURI());
+        } catch (URISyntaxException exception) {
+            exception.printStackTrace();
         }
+        this.eventEmitter.emit(ANALYTICS_CATALOG_REQUEST, properties);
+        this.startResponseTimeMs = System.currentTimeMillis();
+    }
+
+    private void emitAnalyticsCatalogResponse(URL uri) {
+        Map<String, Object> properties = new HashMap<>();
+        try {
+            properties.put(CATALOG_URL, uri.toURI());
+        } catch (URISyntaxException exception) {
+            exception.printStackTrace();
+        }
+        long responseTimeMs = System.currentTimeMillis() - this.startResponseTimeMs;
+        properties.put(RESPONSE_TIME_MS, responseTimeMs);
+        this.eventEmitter.emit(ANALYTICS_CATALOG_RESPONSE, properties);
+    }
+
+    /**
+     * Generate error based on exception and return in [onPostExecute
+     * */
+    private void onFailureResponse(URL url, Throwable exception){
+        EdgeTaskResult<T> result;
+        String errorMessage = getThrowableMessage(exception, url);
+        result = createErrorResult((new ReactCatalogError.Builder()).setMessage(errorMessage).setError(exception).build());
+        EventEmitterUtil.emitError(eventEmitter, errorMessage, new Exception(exception.getMessage()));
+        onPostExecute(result);
     }
 
     private boolean isArray(String response) {
@@ -113,122 +148,54 @@ public abstract class ReactEdgeTask<T> extends AsyncTask<URI, Void, EdgeTaskResu
     }
 
     private EdgeTaskResult<T> createSuccessfulResult(T processData) {
-        return new EdgeTaskResult(processData);
+        return new EdgeTaskResult<T>(processData);
     }
 
     private EdgeTaskResult<T> createErrorResult(ReactCatalogError error) {
-        List<ReactCatalogError> errorList = new ArrayList();
+        List<ReactCatalogError> errorList = new ArrayList<>();
         errorList.add(error);
         return new EdgeTaskResult(errorList);
     }
 
-    private EdgeTaskResult<T> createErrorResult(List<CatalogError> errorList) {
+    private EdgeTaskResult<T> createErrorResult(List<ReactCatalogError> errorList) {
         return new EdgeTaskResult(errorList);
     }
 
-    protected abstract T processData(@NonNull JSONObject var1) throws Exception;
+    protected abstract T processData(@NonNull JSONObject data) throws Exception;
 
-    private List<CatalogError> processError(@NonNull String arrayData) {
-        List<CatalogError> catalogErrorList = (List) GSON_ERROR_PARSER.fromJson(arrayData, (new TypeToken<List<CatalogError>>() {
+    protected abstract void onPostExecute(@NonNull EdgeTaskResult<T> data);
+
+    private List<ReactCatalogError> processError(@NonNull String arrayData) {
+        List<ReactCatalogError> catalogErrorList = (List) GSON_ERROR_PARSER.fromJson(arrayData, (new TypeToken<List<ReactCatalogError>>() {
         }).getType());
-        Iterator var3 = catalogErrorList.iterator();
 
-        while (var3.hasNext()) {
-            CatalogError catalogError = (CatalogError) var3.next();
-            Map<String, Object> properties = new HashMap();
-            properties.put("error_code", catalogError.getCatalogErrorCode());
-            properties.put("error_subcode", catalogError.getCatalogErrorSubcode());
-            properties.put("message", catalogError.getMessage());
-            this.eventEmitter.emit("error", properties);
+        for (ReactCatalogError catalogError : catalogErrorList) {
+            Map<String, Object> properties = new HashMap<>();
+            properties.put(ERROR_CODE, catalogError.getCatalogErrorCode());
+            properties.put(ERROR_SUB_CODE, catalogError.getCatalogErrorSubcode());
+            properties.put(MESSAGE, catalogError.getMessage());
+            this.eventEmitter.emit(EventType.ERROR, properties);
         }
 
         return catalogErrorList;
     }
 
-    private void emitAnalyticsCatalogRequest(URI uri) {
-        Map<String, Object> properties = new HashMap();
-        properties.put("catalogUrl", uri);
-        this.eventEmitter.emit("analyticsCatalogRequest", properties);
-        this.startResponseTimeMs = System.currentTimeMillis();
-    }
-
-    private void emitAnalyticsCatalogResponse() {
-        Map<String, Object> properties = new HashMap();
-        properties.put("catalogUrl", this.uri);
-        long responseTimeMs = System.currentTimeMillis() - this.startResponseTimeMs;
-        properties.put("responseTimeMs", responseTimeMs);
-        this.eventEmitter.emit("analyticsCatalogResponse", properties);
-    }
-
-    private void maybeAddAuthTokenToHeaders(@NonNull Map<String, String> headers, @NonNull String authToken) {
-        if (!TextUtils.isEmpty(authToken)) {
-            headers.put("BCOV-Auth", authToken);
-        }
-
-    }
-
-    protected URI createURI(String... params) throws URISyntaxException {
-        StringBuilder urlBuilder = new StringBuilder();
-        urlBuilder.append(this.baseURL);
-        String key;
-        if (params != null && params.length > 0) {
-            String[] paramsTemp = params;
-            int paramsLength = params.length;
-
-            for (int i = 0; i < paramsLength; ++i) {
-                key = paramsTemp[i];
-                urlBuilder.append('/');
-                urlBuilder.append(key);
-            }
-        }
-
-        int counter = 0;
-        Iterator queryParamsIterator = this.httpRequestConfig.getQueryParameters().entrySet().iterator();
-
-        while (queryParamsIterator.hasNext()) {
-            Map.Entry<String, String> entry = (Map.Entry) queryParamsIterator.next();
-            key = (String) entry.getKey();
-            String value = (String) entry.getValue();
-            if (key != null && value != null) {
-                if (counter == 0) {
-                    urlBuilder.append('?');
-                } else {
-                    urlBuilder.append('&');
-                }
-
-                urlBuilder.append(key).append('=').append(value);
-                ++counter;
-            }
-        }
-
-        return new URI(urlBuilder.toString());
-    }
-
     @NonNull
-    private String getThrowableMessage(Throwable throwable, String... params) {
+    private String getThrowableMessage(Throwable throwable, URL params) {
         String message = "";
         if (throwable instanceof JSONException) {
-            message = String.format(Locale.getDefault(), ErrorUtil.getMessage("mediaRequestInvalidJSON"), (Object[]) params);
+            message = String.format(Locale.getDefault(), ErrorUtil.getMessage(MEDIA_REQUEST_INVALID_JSON), params);
         } else if (throwable instanceof IllegalArgumentException) {
-            message = String.format(Locale.getDefault(), ErrorUtil.getMessage("mediaRequestNoJSON"), (Object[]) params);
+            message = String.format(Locale.getDefault(), ErrorUtil.getMessage(MEDIA_REQUEST_NO_JSON), params);
         } else if (throwable instanceof VideoParseException) {
-            message = String.format(Locale.getDefault(), ErrorUtil.getMessage("videoParseException"), (Object[]) params);
+            message = String.format(Locale.getDefault(), ErrorUtil.getMessage(VIDEO_PARSER_EXCEPTION), params);
         } else if (throwable instanceof IOException) {
-            message = String.format(Locale.getDefault(), ErrorUtil.getMessage("uriError"), (Object[]) params);
+            message = String.format(Locale.getDefault(), ErrorUtil.getMessage(URI_ERROR), params);
         } else if (throwable.getLocalizedMessage() != null) {
             message = throwable.getLocalizedMessage();
         }
 
         return message;
-    }
-
-    public void callDeprecatedOnErrorStringCallback(@NonNull ErrorListener errorListener, @NonNull String message) {
-        Objects.requireNonNull(errorListener, "ErrorListener cannot be null");
-        Objects.requireNonNull(message, "Message cannot be null");
-        if (!TextUtils.isEmpty(message)) {
-            errorListener.onError(message);
-        }
-
     }
 
 }

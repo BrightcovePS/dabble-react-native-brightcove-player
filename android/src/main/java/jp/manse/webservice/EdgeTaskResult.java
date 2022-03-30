@@ -8,13 +8,13 @@ import java.util.List;
 
 public final class EdgeTaskResult<T> {
     private T result;
-    private List<CatalogError> errorList = new ArrayList();
+    private List<ReactCatalogError> errorList = new ArrayList<>();
 
     EdgeTaskResult(T result) {
         this.result = result;
     }
 
-    EdgeTaskResult(List<CatalogError> errorlist) {
+    EdgeTaskResult(List<ReactCatalogError> errorlist) {
         this.errorList.addAll(errorlist);
     }
 
@@ -22,7 +22,7 @@ public final class EdgeTaskResult<T> {
         return this.result;
     }
 
-    public List<CatalogError> getErrorList() {
+    public List<ReactCatalogError> getErrorList() {
         return Collections.unmodifiableList(this.errorList);
     }
 }

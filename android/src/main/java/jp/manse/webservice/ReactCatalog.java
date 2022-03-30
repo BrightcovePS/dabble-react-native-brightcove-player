@@ -2,18 +2,21 @@ package jp.manse.webservice;
 
 import androidx.annotation.NonNull;
 
-import com.brightcove.player.edge.PlaylistListener;
 import com.brightcove.player.event.AbstractComponent;
 import com.brightcove.player.event.Emits;
+import com.brightcove.player.event.Event;
 import com.brightcove.player.event.EventEmitter;
+import com.brightcove.player.event.EventType;
 import com.brightcove.player.event.ListensFor;
-import com.brightcove.player.network.HttpRequestConfig;
 import com.brightcove.player.util.Objects;
+import com.google.gson.JsonElement;
 
 import java.util.HashMap;
 import java.util.Map;
 
 import jp.manse.up_next.GetAllVideosTask;
+import jp.manse.up_next.ReactPlaylistListener;
+import retrofit2.Call;
 
 @Emits(
         events = {"account"}
@@ -22,38 +25,35 @@ import jp.manse.up_next.GetAllVideosTask;
         events = {}
 )
 public class ReactCatalog extends AbstractComponent {
-    public static final String DEFAULT_EDGE_BASE_URL = "https://edge.api.brightcove.com/playback/v1";
-    public static final String DEFAULT_EPA_BASE_URL = "https://edge-auth.api.brightcove.com/playback/v1";
+    private static final String ALL_VIDEOS_PAGE_SIZE = "1000";
+
     @NonNull
     private final String account;
-    @NonNull
-    private final String policy;
-    @NonNull
-    private final String baseURL;
-    Map<String, String> properties;
+    private final APIService apiService;
 
     protected ReactCatalog(ReactCatalog.AbstractBuilder<?> builder) {
-        super(builder.eventEmitter, com.brightcove.player.edge.Catalog.class);
+        super(builder.eventEmitter, ReactCatalog.class);
         this.account = builder.account;
-        this.policy = builder.policy;
-        this.baseURL = builder.baseURL;
-        this.properties = builder.properties;
+        String policy = builder.policy;
+        String baseURL = builder.baseURL;
+        apiService = new APIServiceInstance.Builder()
+                .setPolicy(policy)
+                .setBaseURL(baseURL)
+                .build();
         this.emitAccountEvent();
     }
 
     private void emitAccountEvent() {
-        Map<String, Object> properties = new HashMap();
-        properties.put("value", this.account);
-        this.eventEmitter.emit("account", properties);
+        Map<String, Object> properties = new HashMap<>();
+        properties.put(Event.VALUE, this.account);
+        this.eventEmitter.emit(EventType.ACCOUNT, properties);
     }
 
-    public void getAllVideos(@NonNull HttpRequestConfig httpRequestConfig, @NonNull PlaylistListener playlistListener) {
-        (new GetAllVideosTask(this.eventEmitter, this.baseURL, httpRequestConfig, this.account, this.policy)).getVideos(playlistListener);
+    public void getAllVideos(@NonNull ReactPlaylistListener playlistListener) {
+        Call<JsonElement> getAllVideosCall = apiService.getAllVideos(account, ALL_VIDEOS_PAGE_SIZE);
+        (new GetAllVideosTask(getAllVideosCall, this.eventEmitter)).getVideos(playlistListener);
     }
 
-    public Map<String, String> getProperties() {
-        return this.properties;
-    }
 
     public static class Builder extends ReactCatalog.AbstractBuilder<ReactCatalog.Builder> {
         public Builder(@NonNull EventEmitter eventEmitter, @NonNull String account) {
@@ -66,7 +66,6 @@ public class ReactCatalog extends AbstractComponent {
     }
 
     protected abstract static class AbstractBuilder<T extends ReactCatalog.AbstractBuilder<T>> {
-        private static final String EMPTY_BASE_URL = "";
         @NonNull
         private final EventEmitter eventEmitter;
         @NonNull
@@ -75,15 +74,12 @@ public class ReactCatalog extends AbstractComponent {
         private String policy;
         @NonNull
         private String baseURL;
-        @NonNull
-        private Map<String, String> properties;
 
         protected AbstractBuilder(@NonNull EventEmitter eventEmitter, @NonNull String account) {
             this.eventEmitter = (EventEmitter) Objects.requireNonNull(eventEmitter, "EventEmitter cannot be null");
             this.account = (String) Objects.requireNonNull(account, "Account cannot be null");
             this.policy = "";
             this.baseURL = "";
-            this.properties = new HashMap();
         }
 
         protected abstract T self();
@@ -98,16 +94,8 @@ public class ReactCatalog extends AbstractComponent {
             return this.self();
         }
 
-        public T setProperties(@NonNull Map<String, String> properties) {
-            this.properties = (Map) Objects.requireNonNull(properties, "properties Map cannot be null");
-            return this.self();
-        }
 
         public ReactCatalog build() {
-            if (this.baseURL.equals(EMPTY_BASE_URL)) {
-                this.baseURL = this.policy.equals(EMPTY_BASE_URL) ? DEFAULT_EPA_BASE_URL : DEFAULT_EDGE_BASE_URL;
-            }
-
             return new ReactCatalog(this);
         }
     }

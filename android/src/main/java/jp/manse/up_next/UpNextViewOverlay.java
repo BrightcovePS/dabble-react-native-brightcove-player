@@ -32,7 +32,6 @@ import jp.manse.R;
 import jp.manse.webservice.ReactCatalog;
 
 public class UpNextViewOverlay {
-    private final static String ALL_VIDEOS_PAGE_SIZE = "1000";
     private final static double WIDTH_PORT_PERCENT = 0.7;
     private final static double HEIGHT_PERCENT = 0.6;
     private final static int UP_NEXT_COUNT_DOWN_TIME = 5000;
@@ -209,7 +208,7 @@ public class UpNextViewOverlay {
 
     private void prepareNextFromAllVideos() {
         nextVideo = null;
-        PlaylistListener listener = new PlaylistListener() {
+        ReactPlaylistListener listener = new ReactPlaylistListener() {
             @Override
             public void onPlaylist(Playlist playlistRes) {
                 loadingAllVideos = false;
@@ -267,12 +266,11 @@ public class UpNextViewOverlay {
         }
     }
 
-    private void fetchAllVideos(PlaylistListener listener) {
+    private void fetchAllVideos(ReactPlaylistListener listener) {
         ReactCatalog reactCatalog = new ReactCatalog.Builder(eventEmitter, accountId)
                 .setPolicy(policyKey)
                 .build();
-        HttpRequestConfig config = new HttpRequestConfig.Builder().addQueryParameter("limit", ALL_VIDEOS_PAGE_SIZE).build();
-        reactCatalog.getAllVideos(config, listener);
+        reactCatalog.getAllVideos(listener);
     }
 
     public void setVideoDuration(long videoDuration) {
