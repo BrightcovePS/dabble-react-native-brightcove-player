@@ -181,7 +181,7 @@ struct TimerControlConstants {
       visualEffectView.isHidden = true
     }*/
     controls.playbackController = self.playbackController
-    controls.controlsViewHeight = 40
+    controls.controlsViewHeight = RBPlayerControl.Metrics.smallWidth
     controlsFadingView.insertSubview(controls, belowSubview: controlsView)
     controls.centerInParentView(view: controlsFadingView)
     addClosedCaptionsObserver()

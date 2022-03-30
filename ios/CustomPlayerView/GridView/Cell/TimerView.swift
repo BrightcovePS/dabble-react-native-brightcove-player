@@ -1,4 +1,11 @@
 import UIKit
+fileprivate struct TimerViewConstants {
+  static let cancelTxt = "Cancel"
+  static let timerWidth: CGFloat = 10
+  static let timerHeight: CGFloat = 30
+  static let cancelWidth: CGFloat = 60
+  static let cancelHeight: CGFloat = 30
+}
 class TimerView: UIView {
   var progressCompleted: (() -> Void)?
   var runCount = 0
@@ -15,7 +22,7 @@ class TimerView: UIView {
   lazy var cancelTimerButton: UIButton = {
     let button = UIButton()
     button.translatesAutoresizingMaskIntoConstraints = false
-    button.setTitle("Cancel", for: .normal)
+    button.setTitle(TimerViewConstants.cancelTxt, for: .normal)
     button.titleLabel?.font = UIFont.systemFont(ofSize: 16, weight: .medium)
     button.addTarget(self, action: #selector(handleCancelTimerTapped), for: .touchUpInside)
     return button
@@ -37,15 +44,15 @@ class TimerView: UIView {
     self.addSubview(timerLabel)
     timerLabel.leadingAnchor.constraint(equalTo: self.leadingAnchor, constant: .zero).isActive = true
     timerLabel.topAnchor.constraint(equalTo: self.topAnchor, constant: .zero).isActive = true
-    timerLabel.widthAnchor.constraint(equalToConstant: 10).isActive = true
-    timerLabel.heightAnchor.constraint(equalToConstant: 30).isActive = true
+    timerLabel.widthAnchor.constraint(equalToConstant: TimerViewConstants.timerWidth).isActive = true
+    timerLabel.heightAnchor.constraint(equalToConstant: TimerViewConstants.timerHeight).isActive = true
   }
   private func addCancelButton() {
     self.addSubview(cancelTimerButton)
     cancelTimerButton.leadingAnchor.constraint(equalTo: self.timerLabel.trailingAnchor, constant: .zero).isActive = true
     cancelTimerButton.centerYAnchor.constraint(equalTo: self.timerLabel.centerYAnchor).isActive = true
-    cancelTimerButton.widthAnchor.constraint(equalToConstant: 60).isActive = true
-    cancelTimerButton.heightAnchor.constraint(equalToConstant: 30).isActive = true
+    cancelTimerButton.widthAnchor.constraint(equalToConstant: TimerViewConstants.cancelWidth).isActive = true
+    cancelTimerButton.heightAnchor.constraint(equalToConstant: TimerViewConstants.cancelHeight).isActive = true
   }
   @objc private func handleCancelTimerTapped() {
     CountDownTimer.shared.stopTimer()
@@ -60,7 +67,6 @@ class TimerView: UIView {
         return
       }
       self.runCount -= 1
-      print("Run count", self.runCount)
       if self.runCount == 0 {
         CountDownTimer.shared.stopTimer()
         self.timerLabel.isHidden = true

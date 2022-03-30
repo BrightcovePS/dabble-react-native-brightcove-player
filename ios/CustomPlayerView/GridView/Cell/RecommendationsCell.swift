@@ -4,6 +4,10 @@ struct TimerConstants {
   static let thumbnailVideoEndOffset: Double = 5
   static let apiCallVideoEndOffset: Double = 20
 }
+fileprivate struct RecommendationsCellConstants {
+  static let playButtonWidth: CGFloat = 60
+  static let playButtonHeight: CGFloat = 60
+}
 class RecommendationsCell: UICollectionViewCell, DynamicDataCell {
   let thumbnailHeightMultiplier: CGFloat = 0.785
   let titleHeight: CGFloat = 36
@@ -165,7 +169,7 @@ class RecommendationsCell: UICollectionViewCell, DynamicDataCell {
     timerView = TimerView(timerDuration: totalsecond > 0 ? totalsecond: TimerConstants.nextVideoThumbnailDuration)
     timerView.runCount = Int(totalsecond)
     contentView.addSubview(timerView)
-    timerView.leadingAnchor.constraint(equalTo: thumbnail.leadingAnchor, constant: 5).isActive = true
+    timerView.leadingAnchor.constraint(equalTo: thumbnail.leadingAnchor, constant: RBPlayerControl.Metrics.smallSpacing).isActive = true
     timerView.topAnchor.constraint(equalTo: thumbnail.topAnchor, constant: .zero).isActive = true
     timerView.widthAnchor.constraint(equalToConstant: 2*RecommendationOverlayConstants.kRecommendationClosebuttonWidth).isActive = true
     timerView.heightAnchor.constraint(equalToConstant: RecommendationOverlayConstants.kRecommendationClosebuttonWidth).isActive = true
@@ -207,8 +211,8 @@ class RecommendationsCell: UICollectionViewCell, DynamicDataCell {
     NSLayoutConstraint.activate([
       playButton.centerXAnchor.constraint(equalTo: thumbnail.centerXAnchor),
       playButton.centerYAnchor.constraint(equalTo: thumbnail.centerYAnchor),
-      playButton.widthAnchor.constraint(equalToConstant: 60),
-      playButton.heightAnchor.constraint(equalToConstant: 60)
+      playButton.widthAnchor.constraint(equalToConstant: RecommendationsCellConstants.playButtonWidth),
+      playButton.heightAnchor.constraint(equalToConstant: RecommendationsCellConstants.playButtonHeight)
     ])
   }
   func addTitleLabel() {
@@ -259,8 +263,8 @@ class RecommendationsCell: UICollectionViewCell, DynamicDataCell {
     contentView.addSubview(circularProgressBarView)
     circularProgressBarView.centerYAnchor.constraint(equalTo: contentView.centerYAnchor).isActive = true
     circularProgressBarView.centerXAnchor.constraint(equalTo: contentView.centerXAnchor).isActive = true
-    circularProgressBarView.widthAnchor.constraint(equalToConstant: 40).isActive = true
-    circularProgressBarView.heightAnchor.constraint(equalToConstant: 40).isActive = true
+    circularProgressBarView.widthAnchor.constraint(equalToConstant: RBPlayerControl.Metrics.smallWidth).isActive = true
+    circularProgressBarView.heightAnchor.constraint(equalToConstant: RBPlayerControl.Metrics.smallWidth).isActive = true
     self.circularProgressBarView.progress = 1
   }
   @objc private func closeTapped() {

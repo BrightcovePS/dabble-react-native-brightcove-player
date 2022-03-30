@@ -6,6 +6,9 @@ struct SeekDuration {
   static var timeInterval: Double = 15
 }
 fileprivate struct ControlConstants {
+  static let topStackViewHeight: CGFloat = 36
+  static let controlsStackViewHeight: CGFloat = 44
+  static let standardButtonWidth: CGFloat = 40
   static let VisibleDuration: TimeInterval = 5.0
   static let AnimateInDuration: TimeInterval = 0.1
   static let AnimateOutDuraton: TimeInterval = 0.2
@@ -168,16 +171,16 @@ class CustomOverlayControl: UIView, CustomControlViewType {
     topControlsStackView.leadingAnchor.constraint(equalTo: self.leadingAnchor).isActive = true
     topControlsStackView.trailingAnchor.constraint(equalTo: self.trailingAnchor).isActive = true
     topControlsStackView.topAnchor.constraint(equalTo: self.topAnchor, constant: .zero).isActive = true
-    topControlsStackView.heightAnchor.constraint(equalToConstant: 36).isActive = true
+    topControlsStackView.heightAnchor.constraint(equalToConstant: ControlConstants.topStackViewHeight).isActive = true
     //hStackView.bottomAnchor.constraint(equalTo: self.bottomAnchor, constant: -controlsViewHeight).isActive = true
   }
   private func addGoogleCast() {
-    googleCastButton.widthAnchor.constraint(equalToConstant: 40).isActive = true
+    googleCastButton.widthAnchor.constraint(equalToConstant: ControlConstants.standardButtonWidth).isActive = true
     topControlsStackView.addArrangedSubview(googleCastButton)
   }
   private func addPictureInPicture() {
     pictureInPicture.addTarget(self, action: #selector(handlePictureInPictureTapped), for: .touchUpInside)
-    pictureInPicture.widthAnchor.constraint(equalToConstant: 40).isActive = true
+    pictureInPicture.widthAnchor.constraint(equalToConstant: ControlConstants.standardButtonWidth).isActive = true
     topControlsStackView.addArrangedSubview(pictureInPicture)
   }
   private func addAirplay() {
@@ -185,7 +188,7 @@ class CustomOverlayControl: UIView, CustomControlViewType {
     topControlsStackView.addArrangedSubview(UIView())
     topControlsStackView.addArrangedSubview(UIView())
     airplayBtn.addTarget(self, action: #selector(handleAirplayTapped), for: .touchUpInside)
-    airplayBtn.widthAnchor.constraint(equalToConstant: 40).isActive = true
+    airplayBtn.widthAnchor.constraint(equalToConstant: ControlConstants.standardButtonWidth).isActive = true
     topControlsStackView.addArrangedSubview(airplayBtn)
     addAirplayBtn()
   }
@@ -205,7 +208,7 @@ class CustomOverlayControl: UIView, CustomControlViewType {
   }
   private func addClosedCaptions() {
     closedCaptions.addTarget(self, action: #selector(handleClosedCaptionTapped), for: .touchUpInside)
-    closedCaptions.widthAnchor.constraint(equalToConstant: 40).isActive = true
+    closedCaptions.widthAnchor.constraint(equalToConstant: ControlConstants.standardButtonWidth).isActive = true
     topControlsStackView.addArrangedSubview(closedCaptions)
   }
   private func addHStackView() {
@@ -215,7 +218,7 @@ class CustomOverlayControl: UIView, CustomControlViewType {
     hStackView.centerYAnchor.constraint(equalTo: self.centerYAnchor, constant: .zero).isActive = true
     hStackView.centerXAnchor.constraint(equalTo: self.centerXAnchor, constant: .zero).isActive = true
     hStackView.widthAnchor.constraint(lessThanOrEqualTo: self.widthAnchor, multiplier: 0.8).isActive = true
-    hStackView.heightAnchor.constraint(equalToConstant: 44).isActive = true
+    hStackView.heightAnchor.constraint(equalToConstant: ControlConstants.controlsStackViewHeight).isActive = true
     //hStackView.bottomAnchor.constraint(equalTo: self.bottomAnchor, constant: -controlsViewHeight).isActive = true
   }
   private func addRewind() {

@@ -2,6 +2,7 @@ import UIKit
 import BrightcovePlayerSDK
 fileprivate struct ControlConstants {
   static let seekDuration: Double = 15
+  static let durationLabelWidth: CGFloat = 50
 }
 class CustomControlLayout: NSObject {
   var screenModeButton: UIButton!
@@ -17,9 +18,9 @@ class CustomControlLayout: NSObject {
     let playButtonLayoutView = BCOVPUIBasicControlView.layoutViewWithControl(from: .buttonPlayback, width: .zero, elasticity: 0.0)
     playButtonLayoutView?.isHidden = true
     let jumpBackButtonLayoutView = BCOVPUIBasicControlView.layoutViewWithControl(from: .buttonJumpBack, width: kBCOVPUILayoutUseDefaultValue, elasticity: 0.0)
-    let currentTimeLayoutView = BCOVPUIBasicControlView.layoutViewWithControl(from: .labelCurrentTime, width: 50, elasticity: 0.0)
+    let currentTimeLayoutView = BCOVPUIBasicControlView.layoutViewWithControl(from: .labelCurrentTime, width: ControlConstants.durationLabelWidth, elasticity: 0.0)
     let progressLayoutView = BCOVPUIBasicControlView.layoutViewWithControl(from: .sliderProgress, width: kBCOVPUILayoutUseDefaultValue, elasticity: 1.0)
-    let durationLayoutView = BCOVPUIBasicControlView.layoutViewWithControl(from: .labelDuration, width: 50, elasticity: 0.0)
+    let durationLayoutView = BCOVPUIBasicControlView.layoutViewWithControl(from: .labelDuration, width: ControlConstants.durationLabelWidth, elasticity: 0.0)
     let closedCaptionLayoutView = BCOVPUIBasicControlView.layoutViewWithControl(from: .buttonClosedCaption, width: kBCOVPUILayoutUseDefaultValue, elasticity: 0.0)!
     //closedCaptionLayoutView?.isRemoved = true // Hide until it's explicitly needed.
     let screenModeLayoutView = BCOVPUIBasicControlView.layoutViewWithControl(from: .buttonScreenMode, width: kBCOVPUILayoutUseDefaultValue, elasticity: 0.0)
@@ -85,7 +86,7 @@ class CustomControlLayout: NSObject {
     self.forwardTapped()
   }
   private func forwardTapped() {
-    guard 
+    guard
       let player = self.currentPlayer,
       let duration  = player.currentItem?.duration else{
       return
