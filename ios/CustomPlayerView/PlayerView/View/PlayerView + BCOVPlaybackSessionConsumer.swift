@@ -31,6 +31,13 @@ extension PlayerView: BCOVPlaybackSessionConsumer {
       overlayDecorator.isPreviewWindowActive = false
     }
   }
+  fileprivate func handleScrub(_ totalduration: Double, _ progress: TimeInterval) {
+    let threshold = totalduration - TimerConstants.thumbnailVideoEndOffset
+    if progress >= threshold {
+      displayNextVideo()
+      overlayDecorator.isPreviewWindowActive = true
+    }
+  }
   fileprivate func processAnyVideo(_ totalduration: Double, _ progress: TimeInterval) {
     let threshold = totalduration - TimerConstants.apiCallVideoEndOffset
     if progress >= threshold,
@@ -52,7 +59,7 @@ extension PlayerView: BCOVPlaybackSessionConsumer {
       controlsFadingViewVisible = true
       self.customControlsView?.isPaused = false
     case kBCOVPlaybackSessionLifecycleEventPause:
-      self.screenTapDecorator.reestablishTimer()
+      self.reestablishTimer()
       self.customControlsView?.isPaused = true
     case kBCOVPlaybackSessionLifecycleEventReady:
       self.customControlsView?.isPaused = false
@@ -75,5 +82,6 @@ extension PlayerView: BCOVPlaybackSessionConsumer {
     let progress = totalduration * Double(sliderVal)
     self.shouldHideVideoOverlay(totalduration, progress)
     self.shouldResetConnectionActive(totalduration, progress)
+    handleScrub(totalduration, progress)
   }
 }

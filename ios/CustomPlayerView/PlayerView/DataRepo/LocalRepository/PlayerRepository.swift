@@ -23,7 +23,11 @@ class PlayerRepository {
       CurrentPlayerItem.shared.videoId = videoId ?? StringConstants.kEmptyString
     }
   }
-  var playlistVideos: [BCOVVideo]?
+  var playlistVideos: [BCOVVideo]? {
+    didSet {
+      self.cacheAllPlaylistVideoIds()
+    }
+  }
   init(_ accountId: String? = nil,
        policyKey: String? = nil,
        playlistReferenceId: String? = nil,
@@ -98,5 +102,13 @@ class PlayerRepository {
     guard let videoId = self.videoId,
           let playlist = self.playlistVideos else { return false }
     return PlaylistHelper.isPrevVideoAvailable(with: videoId, in: playlist)
+  }
+  private func cacheAllPlaylistVideoIds() {
+    CurrentPlayerItem.shared.playlistVideoIds = []
+    self.playlistVideos?.forEach({ eachVideo in
+      if let videoId = eachVideo.properties[kBCOVVideoPropertyKeyId] as? String {
+        CurrentPlayerItem.shared.playlistVideoIds.append(videoId)
+      }
+    })
   }
 }

@@ -1,6 +1,6 @@
 import UIKit
 import BrightcovePlayerSDK
-protocol ViewDecoratorType: AnyObject, ViewDecoratorViewModelProtocol, ViewDecoratorRemoteProtocol, AnyVideoProtocol {
+protocol ViewDecoratorType: AnyObject, ViewDecoratorViewModelProtocol, ViewDecoratorRemoteProtocol, AnyVideoProtocol, PlaylistNextVideoProtocol {
   var parentView: BCOVPUIPlayerView? { get set }
   var session: BCOVPlaybackSession? { get set }
   init(_ view: BCOVPUIPlayerView)
@@ -23,4 +23,7 @@ protocol ViewDecoratorRemoteProtocol {
 protocol AnyVideoProtocol {
   var nextAnyVideo: BCOVVideo? { get set }
   func fetchAnyBCVideo(for json: [Videos]?)
+}
+protocol PlaylistNextVideoProtocol {
+  var nextPlaylistVideo: BCOVVideo? { get set }
 }

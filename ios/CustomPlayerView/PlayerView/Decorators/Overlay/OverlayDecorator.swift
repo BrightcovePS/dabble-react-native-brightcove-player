@@ -1,13 +1,23 @@
 import UIKit
 import BrightcovePlayerSDK
-fileprivate struct OverlayConstants {
+struct OverlayConstants {
   static let closeButtonTrailing: CGFloat = 10
   static let closeButtonTop: CGFloat = -20
-  static let containerYOffset: CGFloat = 10
+  static var containerYOffset: CGFloat = 10
+  static let normalScreencontainerYOffset: CGFloat = 5
+  static let fullScreencontainerYOffset: CGFloat = 15
   static let showOverlayAnimationDuration: Double = 0.25
   static let hideOverlayAnimationDuration: Double = 0.15
 }
 class OverlayDecorator: NSObject, ViewDecoratorType {
+  var centreYConstraint: NSLayoutConstraint!
+  var nextPlaylistVideo: BCOVVideo? {
+    didSet {
+      if let video = nextPlaylistVideo {
+      self.viewModel.videoObj = [video]
+      }
+    }
+  }
   var session: BCOVPlaybackSession? {
     didSet {
       setOverlaySize()
@@ -91,9 +101,11 @@ class OverlayDecorator: NSObject, ViewDecoratorType {
   private func addContainer() {
     let view = overlayBackground
     view.addSubview(gridContainer)
+    centreYConstraint?.isActive = false
+    centreYConstraint = gridContainer.centerYAnchor.constraint(equalTo: overlayBackground.safeAreaLayoutGuide.centerYAnchor, constant: OverlayConstants.containerYOffset)
     NSLayoutConstraint.activate([
       gridContainer.centerXAnchor.constraint(equalTo: view.safeAreaLayoutGuide.centerXAnchor),
-      gridContainer.centerYAnchor.constraint(equalTo: view.safeAreaLayoutGuide.centerYAnchor, constant: OverlayConstants.containerYOffset),
+      centreYConstraint,
      // gridContainer.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor, constant: RecommendationOverlayConstants.kRecommendationOverlayBottom),
       /*Donot delete - needed incase of swiping up like you tube for swipe gesture,*/
       //gridContainer.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor, constant: 80),
@@ -154,9 +166,12 @@ class OverlayDecorator: NSObject, ViewDecoratorType {
     gridContainer.removeFromSuperview()
     overlayBackground.removeFromSuperview()
   }
+  /*2,5,6 - Flat orientations*/
   fileprivate func setOverlaySize() {
     guard UIDevice.current.orientation.rawValue != 2,
-          let referenceViewCGrect =  (parentView as? PlayerView)?.session?.playerLayer.videoRect,
+          UIDevice.current.orientation.rawValue != 5,
+          UIDevice.current.orientation.rawValue != 6,
+          let referenceViewCGrect = parentView?.overlayView.frame,
           let screenMode = screenMode else {
       return
     }
@@ -176,7 +191,13 @@ class OverlayDecorator: NSObject, ViewDecoratorType {
       self.refreshContraints()
     }
   }
+  fileprivate func updateCenterYOffset() {
+    if let screenMode = screenMode {
+      OverlaySizeFactory.setupOverlayCentreYOffset(screenMode: screenMode)
+    }
+  }
   fileprivate func refreshContraints() {
+    updateCenterYOffset()
     guard showOverlay,
           let view = parentView?.overlayView,
           overlayBackground.isDescendant(of: view),
@@ -193,8 +214,10 @@ class OverlayDecorator: NSObject, ViewDecoratorType {
     overlayBackground.safeAreaLayoutGuide.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor).isActive = true
     
     //overlayBackground.addSubview(gridContainer)
+    centreYConstraint?.isActive = false
+    centreYConstraint = gridContainer.centerYAnchor.constraint(equalTo: overlayBackground.safeAreaLayoutGuide.centerYAnchor, constant: OverlayConstants.containerYOffset)
     gridContainer.centerXAnchor.constraint(equalTo: overlayBackground.safeAreaLayoutGuide.centerXAnchor).isActive = true
-    gridContainer.centerYAnchor.constraint(equalTo: overlayBackground.safeAreaLayoutGuide.centerYAnchor, constant: OverlayConstants.containerYOffset).isActive = true
+    centreYConstraint.isActive = true
     gridContainer.heightAnchor.constraint(equalToConstant: OverlaySize.height).isActive = true
     gridContainer.widthAnchor.constraint(equalToConstant: OverlaySize.width).isActive = true
     

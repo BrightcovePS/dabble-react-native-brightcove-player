@@ -4,7 +4,7 @@ extension OverlayDecorator: AnyVideoProtocol {
     var randomVideo: Videos?
     repeat {
       randomVideo = getRandomVideo(allVideos: allVideos)
-    } while (randomVideo?.id == CurrentPlayerItem.shared.videoId)
+    } while (randomVideo?.id == CurrentPlayerItem.shared.videoId || CurrentPlayerItem.shared.playlistVideoIds.contains(randomVideo?.id ?? StringConstants.kEmptyString))
     let recommendations = RecommendationsModel(thumbnailURL: randomVideo?.poster, url: randomVideo?.poster, title: randomVideo?.name, headingTitle: randomVideo?.name, referenceId: randomVideo?.reference_id, videoId: randomVideo?.id, accountId: randomVideo?.account_id)
     viewModel.outputModel = [recommendations]
     //self.showOverlay = true  Commented for 10 sec buffer

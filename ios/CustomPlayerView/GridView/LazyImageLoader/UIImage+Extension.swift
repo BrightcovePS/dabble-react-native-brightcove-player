@@ -20,7 +20,8 @@ extension UIImageView {
           completion?()
         }
       }
-    }) { error in
+    }) { _ in
+      completion?()
     }
   }
 }
