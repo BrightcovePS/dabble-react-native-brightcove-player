@@ -1,7 +1,5 @@
 package jp.manse.webservice;
 
-import com.brightcove.player.edge.CatalogError;
-
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;

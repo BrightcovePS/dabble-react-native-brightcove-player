@@ -60,7 +60,7 @@ public class APIServiceInstance {
          * Please apply [baseURL] if it is not default URL
          * "https://edge.api.brightcove.com/playback/v1"
          * "https://edge-auth.api.brightcove.com/playback/v1"
-        * */
+         */
         public T setBaseURL(@NonNull String baseURL) {
             this.baseURL = (String) Objects.requireNonNull(baseURL, "Base URL cannot be null");
             return this.self();
@@ -68,7 +68,7 @@ public class APIServiceInstance {
 
         /**
          * This timeout will apply for both call and response
-         * */
+         */
         public T setTimeoutInMills(long timeout) {
             this.timeoutInMillis = (Long) Objects.requireNonNull(timeout, "Base URL cannot be null");
             return this.self();
@@ -106,12 +106,11 @@ public class APIServiceInstance {
                         .build();
                 // Create instance for APIService from the Retrofit instance
                 return retrofit.create(APIService.class);
-            }
-            catch (Exception exception){
-                System.out.println("Retrofit Object init =============> "+ exception.getMessage());
+            } catch (Exception exception) {
+                System.out.println("Retrofit Object init =============> " + exception.getMessage());
             }
 
-            return  null;
+            return null;
         }
     }
 }

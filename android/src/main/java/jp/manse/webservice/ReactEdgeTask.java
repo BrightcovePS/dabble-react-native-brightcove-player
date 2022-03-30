@@ -39,7 +39,8 @@ import retrofit2.Response;
 @ListensFor(
         events = {}
 )
-public abstract class ReactEdgeTask<T>  implements Component {
+public abstract class ReactEdgeTask<T> implements Component {
+    static final Gson GSON_ERROR_PARSER = (new GsonBuilder()).excludeFieldsWithoutExposeAnnotation().create();
     private static final String ERROR_CODE = "error_code";
     private static final String ERROR_SUB_CODE = "error_subcode";
     private static final String CATALOG_URL = "catalogUrl";
@@ -51,13 +52,11 @@ public abstract class ReactEdgeTask<T>  implements Component {
     private static final String MEDIA_REQUEST_NO_JSON = "mediaRequestNoJSON";
     private static final String VIDEO_PARSER_EXCEPTION = "videoParseException";
     private static final String URI_ERROR = "uriError";
-
-    static final Gson GSON_ERROR_PARSER = (new GsonBuilder()).excludeFieldsWithoutExposeAnnotation().create();
+    private final Call<JsonElement> apiCall;
+    private final URL url;
     protected EventEmitter eventEmitter;
     protected List<String> errors;
-    private final Call<JsonElement> apiCall;
     private long startResponseTimeMs;
-    private final URL url;
 
     public ReactEdgeTask(@NonNull Call<JsonElement> apiCall, EventEmitter eventEmitter) {
         this.apiCall = apiCall;
@@ -68,9 +67,9 @@ public abstract class ReactEdgeTask<T>  implements Component {
     }
 
     /**
-    * Do the API call which is requested with retrofit Call object and process the response string into
+     * Do the API call which is requested with retrofit Call object and process the response string into
      * [EdgeTaskResult] as return of response
-    * */
+     */
     public void doCallAPICall() {
         // Put analytics entry while API call
         emitAnalyticsCatalogRequest(url);
@@ -97,7 +96,7 @@ public abstract class ReactEdgeTask<T>  implements Component {
                         result = createSuccessfulResult(processData(jsonData));
                     }
                     onPostExecute(result);
-                }catch (Exception exception){
+                } catch (Exception exception) {
                     onFailureResponse(url, exception);
                 }
             }
@@ -134,8 +133,8 @@ public abstract class ReactEdgeTask<T>  implements Component {
 
     /**
      * Generate error based on exception and return in [onPostExecute
-     * */
-    private void onFailureResponse(URL url, Throwable exception){
+     */
+    private void onFailureResponse(URL url, Throwable exception) {
         EdgeTaskResult<T> result;
         String errorMessage = getThrowableMessage(exception, url);
         result = createErrorResult((new ReactCatalogError.Builder()).setMessage(errorMessage).setError(exception).build());
