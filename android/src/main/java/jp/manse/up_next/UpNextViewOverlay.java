@@ -21,7 +21,6 @@ import com.brightcove.player.event.EventListener;
 import com.brightcove.player.event.EventType;
 import com.brightcove.player.model.Playlist;
 import com.brightcove.player.model.Video;
-import com.brightcove.player.network.HttpRequestConfig;
 import com.brightcove.player.util.Objects;
 import com.facebook.react.bridge.ReactContext;
 
@@ -29,6 +28,7 @@ import java.util.Random;
 
 import jp.manse.util.ImageLoader;
 import jp.manse.R;
+import jp.manse.webservice.APIConfig;
 import jp.manse.webservice.ReactCatalog;
 
 public class UpNextViewOverlay {
@@ -267,9 +267,10 @@ public class UpNextViewOverlay {
     }
 
     private void fetchAllVideos(ReactPlaylistListener listener) {
-        ReactCatalog reactCatalog = new ReactCatalog.Builder(eventEmitter, accountId)
-                .setPolicy(policyKey)
-                .build();
+        APIConfig apiConfig = new APIConfig();
+        apiConfig.setAccount(accountId);
+        apiConfig.setPolicy(policyKey);
+        ReactCatalog reactCatalog = new ReactCatalog(eventEmitter, apiConfig);
         reactCatalog.getAllVideos(listener);
     }
 
