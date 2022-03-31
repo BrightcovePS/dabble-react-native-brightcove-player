@@ -22,10 +22,10 @@ class GridViewModel: GridViewModelProtocol {
       self.requesInProgress = false
       self.getAnyVideoFromAccount(responseObj: response)
     }
-    remoteRepo.errorHandler = { response in
-      // TODO: To Handle error. Need to check requirement and Visual design
+    remoteRepo.errorHandler = { [weak self] response in
+      guard let self = self else { return }
       self.requesInProgress = false
-      print(response as Any)
+      self.handleErrorResponse()
     }
     if CurrentPlayerItem.shared.allVideosInAccount.count > 0 {
       decorator?.fetchAnyBCVideo(for: CurrentPlayerItem.shared.allVideosInAccount)
@@ -55,5 +55,8 @@ class GridViewModel: GridViewModelProtocol {
   }
   func cancelAnyExisitingRequest() {
     remoteRepo.cancelAnyExisitingRequest()
+  }
+  func handleErrorResponse() {
+    decorator?.handleErrorResponse()
   }
 }
