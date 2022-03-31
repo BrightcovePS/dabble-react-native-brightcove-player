@@ -273,6 +273,9 @@
   }
   return nil;
 }
+- (void)progressSliderDidChangeValue:(UISlider *)slider {
+  _playerView.sliderDidChangeValue = [NSNumber numberWithFloat: slider.value];
+}
 - (void)progressSliderDidTouchUp:(UISlider *)slider {
   _playerView.slider = slider;
 }
