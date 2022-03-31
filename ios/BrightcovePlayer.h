@@ -24,7 +24,6 @@
 @property (nonatomic) float targetVolume;
 @property (nonatomic) float targetBitRate;
 @property (nonatomic) float targetPlaybackRate;
-@property (nonatomic) float seekDuration;
 @property (nonatomic) BOOL playbackServiceDirty;
 
 @property (nonatomic, copy) NSString *referenceId;
