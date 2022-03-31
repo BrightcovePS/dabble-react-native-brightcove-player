@@ -7,7 +7,7 @@ import com.brightcove.player.event.EventEmitter
 import com.brightcove.player.model.Playlist
 import jp.manse.webservice.APIService
 import jp.manse.webservice.EdgeResponseHandler
-import jp.manse.webservice.EdgeTaskResult
+import jp.manse.webservice.EdgeResult
 import jp.manse.webservice.ReactCatalogError
 import org.json.JSONException
 import org.json.JSONObject
@@ -47,7 +47,7 @@ class GetAllVideoRepo(
         return VideoParser.buildPlaylistFromJSON(data, eventEmitter)
     }
 
-    override fun onPostExecute(data: EdgeTaskResult<Playlist>) {
+    override fun onPostExecute(data: EdgeResult<Playlist>) {
         val playlist = data.getResult()
         if (playlist != null) {
             playlistListener!!.onPlaylist(playlist)

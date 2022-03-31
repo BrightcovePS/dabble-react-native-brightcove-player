@@ -29,14 +29,14 @@ abstract class EdgeResponseHandler<T>(
     @Throws(Exception::class)
     protected abstract fun processData(data: JSONObject): T
 
-    protected abstract fun onPostExecute(data: EdgeTaskResult<T>)
+    protected abstract fun onPostExecute(data: EdgeResult<T>)
 
     /**
      * Do the API call which is requested with retrofit Call object and process the response string into
-     * [EdgeTaskResult] as return of response
+     * [EdgeResult] as return of response
      */
     fun parseResponse(response: Response<JsonElement>) {
-        val result: EdgeTaskResult<T>
+        val result: EdgeResult<T>
         try {
             if (response.body() == null) {
                 result = createErrorResult(
@@ -75,7 +75,7 @@ abstract class EdgeResponseHandler<T>(
      * Generate error based on exception and return in [onPostExecute]
      */
     protected fun onFailureResponse(exception: Throwable, url: URL? = null) {
-        val result: EdgeTaskResult<T>
+        val result: EdgeResult<T>
         val errorMessage = if (url == null) "" else getThrowableMessage(exception, url)
         result = createErrorResult(
             ReactCatalogError.Builder().setMessage(errorMessage).setError(exception).build()
@@ -88,18 +88,18 @@ abstract class EdgeResponseHandler<T>(
         return response.startsWith("[") && response.endsWith("]")
     }
 
-    private fun createSuccessfulResult(processData: T): EdgeTaskResult<T> {
-        return EdgeTaskResult(processData)
+    private fun createSuccessfulResult(processData: T): EdgeResult<T> {
+        return EdgeResult(processData)
     }
 
-    private fun createErrorResult(error: ReactCatalogError): EdgeTaskResult<T> {
+    private fun createErrorResult(error: ReactCatalogError): EdgeResult<T> {
         val errorList: MutableList<ReactCatalogError> = ArrayList()
         errorList.add(error)
-        return EdgeTaskResult(errorList)
+        return EdgeResult(errorList)
     }
 
-    private fun createErrorResult(errorList: List<ReactCatalogError>): EdgeTaskResult<T> {
-        return EdgeTaskResult<T>(errorList)
+    private fun createErrorResult(errorList: List<ReactCatalogError>): EdgeResult<T> {
+        return EdgeResult<T>(errorList)
     }
 
     private fun processError(arrayData: String): List<ReactCatalogError> {

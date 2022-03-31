@@ -2,7 +2,7 @@ package jp.manse.webservice
 
 import java.util.*
 
-class EdgeTaskResult<T> {
+class EdgeResult<T> {
     private var result: T? = null
     private val errorList: MutableList<ReactCatalogError> = ArrayList()
 
