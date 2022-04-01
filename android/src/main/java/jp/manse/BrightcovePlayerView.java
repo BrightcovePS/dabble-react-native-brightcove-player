@@ -58,7 +58,7 @@ public class BrightcovePlayerView extends RelativeLayout implements LifecycleEve
     };
     private final EventEmitter eventEmitter;
     private final BrightcoveExoPlayerVideoView playerVideoView;
-    private final BrightcoveMediaController mediaController;
+    private BrightcoveMediaController mediaController = null;
     private final UpNextViewOverlay.UpNextStatusListener onUpNextStatusListener = new UpNextViewOverlay.UpNextStatusListener() {
         @Override
         public void onShow(Video video) {
@@ -79,6 +79,9 @@ public class BrightcovePlayerView extends RelativeLayout implements LifecycleEve
     private String videoToken;
     private long seekDuration = SEEK_OFFSET;
     private final OnClickListener forwardRewindClickListener = v -> {
+        if(mediaController != null){
+            mediaController.show();
+        }
         if (v.getId() == R.id.fast_forward_btn) {
             fastForward();
         } else if (v.getId() == R.id.rewind_btn) {
