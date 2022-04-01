@@ -1,6 +1,7 @@
 package jp.manse;
 
 import android.graphics.Color;
+import android.os.Handler;
 import android.util.Log;
 import android.widget.ImageButton;
 import android.view.SurfaceView;
@@ -168,10 +169,14 @@ public class BrightcovePlayerView extends RelativeLayout implements LifecycleEve
                     }
                     sendJSEvent(BrightcovePlayerManager.EVENT_UPDATE_BUFFER_PROGRESS, bufferUpdateMap);
                     break;
+                case EventType.ENTER_FULL_SCREEN:
+                case EventType.EXIT_FULL_SCREEN:
+                    mediaController.hide();
+                    requestLayout();
+                    break;
                 case EventType.DID_EXIT_FULL_SCREEN:
                 case EventType.DID_ENTER_FULL_SCREEN:
-                    mediaController.show();
-                    sendJSEvent(BrightcovePlayerManager.EVENT_TOGGLE_ANDROID_FULLSCREEN, Arguments.createMap());
+                    onToggleFullScreen();
                     break;
             }
         };
@@ -189,6 +194,10 @@ public class BrightcovePlayerView extends RelativeLayout implements LifecycleEve
         setSeekControlConfig();
     }
 
+    private void onToggleFullScreen() {
+        new Handler().postDelayed(mediaController::show, 300);
+        sendJSEvent(BrightcovePlayerManager.EVENT_TOGGLE_ANDROID_FULLSCREEN, Arguments.createMap());
+    }
     private void addUpNextOverlay() {
         this.upNextViewOverlay = new UpNextViewOverlay(context, accountId, policyKey);
         addView(upNextViewOverlay.getUpNextContainer());
