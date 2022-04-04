@@ -79,7 +79,7 @@ public class BrightcovePlayerView extends RelativeLayout implements LifecycleEve
     private String videoToken;
     private long seekDuration = SEEK_OFFSET;
     private final OnClickListener forwardRewindClickListener = v -> {
-        if(mediaController != null){
+        if (mediaController != null) {
             mediaController.show();
         }
         if (v.getId() == R.id.fast_forward_btn) {
@@ -201,6 +201,7 @@ public class BrightcovePlayerView extends RelativeLayout implements LifecycleEve
         new Handler().postDelayed(mediaController::show, 300);
         sendJSEvent(BrightcovePlayerManager.EVENT_TOGGLE_ANDROID_FULLSCREEN, Arguments.createMap());
     }
+
     private void addUpNextOverlay() {
         this.upNextViewOverlay = new UpNextViewOverlay(context, accountId, policyKey);
         addView(upNextViewOverlay.getUpNextContainer());
