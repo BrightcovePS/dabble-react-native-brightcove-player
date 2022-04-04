@@ -339,7 +339,7 @@ public class UpNextViewOverlay {
                     if (progress != null) {
                         float difference = videoDuration - progress;
                         if (difference <= GET_ALL_VIDEOS_PRE_FETCH_OFFSET && nextVideo == null && !loadingAllVideos) {
-                            // Prefetch all videos from 5th second to up next work smooth
+                            // Prefetch all videos from before 5th second for up next overlay to work smooth
                             prefetchAllVideos();
                         }
                         if (difference <= UP_NEXT_COUNT_DOWN_TIME && upNextContainer.getVisibility() != View.VISIBLE && !upNextOverlayCancelled) {
