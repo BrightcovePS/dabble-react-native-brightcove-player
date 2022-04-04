@@ -1,10 +1,13 @@
 package jp.manse;
 
+import android.content.Context;
+import android.content.res.Configuration;
 import android.graphics.Color;
 import android.os.Handler;
+import android.util.DisplayMetrics;
 import android.util.Log;
+import android.view.WindowManager;
 import android.widget.ImageButton;
-import android.view.SurfaceView;
 import android.widget.RelativeLayout;
 
 import com.brightcove.player.display.ExoPlayerVideoDisplayComponent;
@@ -38,6 +41,7 @@ import com.google.android.exoplayer2.trackselection.MappingTrackSelector;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Objects;
 
 import jp.manse.up_next.UpNextViewOverlay;
 import jp.manse.util.AudioFocusManager;
@@ -51,14 +55,14 @@ public class BrightcovePlayerView extends RelativeLayout implements LifecycleEve
     private final ThemedReactContext context;
     private final ReactApplicationContext applicationContext;
     private final AudioFocusManager audioFocusManager;
+    private final EventEmitter eventEmitter;
+    private final BrightcoveExoPlayerVideoView playerVideoView;
     private final Runnable measureAndLayout = () -> {
         measure(MeasureSpec.makeMeasureSpec(getWidth(), MeasureSpec.EXACTLY),
                 MeasureSpec.makeMeasureSpec(getHeight(), MeasureSpec.EXACTLY));
         layout(getLeft(), getTop(), getRight(), getBottom());
     };
-    private final EventEmitter eventEmitter;
-    private final BrightcoveExoPlayerVideoView playerVideoView;
-    private BrightcoveMediaController mediaController = null;
+    private BrightcoveMediaController mediaController;
     private final UpNextViewOverlay.UpNextStatusListener onUpNextStatusListener = new UpNextViewOverlay.UpNextStatusListener() {
         @Override
         public void onShow(Video video) {
@@ -103,6 +107,17 @@ public class BrightcovePlayerView extends RelativeLayout implements LifecycleEve
             playVideo(video);
         }
     };
+    /**
+     * Please do use this variable any other purpose. it may lead into video size issue
+     * one of condition to refresh the video size
+     **/
+    private int prevOrientationForRefreshVideoLayout = Configuration.ORIENTATION_PORTRAIT;
+
+    /**
+     * Please do use this variable any other purpose. it may lead into video size issue
+     * one of condition to refresh the video size
+     **/
+    private boolean prevFullscreenForRefreshVideoLayout = false;
 
     public BrightcovePlayerView(ThemedReactContext context, ReactApplicationContext applicationContext) {
         super(context);
@@ -127,7 +142,7 @@ public class BrightcovePlayerView extends RelativeLayout implements LifecycleEve
         EventListener eventListener = event -> {
             switch (event.getType()) {
                 case EventType.VIDEO_SIZE_KNOWN:
-                    fixVideoLayout();
+                    refreshVideoLayoutSize();
                     updateBitRate();
                     updatePlaybackRate();
                     break;
@@ -153,6 +168,7 @@ public class BrightcovePlayerView extends RelativeLayout implements LifecycleEve
                     if (playHead != null) {
                         progressMap.putDouble(CURRENT_TIME, playHead / ONE_SEC_DOUBLE);
                     }
+                    refreshVideoLayoutSize();
                     sendJSEvent(BrightcovePlayerManager.EVENT_PROGRESS, progressMap);
                     break;
                 case EventType.VIDEO_DURATION_CHANGED:
@@ -431,17 +447,47 @@ public class BrightcovePlayerView extends RelativeLayout implements LifecycleEve
         upNextViewOverlay.prepareNextVideo();
     }
 
-    private void fixVideoLayout() {
-        int viewWidth = this.getMeasuredWidth();
-        int viewHeight = this.getMeasuredHeight();
-        SurfaceView surfaceView = (SurfaceView) this.playerVideoView.getRenderView();
-        if (surfaceView != null) {
-            surfaceView.measure(viewWidth, viewHeight);
-            int surfaceWidth = surfaceView.getMeasuredWidth();
-            int surfaceHeight = surfaceView.getMeasuredHeight();
-            int leftOffset = (viewWidth - surfaceWidth) / 2;
-            int topOffset = (viewHeight - surfaceHeight) / 2;
-            surfaceView.layout(leftOffset, topOffset, leftOffset + surfaceWidth, topOffset + surfaceHeight);
+    /**
+     * Refresh video player size as per surface render size to avoid below issue
+     * https://github.com/BrightcoveOS/android-player-samples/issues/161
+     * The video size has been set to refresh in to situations. those are,
+     * Fullscreen / normal mode.
+     * Portrait / landscape
+     **/
+    private void refreshVideoLayoutSize() {
+        int orientation = getResources().getConfiguration().orientation;
+
+        if (orientation != this.prevOrientationForRefreshVideoLayout || playerVideoView.isFullScreen() != prevFullscreenForRefreshVideoLayout) {
+            // Get the width and height
+            float width = Objects.requireNonNull(playerVideoView.getRenderView()).getWidth();
+            float height = Objects.requireNonNull(playerVideoView.getRenderView()).getHeight();
+
+            //Get the display metrics
+            DisplayMetrics metrics = new DisplayMetrics();
+            WindowManager wm = (WindowManager) context.getSystemService(Context.WINDOW_SERVICE);
+            wm.getDefaultDisplay().getMetrics(metrics);
+
+            int videoWidth;
+            int videoHeight;
+            float aspectRatio;
+
+            if (orientation == Configuration.ORIENTATION_LANDSCAPE) {
+                aspectRatio = width / height;
+                videoHeight = getMeasuredHeight(); //Calculate the height based on the ratio
+                videoWidth = (int) (videoHeight * aspectRatio); // We cover the entire display's width
+            } else {
+                aspectRatio = height / width;
+                videoWidth = getMeasuredWidth(); // We cover the entire display's width
+                videoHeight = (int) (videoWidth * aspectRatio); //Calculate the height based on the ratio
+            }
+
+            RelativeLayout.LayoutParams layoutParams = new RelativeLayout.LayoutParams(videoWidth, videoHeight);
+            layoutParams.addRule(CENTER_IN_PARENT, TRUE);
+
+            // Set the layout params (In this example the BrightcoveVideoView was held inside a LinearLayout).
+            playerVideoView.setLayoutParams(layoutParams);
+            this.prevOrientationForRefreshVideoLayout = orientation;
+            this.prevFullscreenForRefreshVideoLayout = playerVideoView.isFullScreen();
         }
     }
 
