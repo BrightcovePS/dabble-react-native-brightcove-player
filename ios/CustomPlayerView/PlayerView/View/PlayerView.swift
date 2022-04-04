@@ -53,6 +53,7 @@ struct TimerControlConstants {
       default:
         break
       }
+      restablishTapTimer()
     }
   }
   @objc weak var player: BrightcovePlayer!
@@ -95,9 +96,15 @@ struct TimerControlConstants {
       /*self.updateMPCommandCenter()*/
     }
   }
+  @objc public var sliderDidChangeValue: NSNumber? {
+    didSet {
+      restablishTapTimer()
+    }
+  }
   @objc public var slider: UISlider? {
     didSet {
       self.sliderChanged()
+      restablishTapTimer()
     }
   }
   @objc public var videoId: String? {
@@ -181,7 +188,7 @@ struct TimerControlConstants {
       visualEffectView.isHidden = true
     }*/
     controls.playbackController = self.playbackController
-    controls.controlsViewHeight = 40
+    controls.controlsViewHeight = RBPlayerControl.Metrics.smallWidth
     controlsFadingView.insertSubview(controls, belowSubview: controlsView)
     controls.centerInParentView(view: controlsFadingView)
     addClosedCaptionsObserver()

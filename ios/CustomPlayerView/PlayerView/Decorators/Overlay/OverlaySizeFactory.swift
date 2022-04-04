@@ -7,20 +7,15 @@ class OverlaySizeFactory {
   static var aspectRatio: CGFloat = (9/16)
   static var aspectRatioInverse: CGFloat = (16/9)
   class func setupDimensions(referenceViewCGrect: CGRect, screenMode: BCOVPUIScreenMode) {
-    OverlaySizeFactory.setupOverlayCentreYOffset(screenMode: screenMode)
+    OverlaySizeFactory.setupOverlayCentreYOffset(referenceViewCGrect: referenceViewCGrect, screenMode: screenMode)
     if UIDevice.isPad {
       OverlaySizeFactory.setupDimensionsForIPad(referenceViewCGrect: referenceViewCGrect, screenMode: screenMode)
     } else if UIDevice.isPhone {
       OverlaySizeFactory.setupDimensionsForIPhone(referenceViewCGrect: referenceViewCGrect, screenMode: screenMode)
     }
   }
-  /*2,5,6 - Flat orientations*/
-  class func setupOverlayCentreYOffset(screenMode: BCOVPUIScreenMode) {
-    guard UIDevice.current.orientation.rawValue != 2,
-    UIDevice.current.orientation.rawValue != 5,
-    UIDevice.current.orientation.rawValue != 6
-    else { return }
-    OverlayConstants.containerYOffset = (screenMode == .full && UIDevice.current.orientation.isPortrait) ? OverlayConstants.fullScreencontainerYOffset : OverlayConstants.normalScreencontainerYOffset
+  class func setupOverlayCentreYOffset(referenceViewCGrect: CGRect, screenMode: BCOVPUIScreenMode) {
+    OverlayConstants.containerYOffset = (screenMode == .full && UIDevice.isScreenPortrait) ? OverlayConstants.fullScreencontainerYOffset : OverlayConstants.normalScreencontainerYOffset
   }
   class func setupDimensionsForIPad(referenceViewCGrect: CGRect, screenMode: BCOVPUIScreenMode) {
     if screenMode == .normal { // OK
@@ -48,7 +43,7 @@ class OverlaySizeFactory {
   class func setupDimensionsForIPhone(referenceViewCGrect: CGRect, screenMode: BCOVPUIScreenMode) {
     if screenMode == .normal { // OK
       let widthRatio: CGFloat = 0.7
-      let heightRatio: CGFloat = UIDevice.current.orientation.isLandscape ? 0.725 : 0.65
+      let heightRatio: CGFloat = UIDevice.isScreenLandscape ? 0.725 : 0.65
       if referenceViewCGrect.height < referenceViewCGrect.width { // take height for landscape
         OverlaySize.height = ((referenceViewCGrect.height) * heightRatio) + OverlaySizeFactoryConstants.titleHeight
         OverlaySize.width = ((referenceViewCGrect.height) * heightRatio * OverlaySizeFactory.aspectRatioInverse) - OverlaySizeFactoryConstants.titleHeight

@@ -20,4 +20,8 @@ extension OverlayDecorator: AnyVideoProtocol {
   private func getRandomVideo(allVideos: [Videos]?) -> Videos? {
     return allVideos?.randomElement()
   }
+  /*To handle network failure so that retry will happen automatically over the api offset window as well*/
+  func handleErrorResponse() {
+    self.isConnectionWindowActive = false
+  }
 }

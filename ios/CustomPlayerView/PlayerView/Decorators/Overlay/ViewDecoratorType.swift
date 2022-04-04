@@ -23,6 +23,7 @@ protocol ViewDecoratorRemoteProtocol {
 protocol AnyVideoProtocol {
   var nextAnyVideo: BCOVVideo? { get set }
   func fetchAnyBCVideo(for json: [Videos]?)
+  func handleErrorResponse()
 }
 protocol PlaylistNextVideoProtocol {
   var nextPlaylistVideo: BCOVVideo? { get set }
