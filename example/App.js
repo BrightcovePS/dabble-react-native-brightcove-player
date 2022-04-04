@@ -113,7 +113,7 @@ export default class App extends Component {
     });
   };
 
-  onPlayNext = (event) => {
+  onPlayNext = event => {
     this.setState((state, props) => {
       return {
         state,
