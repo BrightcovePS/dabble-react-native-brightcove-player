@@ -113,6 +113,19 @@ export default class App extends Component {
     });
   };
 
+  onPlayNext = (event) => {
+    this.setState((state, props) => {
+      return {
+        state,
+        playback: {
+          ...state.playback,
+          videoId: event.videoId,
+          referenceId: event.referenceId,
+        },
+      };
+    });
+  };
+
   render() {
     return (
       <View style={styles.container}>
@@ -125,12 +138,7 @@ export default class App extends Component {
           playlistReferenceId={PLAYLIST_REF_ID}
           autoPlay
           {...this.state.playback}
-          onPlayNextVideo={event => {
-            console.log(
-              ' On Play Next =================> ',
-              JSON.stringify(event),
-            );
-          }}
+          onPlayNextVideo={this.onPlayNext}
         />
         <TouchableOpacity
           style={styles.playPauseButton}
