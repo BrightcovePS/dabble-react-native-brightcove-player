@@ -160,7 +160,7 @@ class RecommendationsCell: UICollectionViewCell, DynamicDataCell {
     self.contentView.subviews.forEach { eachSubView in
       eachSubView.removeFromSuperview()
     }
-    thumbnail.image = nil
+    thumbnail.image = UIColor.darkGray.image()
     thumbnail.backgroundColor = .darkGray
   }
   private func addTimerView() {
