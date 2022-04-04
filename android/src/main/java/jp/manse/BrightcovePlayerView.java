@@ -82,21 +82,22 @@ public class BrightcovePlayerView extends RelativeLayout implements LifecycleEve
     private String referenceId;
     private String videoToken;
     private long seekDuration = SEEK_OFFSET;
+    private boolean autoPlay = true;
+    private boolean playing = false;
+    private int bitRate = 0;
+    private float playbackRate = 1;
+    private UpNextViewOverlay upNextViewOverlay;
     private final OnClickListener forwardRewindClickListener = v -> {
         if (mediaController != null) {
             mediaController.show();
         }
+        upNextViewOverlay.resetUpNextCancel();
         if (v.getId() == R.id.fast_forward_btn) {
             fastForward();
         } else if (v.getId() == R.id.rewind_btn) {
             rewind();
         }
     };
-    private boolean autoPlay = true;
-    private boolean playing = false;
-    private int bitRate = 0;
-    private float playbackRate = 1;
-    private UpNextViewOverlay upNextViewOverlay;
     private final UpNextViewOverlay.OnPlayUpNextListener onPlayUpNextListener = new UpNextViewOverlay.OnPlayUpNextListener() {
         @Override
         public void onPlayNext(Video video) {
