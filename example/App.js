@@ -13,18 +13,24 @@ import {
   BrightcovePlayerUtil,
 } from 'react-native-brightcove-player';
 
-const ACCOUNT_ID = '5434391461001';
+const ACCOUNT_ID = '2779557264001';
+// const ACCOUNT_ID = '5434391461001';
 const POLICY_KEY =
-  'BCpkADawqM0T8lW3nMChuAbrcunBBHmh4YkNl5e6ZrKQwPiK_Y83RAOF4DP5tyBF_ONBVgrEjqW6fbV0nKRuHvjRU3E8jdT9WMTOXfJODoPML6NUDCYTwTHxtNlr5YdyGYaCPLhMUZ3Xu61L';
-const PLAYLIST_REF_ID = 'brightcove-native-sdk-plist';
+  'BCpkADawqM0mZx1lVrdIUv9B0iOcBlFLj0vfKKE8rOCEZBYbUDvTR6m-LSUbiho5BP1nLhhXaqmMROcJvU_u2tc6lO0i6GDmBeiVj09BAdxK5fSyfgFwBz3RCpRA_vsB0ZEbwl59K7ha6Sbd';
+// const POLICY_KEY =
+//   'BCpkADawqM0T8lW3nMChuAbrcunBBHmh4YkNl5e6ZrKQwPiK_Y83RAOF4DP5tyBF_ONBVgrEjqW6fbV0nKRuHvjRU3E8jdT9WMTOXfJODoPML6NUDCYTwTHxtNlr5YdyGYaCPLhMUZ3Xu61L';
+const PLAYLIST_REF_ID = 'most_played';
+// const PLAYLIST_REF_ID = 'brightcove-native-sdk-plist';
 
 export default class App extends Component {
   state = {
     videos: [],
     offlineVideos: [],
     playback: {
+      play: false,
       referenceId: null,
       videoToken: null,
+      videoId: null,
     },
   };
 
@@ -73,9 +79,12 @@ export default class App extends Component {
         downloadStatus && downloadStatus.downloadProgress === 1
           ? {
               videoToken: downloadStatus.videoToken,
+              play: true,
             }
           : {
               referenceId: item.referenceId,
+              videoId: item.videoId,
+              play: true,
             },
     });
   }
@@ -92,6 +101,18 @@ export default class App extends Component {
     this.disposer && this.disposer();
   }
 
+  onPressPlayPause = () => {
+    this.setState((state, props) => {
+      return {
+        state,
+        playback: {
+          ...state.playback,
+          play: !state.playback.play,
+        },
+      };
+    });
+  };
+
   render() {
     return (
       <View style={styles.container}>
@@ -101,15 +122,31 @@ export default class App extends Component {
           accountId={ACCOUNT_ID}
           policyKey={POLICY_KEY}
           seekDuration={15000}
+          playlistReferenceId={PLAYLIST_REF_ID}
           autoPlay
           {...this.state.playback}
+          onPlayNextVideo={event => {
+            console.log(
+              ' On Play Next =================> ',
+              JSON.stringify(event),
+            );
+          }}
         />
-
+        <TouchableOpacity
+          style={styles.playPauseButton}
+          onPress={this.onPressPlayPause}>
+          <Text>
+            {' '}
+            Playing status: {this.state.playback.play
+              ? 'Playing'
+              : 'Paused'}{' '}
+          </Text>
+        </TouchableOpacity>
         <FlatList
           style={styles.list}
           extraData={this.state.offlineVideos}
           data={this.state.videos}
-          keyExtractor={item => item.referenceId}
+          keyExtractor={item => item.videoId}
           renderItem={({item}) => {
             const downloadStatus = this.state.offlineVideos.find(
               video => video.videoId === item.videoId,
@@ -220,5 +257,10 @@ const styles = StyleSheet.create({
     padding: 16,
     marginLeft: 'auto',
     alignSelf: 'center',
+  },
+  playPauseButton: {
+    alignItems: 'center',
+    backgroundColor: '#DDDDDD',
+    padding: 10,
   },
 });

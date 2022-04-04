@@ -1,8 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <dimen name="up_next_poster_height">100dp</dimen>
+    <dimen name="up_next_poster_width">125dp</dimen>
+    <dimen name="ic_padding">12dp</dimen>
     <dimen name="margin_xsmall">8dp</dimen>
     <dimen name="margin_small">12dp</dimen>
     <dimen name="margin_medium">16dp</dimen>
     <dimen name="margin_large">20dp</dimen>
+    <dimen name="margin_xxxlarge">50dp</dimen>
     <dimen name="margin_xlarge">24dp</dimen>
     <dimen name="action_icon_size">48dp</dimen>
+    <dimen name="padding_small">8dp</dimen>
+    <dimen name="padding_xsmall">6dp</dimen>
+    <dimen name="line_width">3dp</dimen>
 </resources>

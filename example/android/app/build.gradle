@@ -119,6 +119,7 @@ def jscFlavor = 'org.webkit:android-jsc:+'
  */
 def enableHermes = project.ext.react.get("enableHermes", false);
 
+apply plugin: 'kotlin-android'
 android {
     compileSdkVersion rootProject.ext.compileSdkVersion
 
@@ -162,6 +163,9 @@ android {
             minifyEnabled enableProguardInReleaseBuilds
             proguardFiles getDefaultProguardFile("proguard-android.txt"), "proguard-rules.pro"
         }
+    }
+    packagingOptions {
+        exclude 'META-INF/rxjava.properties'
     }
     // applicationVariants are e.g. debug, release
     applicationVariants.all { variant ->

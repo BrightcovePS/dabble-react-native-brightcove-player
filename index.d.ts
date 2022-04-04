@@ -1,13 +1,20 @@
-import * as React from 'react';
-import { ViewStyle } from 'react-native';
+import * as React from "react";
+import { ViewStyle } from "react-native";
 
 type VideoToken = string;
+
+type NextVideo = {
+  videoId: string;
+  referenceId: string;
+};
 
 export type BrightcovePlayerProps = {
   policyKey?: string;
   accountId?: string;
   referenceId?: string;
   videoId?: string;
+  playlistId?: string;
+  playlistReferenceId?: string;
   videoToken?: VideoToken;
   autoPlay?: boolean;
   play?: boolean;
@@ -26,6 +33,7 @@ export type BrightcovePlayerProps = {
   onUpdateBufferProgress?: ({ bufferProgress: number }) => void;
   onEnterFullscreen?: () => void;
   onExitFullscreen?: () => void;
+  onPlayNextVideo?: (nextVideo: NextVideo) => void;
   style?: ViewStyle;
 };
 
