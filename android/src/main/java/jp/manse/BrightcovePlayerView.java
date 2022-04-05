@@ -143,7 +143,7 @@ public class BrightcovePlayerView extends RelativeLayout implements LifecycleEve
         EventListener eventListener = event -> {
             switch (event.getType()) {
                 case EventType.VIDEO_SIZE_KNOWN:
-                    refreshVideoLayoutSize();
+                    refreshVideoLayoutSize(true);
                     updateBitRate();
                     updatePlaybackRate();
                     break;
@@ -169,7 +169,7 @@ public class BrightcovePlayerView extends RelativeLayout implements LifecycleEve
                     if (playHead != null) {
                         progressMap.putDouble(CURRENT_TIME, playHead / ONE_SEC_DOUBLE);
                     }
-                    refreshVideoLayoutSize();
+                    refreshVideoLayoutSize(false);
                     sendJSEvent(BrightcovePlayerManager.EVENT_PROGRESS, progressMap);
                     break;
                 case EventType.VIDEO_DURATION_CHANGED:
@@ -454,11 +454,12 @@ public class BrightcovePlayerView extends RelativeLayout implements LifecycleEve
      * The video size has been set to refresh in to situations. those are,
      * Fullscreen / normal mode.
      * Portrait / landscape
+     * @param isVideoSizeKnownEvent to apply video size without any conditions on [EventType.VIDEO_SIZE_KNOWN] event listen
      **/
-    private void refreshVideoLayoutSize() {
+    private void refreshVideoLayoutSize(boolean isVideoSizeKnownEvent) {
         int orientation = getResources().getConfiguration().orientation;
 
-        if (orientation != this.prevOrientationForRefreshVideoLayout || playerVideoView.isFullScreen() != prevFullscreenForRefreshVideoLayout) {
+        if (isVideoSizeKnownEvent || orientation != this.prevOrientationForRefreshVideoLayout || playerVideoView.isFullScreen() != prevFullscreenForRefreshVideoLayout) {
             // Get the width and height
             float width = Objects.requireNonNull(playerVideoView.getRenderView()).getWidth();
             float height = Objects.requireNonNull(playerVideoView.getRenderView()).getHeight();
