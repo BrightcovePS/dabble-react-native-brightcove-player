@@ -109,13 +109,13 @@ public class BrightcovePlayerView extends RelativeLayout implements LifecycleEve
         }
     };
     /**
-     * Please do use this variable any other purpose. it may lead into video size issue
+     * Please do not use this variable any other purpose. it may lead into video size issue
      * one of condition to refresh the video size
      **/
     private int prevOrientationForRefreshVideoLayout = Configuration.ORIENTATION_PORTRAIT;
 
     /**
-     * Please do use this variable any other purpose. it may lead into video size issue
+     * Please do not use this variable any other purpose. it may lead into video size issue
      * one of condition to refresh the video size
      **/
     private boolean prevFullscreenForRefreshVideoLayout = false;
