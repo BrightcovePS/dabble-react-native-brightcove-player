@@ -6,8 +6,8 @@ class MPRemoteCommandCenterDecorator: PlayerDecoratorProtocol, MPCommandCenterPl
   var playlistRepo: PlayerRepository {
     return playerView?.playlistRepo ?? PlayerRepository()
   }
-  var referenceId: String? {
-    return playerView?.referenceId
+  var videoId: String? {
+    return playerView?.videoId
   }
   let commandCenter =  MPRemoteCommandCenter.shared()
   required init(_ playerView: PlayerView) {
@@ -67,8 +67,8 @@ class MPRemoteCommandCenterDecorator: PlayerDecoratorProtocol, MPCommandCenterPl
     updateMPCommandCentreUI()
   }
   func updateMPCommandCentreUI() {
-    guard let referenceId = self.referenceId else { return }
-    let bcovVideo = self.playlistRepo.getVideo(with: referenceId)
+    guard let videoId = self.videoId else { return }
+    let bcovVideo = self.playlistRepo.getVideo(with: videoId)
     let title = bcovVideo?.properties[kBCOVPlaylistPropertiesKeyName]
     var nowPlayingInfo = [String : Any]()
     nowPlayingInfo[MPMediaItemPropertyTitle] = title

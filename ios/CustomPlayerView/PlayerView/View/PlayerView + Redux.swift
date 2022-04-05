@@ -19,7 +19,7 @@ extension PlayerView: StoreSubscriber {
     let videoId = (state as? OverlayReduxState)?.videoId ?? StringConstants.kEmptyString
     playlistRepo.referenceId = referenceId
     playlistRepo.videoId = videoId
-    if let video = playlistRepo.getVideo(with: referenceId) {
+    if let video = playlistRepo.getVideo(with: videoId) {
       self.playbackController.setVideos([video] as NSFastEnumeration)
     } else if let nextVideo = overlayDecorator.nextAnyVideo {
       self.playbackController.setVideos([nextVideo] as NSFastEnumeration)

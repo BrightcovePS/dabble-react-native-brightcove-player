@@ -77,9 +77,9 @@ class PlayerRepository {
           let playlist = self.playlistVideos else { return nil }
     return PlaylistHelper.getPreviousVideo(with: videoId, in: playlist)
   }
-  func getVideo(with referenceId: String) -> BCOVVideo? {
+  func getVideo(with videoId: String) -> BCOVVideo? {
     guard let playlist = self.playlistVideos else { return nil }
-    return PlaylistHelper.getVideo(with: referenceId, in: playlist)
+    return PlaylistHelper.getVideo(with: videoId, in: playlist)
   }
   func getVideoFromCloud(with videoId: String, completionHandler: @escaping (BCOVVideo?, Error?) -> Void){
     let playbackService = getPlaybackService()

@@ -14,13 +14,9 @@ import {
 } from 'react-native-brightcove-player';
 
 const ACCOUNT_ID = '2779557264001';
-// const ACCOUNT_ID = '5434391461001';
 const POLICY_KEY =
   'BCpkADawqM0mZx1lVrdIUv9B0iOcBlFLj0vfKKE8rOCEZBYbUDvTR6m-LSUbiho5BP1nLhhXaqmMROcJvU_u2tc6lO0i6GDmBeiVj09BAdxK5fSyfgFwBz3RCpRA_vsB0ZEbwl59K7ha6Sbd';
-// const POLICY_KEY =
-//   'BCpkADawqM0T8lW3nMChuAbrcunBBHmh4YkNl5e6ZrKQwPiK_Y83RAOF4DP5tyBF_ONBVgrEjqW6fbV0nKRuHvjRU3E8jdT9WMTOXfJODoPML6NUDCYTwTHxtNlr5YdyGYaCPLhMUZ3Xu61L';
 const PLAYLIST_REF_ID = 'most_played';
-// const PLAYLIST_REF_ID = 'brightcove-native-sdk-plist';
 
 export default class App extends Component {
   state = {
