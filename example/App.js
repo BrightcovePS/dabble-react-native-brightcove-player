@@ -113,7 +113,8 @@ export default class App extends Component {
         state,
         playback: {
           ...state.playback,
-          videoId: event.videoId
+          videoId: event.videoId,
+          play: true
         },
       };
     });
