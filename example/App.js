@@ -28,7 +28,6 @@ export default class App extends Component {
     offlineVideos: [],
     playback: {
       play: false,
-      referenceId: null,
       videoToken: null,
       videoId: null,
     },
@@ -79,12 +78,11 @@ export default class App extends Component {
         downloadStatus && downloadStatus.downloadProgress === 1
           ? {
               videoToken: downloadStatus.videoToken,
-              play: true,
+              play: true
             }
           : {
-              referenceId: item.referenceId,
               videoId: item.videoId,
-              play: true,
+              play: true
             },
     });
   }
@@ -107,7 +105,7 @@ export default class App extends Component {
         state,
         playback: {
           ...state.playback,
-          play: !state.playback.play,
+          play: !state.playback.play
         },
       };
     });
@@ -119,8 +117,7 @@ export default class App extends Component {
         state,
         playback: {
           ...state.playback,
-          videoId: event.videoId,
-          referenceId: event.referenceId,
+          videoId: event.videoId
         },
       };
     });
@@ -168,7 +165,7 @@ export default class App extends Component {
                     style={styles.poster}
                     accountId={ACCOUNT_ID}
                     policyKey={POLICY_KEY}
-                    referenceId={item.referenceId}
+                    videoId={item.videoId}
                   />
                   <View style={styles.body}>
                     <Text style={styles.name}>{item.name}</Text>
