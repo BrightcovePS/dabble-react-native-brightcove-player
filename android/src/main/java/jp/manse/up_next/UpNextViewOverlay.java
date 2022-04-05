@@ -63,6 +63,12 @@ public class UpNextViewOverlay {
     private boolean upNextOverlayCancelled = false;
     private int downSecondCounter = 5;
 
+    /**
+     * [nextVideoNotAvailableFromPlaylist] will be true if there is no next video from playlist or
+     * the playing video is not from the playlist
+     **/
+    private boolean nextVideoNotAvailableFromPlaylist = false;
+
     public UpNextViewOverlay(@NonNull ReactContext context, @NonNull String account, @NonNull String policyKey) {
         this.context = context;
         this.accountId = account;
@@ -204,9 +210,10 @@ public class UpNextViewOverlay {
         } else {
             nextVideo = getNextVideo();
         }
+        nextVideoNotAvailableFromPlaylist = nextVideo == null;
     }
 
-    private void prepareNextFromAllVideos() {
+    private void prefetchAllVideos() {
         nextVideo = null;
         ReactPlaylistListener listener = new ReactPlaylistListener() {
             @Override
@@ -214,7 +221,6 @@ public class UpNextViewOverlay {
                 loadingAllVideos = false;
                 if (playlistRes != null && playlistRes.getVideos() != null) {
                     allVideos = playlistRes;
-                    nextVideo = getNextRandomVideo();
                 }
             }
         };
@@ -225,8 +231,6 @@ public class UpNextViewOverlay {
             } catch (Exception e) {
                 loadingAllVideos = false;
             }
-        } else {
-            nextVideo = getNextRandomVideo();
         }
     }
 
@@ -335,10 +339,14 @@ public class UpNextViewOverlay {
                     if (progress != null) {
                         float difference = videoDuration - progress;
                         if (difference <= GET_ALL_VIDEOS_PRE_FETCH_OFFSET && nextVideo == null && !loadingAllVideos) {
-                            // Pick random video from video cloud
-                            prepareNextFromAllVideos();
+                            // Prefetch all videos from video cloud on before last 5th second of video for up next overlay to work smooth
+                            prefetchAllVideos();
                         }
                         if (difference <= UP_NEXT_COUNT_DOWN_TIME && upNextContainer.getVisibility() != View.VISIBLE && !upNextOverlayCancelled) {
+                            if (nextVideoNotAvailableFromPlaylist) {
+                                // Pick random video from video cloud
+                                nextVideo = getNextRandomVideo();
+                            }
                             showUpNext();
                         }
                     }
