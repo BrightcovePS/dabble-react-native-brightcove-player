@@ -481,7 +481,7 @@ public class BrightcovePlayerView extends RelativeLayout implements LifecycleEve
         int orientation = getResources().getConfiguration().orientation;
 
         if (isVideoSizeKnownEvent || orientation != this.prevOrientationForRefreshVideoLayout || playerVideoView.isFullScreen() != prevFullscreenForRefreshVideoLayout) {
-            // Get the width and height from play surface render view
+            // Get the width and height from player surface view render view
             float width = Objects.requireNonNull(playerVideoView.getRenderView()).getWidth();
             float height = Objects.requireNonNull(playerVideoView.getRenderView()).getHeight();
 
@@ -489,7 +489,7 @@ public class BrightcovePlayerView extends RelativeLayout implements LifecycleEve
             int videoHeight = (int) height;
             float aspectRatio;
 
-            // Calculate video player size as per Surface view render size
+            // Calculate video player size as per player surface view render size
             if (viewWidth > viewHeight) {
                 aspectRatio = width / height;
                 videoHeight = viewHeight;
@@ -500,7 +500,7 @@ public class BrightcovePlayerView extends RelativeLayout implements LifecycleEve
                 videoHeight = (int) (videoWidth * aspectRatio);
             }
 
-            // Resetting video size overflow width/height to show full content on viewport
+            // Reconfiguring the previously calculated video size when calculated video width/height overflow on screen
             if (videoWidth > viewWidth) {
                 aspectRatio = height / width;
                 videoWidth = viewWidth;
