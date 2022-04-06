@@ -403,7 +403,7 @@ public class BrightcovePlayerView extends RelativeLayout implements LifecycleEve
     /**
      * @return boolean flag of comparison between video id and reference id with player
      * video current video object video id and reference id
-     * */
+     */
     private boolean isSameVideo() {
         return (playerVideoView != null && playerVideoView.getCurrentVideo() != null)
                 && ((videoId != null && videoId.equals(playerVideoView.getCurrentVideo().getId()))
