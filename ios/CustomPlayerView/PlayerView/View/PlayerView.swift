@@ -62,6 +62,11 @@ struct TimerControlConstants {
       SeekDuration.timeInterval = seekDuration/1000
     }
   }
+  @objc public var playlistAutoPlay: Bool = false {
+    didSet {
+      playlistRepo.playlistAutoPlay = playlistAutoPlay
+    }
+  }
   @objc public var showVideoEndOverlay: Bool = false {
     didSet {
       self.overlayDecorator.showOverlay = showVideoEndOverlay
@@ -157,6 +162,7 @@ struct TimerControlConstants {
     //options.showPictureInPictureButton = true // Must be true
     self.player = player
     self.presentingViewController = presentingView
+    self.playlistAutoPlay = false
     super.init(playbackController: playbackController, options: options, controlsView: BCOVPUIBasicControlView.withVODLayout())
     configurePlayerView()
   }
@@ -263,12 +269,28 @@ struct TimerControlConstants {
           let policyKey = self.policyKey
     else { return }
     playlistRepo = PlayerRepository(accountId, policyKey: policyKey)
+    addPlaylistRepoObserver()
     if let playlistReferenceId = self.playlistReferenceId {
       playlistRepo.playlistReferenceId = playlistReferenceId
       playlistRepo.getPlaylistFromRefId()
     } else if let playlistId = self.playlistId {
       playlistRepo.playlistId = playlistId
       playlistRepo.getPlaylistFromPlaylistId()
+    }
+  }
+  private func addPlaylistRepoObserver() {
+    playlistRepo.playlistReady = { [weak self] in
+      guard let self = self else { return }
+      if self.playlistAutoPlay, let video = self.playlistRepo.playlistVideos?.first {
+        self.playbackController.setVideos([video] as NSFastEnumeration)
+        let referenceId = video.properties[kBCOVPlaylistPropertiesKeyReferenceId] as? String ?? StringConstants.kEmptyString
+        let videoId = video.properties[kBCOVPlaylistPropertiesKeyId] as? String ?? StringConstants.kEmptyString
+        let dictVideoDetails = [NextVideoBridgeKeys.kReferenceId: referenceId,
+                                NextVideoBridgeKeys.kVideoId: videoId]
+        self.referenceId = referenceId
+        self.videoId = videoId
+        self.player.nextVideoPlayer(dictVideoDetails)
+      }
     }
   }
   func configureRedux() {

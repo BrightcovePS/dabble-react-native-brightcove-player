@@ -3,6 +3,8 @@ import BrightcovePlayerSDK
 class PlayerRepository {
   var accountId: String?
   var policyKey: String?
+  var playlistAutoPlay: Bool?
+  var playlistReady: (() -> Void)?
   var playlistReferenceId: String? {
     didSet {
       CurrentPlayerItem.shared.playlistRefId = playlistReferenceId ?? StringConstants.kEmptyString
@@ -25,6 +27,7 @@ class PlayerRepository {
   }
   var playlistVideos: [BCOVVideo]? {
     didSet {
+      self.playlistReady?()
       self.cacheAllPlaylistVideoIds()
     }
   }
