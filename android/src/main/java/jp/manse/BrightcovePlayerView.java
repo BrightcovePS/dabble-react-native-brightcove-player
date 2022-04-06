@@ -400,6 +400,16 @@ public class BrightcovePlayerView extends RelativeLayout implements LifecycleEve
         }
     }
 
+    /**
+     * @return boolean flag of comparison between video id and reference id with player
+     * video current video object video id and reference id
+     * */
+    private boolean isSameVideo() {
+        return (playerVideoView != null && playerVideoView.getCurrentVideo() != null)
+                && ((videoId != null && videoId.equals(playerVideoView.getCurrentVideo().getId()))
+                || (referenceId != null && referenceId.equals(playerVideoView.getCurrentVideo().getReferenceId())));
+    }
+
     private void loadVideo() {
         if (accountId == null || policyKey == null) {
             return;
@@ -418,6 +428,12 @@ public class BrightcovePlayerView extends RelativeLayout implements LifecycleEve
             }
             return;
         }
+
+        // if the videoId / reference id same as current video then boycott the playback get video API
+        if (isSameVideo()) {
+            return;
+        }
+
         VideoListener listener = new VideoListener() {
             @Override
             public void onVideo(Video video) {
@@ -427,6 +443,7 @@ public class BrightcovePlayerView extends RelativeLayout implements LifecycleEve
         Catalog catalog = new Catalog.Builder(this.playerVideoView.getEventEmitter(), accountId)
                 .setPolicy(policyKey)
                 .build();
+
         if (this.videoId != null) {
             catalog.findVideoByID(this.videoId, listener);
         } else if (this.referenceId != null) {
@@ -488,7 +505,7 @@ public class BrightcovePlayerView extends RelativeLayout implements LifecycleEve
                 aspectRatio = height / width;
                 videoWidth = viewWidth;
                 videoHeight = (int) (videoWidth * aspectRatio);
-            }else if (videoHeight > viewHeight){
+            } else if (videoHeight > viewHeight) {
                 aspectRatio = width / height;
                 videoHeight = viewHeight;
                 videoWidth = (int) (videoHeight * aspectRatio);
