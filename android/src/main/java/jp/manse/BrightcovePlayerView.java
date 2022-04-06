@@ -91,7 +91,6 @@ public class BrightcovePlayerView extends RelativeLayout implements LifecycleEve
         if (mediaController != null) {
             mediaController.show();
         }
-        upNextViewOverlay.resetUpNextCancel();
         if (v.getId() == R.id.fast_forward_btn) {
             fastForward();
         } else if (v.getId() == R.id.rewind_btn) {
@@ -119,6 +118,10 @@ public class BrightcovePlayerView extends RelativeLayout implements LifecycleEve
      * one of condition to refresh the video size
      **/
     private boolean prevFullscreenForRefreshVideoLayout = false;
+
+    // Storing this view height and width for accurate video sizing on refresh layout operation
+    private int viewHeight;
+    private int viewWidth;
 
     public BrightcovePlayerView(ThemedReactContext context, ReactApplicationContext applicationContext) {
         super(context);
@@ -454,40 +457,49 @@ public class BrightcovePlayerView extends RelativeLayout implements LifecycleEve
      * The video size has been set to refresh in to situations. those are,
      * Fullscreen / normal mode.
      * Portrait / landscape
+     *
      * @param isVideoSizeKnownEvent to apply video size without any conditions on [EventType.VIDEO_SIZE_KNOWN] event listen
      **/
     private void refreshVideoLayoutSize(boolean isVideoSizeKnownEvent) {
         int orientation = getResources().getConfiguration().orientation;
 
         if (isVideoSizeKnownEvent || orientation != this.prevOrientationForRefreshVideoLayout || playerVideoView.isFullScreen() != prevFullscreenForRefreshVideoLayout) {
-            // Get the width and height
+            // Get the width and height from play surface render view
             float width = Objects.requireNonNull(playerVideoView.getRenderView()).getWidth();
             float height = Objects.requireNonNull(playerVideoView.getRenderView()).getHeight();
 
-            //Get the display metrics
-            DisplayMetrics metrics = new DisplayMetrics();
-            WindowManager wm = (WindowManager) context.getSystemService(Context.WINDOW_SERVICE);
-            wm.getDefaultDisplay().getMetrics(metrics);
-
-            int videoWidth;
-            int videoHeight;
+            int videoWidth = (int) width;
+            int videoHeight = (int) height;
             float aspectRatio;
 
-            if (orientation == Configuration.ORIENTATION_LANDSCAPE) {
+            // Calculate video player size as per Surface view render size
+            if (viewWidth > viewHeight) {
                 aspectRatio = width / height;
-                videoHeight = getMeasuredHeight(); //Calculate the height based on the ratio
-                videoWidth = (int) (videoHeight * aspectRatio); // We cover the entire display's width
-            } else {
+                videoHeight = viewHeight;
+                videoWidth = (int) (videoHeight * aspectRatio);
+            } else if (viewHeight > viewWidth) {
                 aspectRatio = height / width;
-                videoWidth = getMeasuredWidth(); // We cover the entire display's width
-                videoHeight = (int) (videoWidth * aspectRatio); //Calculate the height based on the ratio
+                videoWidth = viewWidth;
+                videoHeight = (int) (videoWidth * aspectRatio);
             }
 
+            // Resetting video size overflow width/height to show full content on viewport
+            if (videoWidth > viewWidth) {
+                aspectRatio = height / width;
+                videoWidth = viewWidth;
+                videoHeight = (int) (videoWidth * aspectRatio);
+            }else if (videoHeight > viewHeight){
+                aspectRatio = width / height;
+                videoHeight = viewHeight;
+                videoWidth = (int) (videoHeight * aspectRatio);
+            }
+
+            // Apply video width and height to player view
             RelativeLayout.LayoutParams layoutParams = new RelativeLayout.LayoutParams(videoWidth, videoHeight);
             layoutParams.addRule(CENTER_IN_PARENT, TRUE);
-
-            // Set the layout params (In this example the BrightcoveVideoView was held inside a LinearLayout).
             playerVideoView.setLayoutParams(layoutParams);
+
+            // Cache previous state of orientation and fullscreen to refresh video player size only these state changes
             this.prevOrientationForRefreshVideoLayout = orientation;
             this.prevFullscreenForRefreshVideoLayout = playerVideoView.isFullScreen();
         }
@@ -522,8 +534,9 @@ public class BrightcovePlayerView extends RelativeLayout implements LifecycleEve
 
     private void fastForward() {
         long seekMax = mediaController.getBrightcoveSeekBar().getMax();
-        long seekPos = playerVideoView.getCurrentPositionLong() + seekDuration;
+        long seekPos = mediaController.getBrightcoveSeekBar().getProgress() + seekDuration;
         if (seekMax > seekPos) {
+            upNextViewOverlay.resetUpNextCancel();
             playerVideoView.seekTo(seekPos);
         }
     }
@@ -531,6 +544,7 @@ public class BrightcovePlayerView extends RelativeLayout implements LifecycleEve
     private void rewind() {
         long seekPos = mediaController.getBrightcoveSeekBar().getProgress() - seekDuration;
         if (seekPos > 0) {
+            upNextViewOverlay.resetUpNextCancel();
             playerVideoView.seekTo(seekPos);
         }
     }
@@ -539,6 +553,9 @@ public class BrightcovePlayerView extends RelativeLayout implements LifecycleEve
     protected void onSizeChanged(int width, int height, int oldw, int oldh) {
         upNextViewOverlay.onPlayerSizeChanged(width, height);
         super.onSizeChanged(width, height, oldw, oldh);
+        // Storing view size to calculate video view in better manner
+        viewHeight = height;
+        viewWidth = width;
     }
 
     @Override
