@@ -203,14 +203,15 @@ public class UpNextViewOverlay {
             public void onPlaylist(Playlist playlistRes) {
                 playList = playlistRes;
                 nextVideo = getNextVideo();
+                nextVideoNotAvailableFromPlaylist = nextVideo == null;
             }
         };
         if (playList == null) {
             fetchPlayList(listener);
         } else {
             nextVideo = getNextVideo();
+            nextVideoNotAvailableFromPlaylist = nextVideo == null;
         }
-        nextVideoNotAvailableFromPlaylist = nextVideo == null;
     }
 
     private void prefetchAllVideos() {
@@ -331,6 +332,10 @@ public class UpNextViewOverlay {
                     break;
                 case EventType.COMPLETED:
                     if (upNextContainer.getVisibility() != View.VISIBLE && !upNextOverlayCancelled) {
+                        if (nextVideoNotAvailableFromPlaylist && allVideos != null) {
+                            // Pick random video from video cloud
+                            nextVideo = getNextRandomVideo();
+                        }
                         showUpNext();
                     }
                     break;
