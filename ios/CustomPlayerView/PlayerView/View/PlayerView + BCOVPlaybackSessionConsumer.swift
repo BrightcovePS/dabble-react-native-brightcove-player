@@ -26,7 +26,8 @@ extension PlayerView: BCOVPlaybackSessionConsumer {
   }
   fileprivate func shouldHideVideoOverlay(_ totalduration: Double, _ progress: TimeInterval) {
     let threshold = totalduration - TimerConstants.thumbnailVideoEndOffset
-    if progress < threshold {
+    //progress == 0 is to make isPreviewWindowActive = false even when the video is less than 5 seconds and when threshold == Nan and Progress is 0
+    if (progress == 0 || progress < threshold) {
       self.overlayDecorator.showOverlay = false
       overlayDecorator.isPreviewWindowActive = false
     }
