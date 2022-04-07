@@ -18,10 +18,10 @@ extension PlayerView: BCOVPlaybackSessionConsumer {
   }
   fileprivate func showNextVideoOverlay(_ totalduration: Double, _ progress: TimeInterval) {
     let threshold = totalduration - TimerConstants.thumbnailVideoEndOffset
-    if progress >= threshold,
+    if progress > threshold,
        !self.overlayDecorator.isPreviewWindowActive {
-      displayNextVideo()
       overlayDecorator.isPreviewWindowActive = true
+      displayNextVideo()
     }
   }
   fileprivate func shouldHideVideoOverlay(_ totalduration: Double, _ progress: TimeInterval) {
@@ -35,8 +35,8 @@ extension PlayerView: BCOVPlaybackSessionConsumer {
   fileprivate func handleScrub(_ totalduration: Double, _ progress: TimeInterval) {
     let threshold = totalduration - TimerConstants.thumbnailVideoEndOffset
     if progress >= threshold {
-      displayNextVideo()
       overlayDecorator.isPreviewWindowActive = true
+      displayNextVideo()
     }
   }
   fileprivate func processAnyVideo(_ totalduration: Double, _ progress: TimeInterval) {
