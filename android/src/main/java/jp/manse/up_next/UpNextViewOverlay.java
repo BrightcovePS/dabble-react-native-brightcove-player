@@ -251,8 +251,11 @@ public class UpNextViewOverlay {
 
     private Video getNextRandomVideo() {
         Video video = null;
-        while (video == null || video.getId().equals(videoId)) {
-            video = getRandomFromAllVideos();
+        // We left the random video pick logic when there is only one on video cloud to avoid infinite loop
+        if(allVideos != null && allVideos.getVideos() != null && allVideos.getVideos().size() > 1) {
+            while (video == null || video.getId().equals(videoId)) {
+                video = getRandomFromAllVideos();
+            }
         }
         return video;
     }
