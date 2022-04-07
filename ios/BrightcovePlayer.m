@@ -49,19 +49,30 @@
   }
   if (!_playbackService) return;
   if (_videoId) {
+    if ([self.videoId isEqual: self.playerView.videoId]) {
+      return;
+    }
     [_playbackService findVideoWithVideoID:_videoId parameters:nil completion:^(BCOVVideo *video, NSDictionary *jsonResponse, NSError *error) {
       if (video) {
+        [self setupVideoProperties: video];
         [self.playbackController setVideos: @[ video ]];
       }
     }];
   } else if (_referenceId) {
+    if ([self.referenceId isEqual: self.playerView.referenceId]) {
+      return;
+    }
     [_playbackService findVideoWithReferenceID:_referenceId parameters:nil completion:^(BCOVVideo *video, NSDictionary *jsonResponse, NSError *error) {
       if (video) {
-        self.playerView.videoId = video.properties[kBCOVVideoPropertyKeyId];
+        [self setupVideoProperties: video];
         [self.playbackController setVideos: @[ video ]];
       }
     }];
   }
+}
+-(void) setupVideoProperties: (BCOVVideo*) video {
+  self.playerView.referenceId = video.properties[kBCOVVideoPropertyKeyReferenceId];
+  self.playerView.videoId = video.properties[kBCOVVideoPropertyKeyId];
 }
 
 - (id<BCOVPlaybackController>)createPlaybackController {
@@ -72,7 +83,6 @@
 
 - (void)setReferenceId:(NSString *)referenceId {
   _referenceId = referenceId;
-  _playerView.referenceId = _referenceId;
   _videoId = NULL;
   [self setupService];
   [self loadMovie];
@@ -80,7 +90,6 @@
 
 - (void)setVideoId:(NSString *)videoId {
   _videoId = videoId;
-  _playerView.videoId = _videoId;
   _referenceId = NULL;
   [self setupService];
   [self loadMovie];

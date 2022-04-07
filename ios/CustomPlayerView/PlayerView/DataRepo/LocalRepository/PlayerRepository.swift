@@ -3,6 +3,8 @@ import BrightcovePlayerSDK
 class PlayerRepository {
   var accountId: String?
   var policyKey: String?
+  var playlistAutoPlay: Bool?
+  var playlistReady: (() -> Void)?
   var playlistReferenceId: String? {
     didSet {
       CurrentPlayerItem.shared.playlistRefId = playlistReferenceId ?? StringConstants.kEmptyString
@@ -25,6 +27,7 @@ class PlayerRepository {
   }
   var playlistVideos: [BCOVVideo]? {
     didSet {
+      self.playlistReady?()
       self.cacheAllPlaylistVideoIds()
     }
   }
@@ -77,9 +80,9 @@ class PlayerRepository {
           let playlist = self.playlistVideos else { return nil }
     return PlaylistHelper.getPreviousVideo(with: videoId, in: playlist)
   }
-  func getVideo(with referenceId: String) -> BCOVVideo? {
+  func getVideo(with videoId: String) -> BCOVVideo? {
     guard let playlist = self.playlistVideos else { return nil }
-    return PlaylistHelper.getVideo(with: referenceId, in: playlist)
+    return PlaylistHelper.getVideo(with: videoId, in: playlist)
   }
   func getVideoFromCloud(with videoId: String, completionHandler: @escaping (BCOVVideo?, Error?) -> Void){
     let playbackService = getPlaybackService()
