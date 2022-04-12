@@ -1,12 +1,9 @@
 package jp.manse;
 
-import android.content.Context;
 import android.content.res.Configuration;
 import android.graphics.Color;
 import android.os.Handler;
-import android.util.DisplayMetrics;
 import android.util.Log;
-import android.view.WindowManager;
 import android.widget.ImageButton;
 import android.widget.RelativeLayout;
 
