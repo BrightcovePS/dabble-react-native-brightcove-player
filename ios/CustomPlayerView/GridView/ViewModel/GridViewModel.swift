@@ -46,7 +46,7 @@ class GridViewModel: GridViewModelProtocol {
     let videoId = nextVideo.properties[kBCOVVideoPropertyKeyId] as? String
     let referenceId = nextVideo.properties[kBCOVVideoPropertyKeyReferenceId] as? String
     let url = nextVideo.properties[kBCOVVideoPropertyKeyPoster] as? String
-    let recommendations = RecommendationsModel(thumbnailURL: url, url: url, title: description, headingTitle: title, referenceId: referenceId, videoId: videoId, accountId: accountId)
+    let recommendations = RecommendationsModel(thumbnailURL: url, url: url, title: title, headingTitle: title, referenceId: referenceId, videoId: videoId, accountId: accountId)
     outputModel = [recommendations]
   }
   func getAnyVideoFromAccount(responseObj: AllVideos?) {

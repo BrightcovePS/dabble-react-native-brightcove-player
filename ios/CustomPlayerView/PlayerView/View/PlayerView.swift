@@ -225,11 +225,7 @@ struct TimerControlConstants {
     if let video = playlistRepo.getNextVideo() {
       setNextPlaylistVideo(video)
     } else {
-      if CurrentPlayerItem.shared.allVideosInAccount.count > 0 {
-        connectToRemote()
-      }
-      overlayDecorator.showOverlay = overlayDecorator.nextAnyVideo != nil ? true: false
-      //overlayDecorator.connectToRemote() Commented for 10 sec buffer
+      connectToRemote()
     }
   }
   func setNextPlaylistVideo(_ nextVideo: BCOVVideo) {

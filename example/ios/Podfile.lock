@@ -1,8 +1,16 @@
 PODS:
   - boost (1.76.0)
-  - Brightcove-Player-Core (6.10.2):
-    - Brightcove-Player-Core/Framework (= 6.10.2)
-  - Brightcove-Player-Core/Framework (6.10.2)
+  - Brightcove-Player-Core (6.10.4):
+    - Brightcove-Player-Core/Framework (= 6.10.4)
+  - Brightcove-Player-Core/Framework (6.10.4)
+  - Brightcove-Player-GoogleCast (6.10.4):
+    - Brightcove-Player-GoogleCast/Bluetooth (= 6.10.4)
+  - Brightcove-Player-GoogleCast/Bluetooth (6.10.4):
+    - Brightcove-Player-GoogleCast/Bluetooth/Framework (= 6.10.4)
+    - google-cast-sdk (= 4.6.1)
+  - Brightcove-Player-GoogleCast/Bluetooth/Framework (6.10.4):
+    - Brightcove-Player-Core (= 6.10.4)
+    - google-cast-sdk (= 4.6.1)
   - CocoaAsyncSocket (7.6.5)
   - DoubleConversion (1.1.6)
   - FBLazyVector (0.67.2)
@@ -75,8 +83,14 @@ PODS:
     - FlipperKit/FlipperKitNetworkPlugin
   - fmt (6.2.1)
   - glog (0.3.5)
+  - google-cast-sdk (4.6.1):
+    - google-cast-sdk/Core (= 4.6.1)
+    - Protobuf (~> 3.13)
+  - google-cast-sdk/Core (4.6.1):
+    - Protobuf (~> 3.13)
   - libevent (2.1.12)
   - OpenSSL-Universal (1.1.180)
+  - Protobuf (3.19.4)
   - RCT-Folly (2021.06.28.00-v2):
     - boost
     - DoubleConversion
@@ -276,7 +290,7 @@ PODS:
   - React-logger (0.67.2):
     - glog
   - react-native-brightcove-player (1.7.0):
-    - Brightcove-Player-Core
+    - Brightcove-Player-GoogleCast
     - React
   - React-perflogger (0.67.2)
   - React-RCTActionSheet (0.67.2):
@@ -407,6 +421,7 @@ DEPENDENCIES:
 SPEC REPOS:
   https://github.com/brightcove/BrightcoveSpecs.git:
     - Brightcove-Player-Core
+    - Brightcove-Player-GoogleCast
   https://github.com/CocoaPods/Specs.git:
     - CocoaAsyncSocket
     - Flipper
@@ -419,8 +434,10 @@ SPEC REPOS:
     - Flipper-RSocket
     - FlipperKit
     - fmt
+    - google-cast-sdk
     - libevent
     - OpenSSL-Universal
+    - Protobuf
     - YogaKit
 
 EXTERNAL SOURCES:
@@ -489,7 +506,8 @@ EXTERNAL SOURCES:
 
 SPEC CHECKSUMS:
   boost: a7c83b31436843459a1961bfd74b96033dc77234
-  Brightcove-Player-Core: 207189ebef308f851425fda360a149f632accf53
+  Brightcove-Player-Core: b2663085711ae8863788492866e55d1cd82f8d33
+  Brightcove-Player-GoogleCast: 55bf79fe26a8a2ba454a17cd3632d668dfa0ffa8
   CocoaAsyncSocket: 065fd1e645c7abab64f7a6a2007a48038fdc6a99
   DoubleConversion: 831926d9b8bf8166fd87886c4abab286c2422662
   FBLazyVector: 244195e30d63d7f564c55da4410b9a24e8fbceaa
@@ -505,8 +523,10 @@ SPEC CHECKSUMS:
   FlipperKit: aec2d931adeee48a07bab1ea8bcc8a6bb87dfce4
   fmt: ff9d55029c625d3757ed641535fd4a75fedc7ce9
   glog: 85ecdd10ee8d8ec362ef519a6a45ff9aa27b2e85
+  google-cast-sdk: 9fc76175641bc24ef2515e0263344bd2c5c4e75c
   libevent: 4049cae6c81cdb3654a443be001fb9bdceff7913
   OpenSSL-Universal: 1aa4f6a6ee7256b83db99ec1ccdaa80d10f9af9b
+  Protobuf: 235750e4696ff59fb07d949a9dbbc92b3c0700fe
   RCT-Folly: 803a9cfd78114b2ec0f140cfa6fa2a6bafb2d685
   RCTRequired: cd47794163052d2b8318c891a7a14fcfaccc75ab
   RCTTypeSafety: 393bb40b3e357b224cde53d3fec26813c52428b1
@@ -519,7 +539,7 @@ SPEC CHECKSUMS:
   React-jsiexecutor: 52beb652bbc61201bd70cbe4f0b8edb607e8da4f
   React-jsinspector: 595f76eba2176ebd8817a1fffd47b84fbdab9383
   React-logger: 23de8ea0f44fa00ee77e96060273225607fd4d78
-  react-native-brightcove-player: 2e9616258ff8b1f4a6fa5e9b50a8072289b3b144
+  react-native-brightcove-player: ad360cb80185288555af10d0c1670e1fdf1d0a91
   React-perflogger: 3c9bb7372493e49036f07a82c44c8cf65cbe88db
   React-RCTActionSheet: 052606483045a408693aa7e864410b4a052f541a
   React-RCTAnimation: 08d4cac13222bb1348c687a0158dfd3b577cdb63
