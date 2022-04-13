@@ -1,0 +1,11 @@
+framework module RCTBrightcovePlayer {
+  umbrella header "RCTBrightcovePlayer.h"
+
+  export *
+  module * { export * }
+}
+
+module RCTBrightcovePlayer.Swift {
+    header "RCTBrightcovePlayer-Swift.h"
+    requires objc
+}
