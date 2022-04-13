@@ -1,7 +1,7 @@
 #import "BrightcovePlayer.h"
 #import "BrightcovePlayerOfflineVideoManager.h"
-#import "react_native_brightcove_player-Swift.h"
-@interface BrightcovePlayer () <BCOVPlaybackControllerDelegate, BCOVPUIPlayerViewDelegate>
+//#import "react_native_brightcove_player-Swift.h"
+@interface BrightcovePlayer () <BCOVPlaybackControllerDelegate, BCOVPUIPlayerViewDelegate, RCTPlayerProtocol>
 @end
 
 @implementation BrightcovePlayer
