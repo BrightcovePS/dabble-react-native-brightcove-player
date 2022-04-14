@@ -11,9 +11,9 @@
 		713443E1229BDB220071B8E4 /* BrightcovePlayerPosterManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 713443DA229BDB220071B8E4 /* BrightcovePlayerPosterManager.m */; };
 		713443E2229BDB220071B8E4 /* BrightcovePlayerUtil.m in Sources */ = {isa = PBXBuildFile; fileRef = 713443DB229BDB220071B8E4 /* BrightcovePlayerUtil.m */; };
 		713443E3229BDB220071B8E4 /* BrightcovePlayerPoster.m in Sources */ = {isa = PBXBuildFile; fileRef = 713443DC229BDB220071B8E4 /* BrightcovePlayerPoster.m */; };
-		A5298D4528074923003B7074 /* RCTBrightcovePlayer.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = A5298D4428074923003B7074 /* RCTBrightcovePlayer.framework */; };
 		A54AFB3827E4877F00658D3C /* BrightcovePlayer.m in Sources */ = {isa = PBXBuildFile; fileRef = A54AFB3427E4877E00658D3C /* BrightcovePlayer.m */; };
 		A54AFB3927E4877F00658D3C /* BrightcovePlayerManager.m in Sources */ = {isa = PBXBuildFile; fileRef = A54AFB3527E4877E00658D3C /* BrightcovePlayerManager.m */; };
+		A592BDE428077E190070E878 /* RCTBrightcovePlayer.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = A592BDE328077E190070E878 /* RCTBrightcovePlayer.framework */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXCopyFilesBuildPhase section */
@@ -38,12 +38,12 @@
 		713443DB229BDB220071B8E4 /* BrightcovePlayerUtil.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = BrightcovePlayerUtil.m; sourceTree = "<group>"; };
 		713443DC229BDB220071B8E4 /* BrightcovePlayerPoster.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = BrightcovePlayerPoster.m; sourceTree = "<group>"; };
 		713443DD229BDB220071B8E4 /* BrightcovePlayerPoster.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BrightcovePlayerPoster.h; sourceTree = "<group>"; };
-		A5298D4428074923003B7074 /* RCTBrightcovePlayer.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = RCTBrightcovePlayer.framework; path = ../RCTBrightcovePlayer.framework; sourceTree = "<group>"; };
 		A54AFA6E27E4873A00658D3C /* react-native-brightcove-player-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "react-native-brightcove-player-Bridging-Header.h"; sourceTree = "<group>"; };
 		A54AFB3427E4877E00658D3C /* BrightcovePlayer.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = BrightcovePlayer.m; sourceTree = "<group>"; };
 		A54AFB3527E4877E00658D3C /* BrightcovePlayerManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = BrightcovePlayerManager.m; sourceTree = "<group>"; };
 		A54AFB3627E4877E00658D3C /* BrightcovePlayerManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BrightcovePlayerManager.h; sourceTree = "<group>"; };
 		A54AFB3727E4877F00658D3C /* BrightcovePlayer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BrightcovePlayer.h; sourceTree = "<group>"; };
+		A592BDE328077E190070E878 /* RCTBrightcovePlayer.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = RCTBrightcovePlayer.framework; path = ../RCTBrightcovePlayer.framework; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -51,7 +51,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				A5298D4528074923003B7074 /* RCTBrightcovePlayer.framework in Frameworks */,
+				A592BDE428077E190070E878 /* RCTBrightcovePlayer.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -90,7 +90,7 @@
 		A5298D4328074923003B7074 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
-				A5298D4428074923003B7074 /* RCTBrightcovePlayer.framework */,
+				A592BDE328077E190070E878 /* RCTBrightcovePlayer.framework */,
 			);
 			name = Frameworks;
 			sourceTree = "<group>";
@@ -198,6 +198,7 @@
 				DEBUG_INFORMATION_FORMAT = dwarf;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
 				ENABLE_TESTABILITY = YES;
+				EXCLUDED_ARCHS = arm64;
 				GCC_C_LANGUAGE_STANDARD = gnu11;
 				GCC_DYNAMIC_NO_PIC = NO;
 				GCC_NO_COMMON_BLOCKS = YES;
@@ -254,6 +255,7 @@
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				ENABLE_NS_ASSERTIONS = NO;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				EXCLUDED_ARCHS = arm64;
 				GCC_C_LANGUAGE_STANDARD = gnu11;
 				GCC_NO_COMMON_BLOCKS = YES;
 				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
@@ -276,6 +278,7 @@
 				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_STYLE = Automatic;
+				EXCLUDED_ARCHS = arm64;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(PROJECT_DIR)",
@@ -306,6 +309,7 @@
 				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_STYLE = Automatic;
+				EXCLUDED_ARCHS = arm64;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(PROJECT_DIR)",
