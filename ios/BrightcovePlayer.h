@@ -11,7 +11,8 @@
 #import <BrightcovePlayerSDK/BCOVOfflineVideoManager.h>
 #import <React/RCTBridge.h>
 #import <React/UIView+React.h>
-@class PlayerView;
+#import <RCTBrightcovePlayer/RCTBrightcovePlayer.h>
+//@class PlayerView;
 @interface BrightcovePlayer : UIView<BCOVOfflineVideoManagerDelegate>
 
 @property (nonatomic) BCOVPlaybackService *playbackService;

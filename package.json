@@ -1,15 +1,8 @@
 {
   "name": "react-native-brightcove-player",
-  "version": "1.7.0",
+  "version": "1.0.0",
   "description": "A React Native implementation of Brightcove Player SDK.",
   "main": "index.js",
-  "repository": {
-    "type": "git",
-    "url": "git@github.com:manse/react-native-brightcove-player.git"
-  },
-  "bugs": {
-    "url": "https://github.com/manse/react-native-brightcove-player/issues"
-  },
   "keywords": [
     "react-native",
     "ios",
@@ -17,9 +10,9 @@
     "brightcove",
     "react-component"
   ],
-  "author": "Ryota Mannari <info@manse.jp> (https://github.com/manse)",
-  "license": "MIT",
-  "homepage": "https://github.com/manse/react-native-brightcove-player",
+  "author": "Brightcove Global Services",
+  "license": "https://www.brightcove.com/en/terms-and-conditions/",
+  "homepage": "https://github.com/BrightcovePS/react-native-brightcove-player#readme",
   "dependencies": {
     "prop-types": "^15.5.10"
   }

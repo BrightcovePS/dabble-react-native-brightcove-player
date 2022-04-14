@@ -3,7 +3,7 @@
 	archiveVersion = 1;
 	classes = {
 	};
-	objectVersion = 46;
+	objectVersion = 52;
 	objects = {
 
 /* Begin PBXBuildFile section */
@@ -15,6 +15,8 @@
 		2D02E4BC1E0B4A80006451C7 /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 13B07FB01A68108700A75B9A /* AppDelegate.m */; };
 		2D02E4BF1E0B4AB3006451C7 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 13B07FB71A68108700A75B9A /* main.m */; };
 		2DCD954D1E0B4F2C00145EB5 /* exampleTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 00E356F21AD99517003FC87E /* exampleTests.m */; };
+		A5298D4728074D28003B7074 /* RCTBrightcovePlayer.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = A5298D4628074D28003B7074 /* RCTBrightcovePlayer.framework */; platformFilter = ios; };
+		A5298D4828074D28003B7074 /* RCTBrightcovePlayer.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = A5298D4628074D28003B7074 /* RCTBrightcovePlayer.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		B8DC47A914490CB0B746B751 /* libPods-example-tvOSTests.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 6E2406325ADA4133F316A256 /* libPods-example-tvOSTests.a */; };
 		D304C2ACA8AB97E9B3FCB9A6 /* libPods-example-exampleTests.a in Frameworks */ = {isa = PBXBuildFile; fileRef = C6B180A7C57FC1F14F03A1CA /* libPods-example-exampleTests.a */; };
 		F3DF27F7F377BC33FB50BB65 /* libPods-example.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 1AD39ABF760C2EBBDA55D827 /* libPods-example.a */; };
@@ -37,6 +39,20 @@
 		};
 /* End PBXContainerItemProxy section */
 
+/* Begin PBXCopyFilesBuildPhase section */
+		A5298D4928074D28003B7074 /* Embed Frameworks */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "";
+			dstSubfolderSpec = 10;
+			files = (
+				A5298D4828074D28003B7074 /* RCTBrightcovePlayer.framework in Embed Frameworks */,
+			);
+			name = "Embed Frameworks";
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXCopyFilesBuildPhase section */
+
 /* Begin PBXFileReference section */
 		008F07F21AC5B25A0029DE68 /* main.jsbundle */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = main.jsbundle; sourceTree = "<group>"; };
 		00E356EE1AD99517003FC87E /* exampleTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = exampleTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -55,6 +71,7 @@
 		6E2406325ADA4133F316A256 /* libPods-example-tvOSTests.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-example-tvOSTests.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 		84EFF58D2B8D3A341D097FB9 /* Pods-example.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-example.release.xcconfig"; path = "Target Support Files/Pods-example/Pods-example.release.xcconfig"; sourceTree = "<group>"; };
 		86D1C86896B8844A4489E0D7 /* Pods-example-tvOSTests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-example-tvOSTests.release.xcconfig"; path = "Target Support Files/Pods-example-tvOSTests/Pods-example-tvOSTests.release.xcconfig"; sourceTree = "<group>"; };
+		A5298D4628074D28003B7074 /* RCTBrightcovePlayer.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = RCTBrightcovePlayer.framework; path = "../node_modules/react-native-brightcove-player/RCTBrightcovePlayer.framework"; sourceTree = "<group>"; };
 		AA9EB176A77DDC702BADAD5E /* Pods-example-tvOS.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-example-tvOS.release.xcconfig"; path = "Target Support Files/Pods-example-tvOS/Pods-example-tvOS.release.xcconfig"; sourceTree = "<group>"; };
 		B1BDDF7D50703474119385E1 /* Pods-example.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-example.debug.xcconfig"; path = "Target Support Files/Pods-example/Pods-example.debug.xcconfig"; sourceTree = "<group>"; };
 		BDE6F6A0F82C1083BCEA5FA2 /* Pods-example-exampleTests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-example-exampleTests.release.xcconfig"; path = "Target Support Files/Pods-example-exampleTests/Pods-example-exampleTests.release.xcconfig"; sourceTree = "<group>"; };
@@ -79,6 +96,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				A5298D4728074D28003B7074 /* RCTBrightcovePlayer.framework in Frameworks */,
 				F3DF27F7F377BC33FB50BB65 /* libPods-example.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -136,6 +154,7 @@
 			isa = PBXGroup;
 			children = (
 				ED297162215061F000B7C4FE /* JavaScriptCore.framework */,
+				A5298D4628074D28003B7074 /* RCTBrightcovePlayer.framework */,
 				ED2971642150620600B7C4FE /* JavaScriptCore.framework */,
 				1AD39ABF760C2EBBDA55D827 /* libPods-example.a */,
 				C6B180A7C57FC1F14F03A1CA /* libPods-example-exampleTests.a */,
@@ -229,6 +248,7 @@
 				00DD1BFF1BD5951E006B06BC /* Bundle React Native code and images */,
 				BCDA6C1D7BAED99416DAA3A8 /* [CP] Embed Pods Frameworks */,
 				41ED79C03CBB5AD9D15473AB /* [CP] Copy Pods Resources */,
+				A5298D4928074D28003B7074 /* Embed Frameworks */,
 			);
 			buildRules = (
 			);
@@ -445,31 +465,6 @@
 				"${PODS_CONFIGURATION_BUILD_DIR}/React-Core/AccessibilityResources.bundle",
 				"${PODS_ROOT}/google-cast-sdk/GoogleCastSDK-ios-4.6.1_static/GoogleCast.framework/GoogleCastCoreResources.bundle",
 				"${PODS_ROOT}/google-cast-sdk/GoogleCastSDK-ios-4.6.1_static/GoogleCast.framework/GoogleCastUIResources.bundle",
-				"${PODS_ROOT}/../../node_modules/react-native-brightcove-player/ios/CustomPlayerView/Images.xcassets/airplay.imageset/airplay.png",
-				"${PODS_ROOT}/../../node_modules/react-native-brightcove-player/ios/CustomPlayerView/Images.xcassets/airplay.imageset/Contents.json",
-				"${PODS_ROOT}/../../node_modules/react-native-brightcove-player/ios/CustomPlayerView/Images.xcassets/AppIcon.appiconset/Contents.json",
-				"${PODS_ROOT}/../../node_modules/react-native-brightcove-player/ios/CustomPlayerView/Images.xcassets/close.imageset/close 2.png",
-				"${PODS_ROOT}/../../node_modules/react-native-brightcove-player/ios/CustomPlayerView/Images.xcassets/close.imageset/Contents.json",
-				"${PODS_ROOT}/../../node_modules/react-native-brightcove-player/ios/CustomPlayerView/Images.xcassets/closedcaptions.imageset/closed_caption.png",
-				"${PODS_ROOT}/../../node_modules/react-native-brightcove-player/ios/CustomPlayerView/Images.xcassets/closedcaptions.imageset/Contents.json",
-				"${PODS_ROOT}/../../node_modules/react-native-brightcove-player/ios/CustomPlayerView/Images.xcassets/Contents.json",
-				"${PODS_ROOT}/../../node_modules/react-native-brightcove-player/ios/CustomPlayerView/Images.xcassets/forward.imageset/Contents.json",
-				"${PODS_ROOT}/../../node_modules/react-native-brightcove-player/ios/CustomPlayerView/Images.xcassets/forward.imageset/forward.png",
-				"${PODS_ROOT}/../../node_modules/react-native-brightcove-player/ios/CustomPlayerView/Images.xcassets/fullscreen.imageset/Contents.json",
-				"${PODS_ROOT}/../../node_modules/react-native-brightcove-player/ios/CustomPlayerView/Images.xcassets/fullscreen.imageset/fullscreen.png",
-				"${PODS_ROOT}/../../node_modules/react-native-brightcove-player/ios/CustomPlayerView/Images.xcassets/fullscreenexit.imageset/Contents.json",
-				"${PODS_ROOT}/../../node_modules/react-native-brightcove-player/ios/CustomPlayerView/Images.xcassets/fullscreenexit.imageset/fullscreen_exit.png",
-				"${PODS_ROOT}/../../node_modules/react-native-brightcove-player/ios/CustomPlayerView/Images.xcassets/pause.imageset/Contents.json",
-				"${PODS_ROOT}/../../node_modules/react-native-brightcove-player/ios/CustomPlayerView/Images.xcassets/pause.imageset/Pause Fill.png",
-				"${PODS_ROOT}/../../node_modules/react-native-brightcove-player/ios/CustomPlayerView/Images.xcassets/pictureinpicture.imageset/Contents.json",
-				"${PODS_ROOT}/../../node_modules/react-native-brightcove-player/ios/CustomPlayerView/Images.xcassets/pictureinpicture.imageset/picture_in_picture_alt.png",
-				"${PODS_ROOT}/../../node_modules/react-native-brightcove-player/ios/CustomPlayerView/Images.xcassets/play.imageset/Contents.json",
-				"${PODS_ROOT}/../../node_modules/react-native-brightcove-player/ios/CustomPlayerView/Images.xcassets/play.imageset/Play Fill.png",
-				"${PODS_ROOT}/../../node_modules/react-native-brightcove-player/ios/CustomPlayerView/Images.xcassets/replay.imageset/Contents.json",
-				"${PODS_ROOT}/../../node_modules/react-native-brightcove-player/ios/CustomPlayerView/Images.xcassets/replay.imageset/replay.png",
-				"${PODS_ROOT}/../../node_modules/react-native-brightcove-player/ios/CustomPlayerView/Images.xcassets/rewind.imageset/backward.png",
-				"${PODS_ROOT}/../../node_modules/react-native-brightcove-player/ios/CustomPlayerView/Images.xcassets/rewind.imageset/Contents.json",
-				"${PODS_ROOT}/../../node_modules/react-native-brightcove-player/ios/CustomPlayerView/Images.xcassets",
 			);
 			name = "[CP] Copy Pods Resources";
 			outputPaths = (
@@ -477,19 +472,6 @@
 				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/AccessibilityResources.bundle",
 				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/GoogleCastCoreResources.bundle",
 				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/GoogleCastUIResources.bundle",
-				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/airplay.png",
-				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/Contents.json",
-				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/close 2.png",
-				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/closed_caption.png",
-				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/forward.png",
-				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/fullscreen.png",
-				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/fullscreen_exit.png",
-				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/Pause Fill.png",
-				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/picture_in_picture_alt.png",
-				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/Play Fill.png",
-				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/replay.png",
-				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/backward.png",
-				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/Assets.car",
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
@@ -507,31 +489,6 @@
 				"${PODS_CONFIGURATION_BUILD_DIR}/React-Core/AccessibilityResources.bundle",
 				"${PODS_ROOT}/google-cast-sdk/GoogleCastSDK-ios-4.6.1_static/GoogleCast.framework/GoogleCastCoreResources.bundle",
 				"${PODS_ROOT}/google-cast-sdk/GoogleCastSDK-ios-4.6.1_static/GoogleCast.framework/GoogleCastUIResources.bundle",
-				"${PODS_ROOT}/../../node_modules/react-native-brightcove-player/ios/CustomPlayerView/Images.xcassets/airplay.imageset/airplay.png",
-				"${PODS_ROOT}/../../node_modules/react-native-brightcove-player/ios/CustomPlayerView/Images.xcassets/airplay.imageset/Contents.json",
-				"${PODS_ROOT}/../../node_modules/react-native-brightcove-player/ios/CustomPlayerView/Images.xcassets/AppIcon.appiconset/Contents.json",
-				"${PODS_ROOT}/../../node_modules/react-native-brightcove-player/ios/CustomPlayerView/Images.xcassets/close.imageset/close 2.png",
-				"${PODS_ROOT}/../../node_modules/react-native-brightcove-player/ios/CustomPlayerView/Images.xcassets/close.imageset/Contents.json",
-				"${PODS_ROOT}/../../node_modules/react-native-brightcove-player/ios/CustomPlayerView/Images.xcassets/closedcaptions.imageset/closed_caption.png",
-				"${PODS_ROOT}/../../node_modules/react-native-brightcove-player/ios/CustomPlayerView/Images.xcassets/closedcaptions.imageset/Contents.json",
-				"${PODS_ROOT}/../../node_modules/react-native-brightcove-player/ios/CustomPlayerView/Images.xcassets/Contents.json",
-				"${PODS_ROOT}/../../node_modules/react-native-brightcove-player/ios/CustomPlayerView/Images.xcassets/forward.imageset/Contents.json",
-				"${PODS_ROOT}/../../node_modules/react-native-brightcove-player/ios/CustomPlayerView/Images.xcassets/forward.imageset/forward.png",
-				"${PODS_ROOT}/../../node_modules/react-native-brightcove-player/ios/CustomPlayerView/Images.xcassets/fullscreen.imageset/Contents.json",
-				"${PODS_ROOT}/../../node_modules/react-native-brightcove-player/ios/CustomPlayerView/Images.xcassets/fullscreen.imageset/fullscreen.png",
-				"${PODS_ROOT}/../../node_modules/react-native-brightcove-player/ios/CustomPlayerView/Images.xcassets/fullscreenexit.imageset/Contents.json",
-				"${PODS_ROOT}/../../node_modules/react-native-brightcove-player/ios/CustomPlayerView/Images.xcassets/fullscreenexit.imageset/fullscreen_exit.png",
-				"${PODS_ROOT}/../../node_modules/react-native-brightcove-player/ios/CustomPlayerView/Images.xcassets/pause.imageset/Contents.json",
-				"${PODS_ROOT}/../../node_modules/react-native-brightcove-player/ios/CustomPlayerView/Images.xcassets/pause.imageset/Pause Fill.png",
-				"${PODS_ROOT}/../../node_modules/react-native-brightcove-player/ios/CustomPlayerView/Images.xcassets/pictureinpicture.imageset/Contents.json",
-				"${PODS_ROOT}/../../node_modules/react-native-brightcove-player/ios/CustomPlayerView/Images.xcassets/pictureinpicture.imageset/picture_in_picture_alt.png",
-				"${PODS_ROOT}/../../node_modules/react-native-brightcove-player/ios/CustomPlayerView/Images.xcassets/play.imageset/Contents.json",
-				"${PODS_ROOT}/../../node_modules/react-native-brightcove-player/ios/CustomPlayerView/Images.xcassets/play.imageset/Play Fill.png",
-				"${PODS_ROOT}/../../node_modules/react-native-brightcove-player/ios/CustomPlayerView/Images.xcassets/replay.imageset/Contents.json",
-				"${PODS_ROOT}/../../node_modules/react-native-brightcove-player/ios/CustomPlayerView/Images.xcassets/replay.imageset/replay.png",
-				"${PODS_ROOT}/../../node_modules/react-native-brightcove-player/ios/CustomPlayerView/Images.xcassets/rewind.imageset/backward.png",
-				"${PODS_ROOT}/../../node_modules/react-native-brightcove-player/ios/CustomPlayerView/Images.xcassets/rewind.imageset/Contents.json",
-				"${PODS_ROOT}/../../node_modules/react-native-brightcove-player/ios/CustomPlayerView/Images.xcassets",
 			);
 			name = "[CP] Copy Pods Resources";
 			outputPaths = (
@@ -539,19 +496,6 @@
 				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/AccessibilityResources.bundle",
 				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/GoogleCastCoreResources.bundle",
 				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/GoogleCastUIResources.bundle",
-				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/airplay.png",
-				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/Contents.json",
-				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/close 2.png",
-				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/closed_caption.png",
-				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/forward.png",
-				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/fullscreen.png",
-				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/fullscreen_exit.png",
-				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/Pause Fill.png",
-				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/picture_in_picture_alt.png",
-				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/Play Fill.png",
-				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/replay.png",
-				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/backward.png",
-				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/Assets.car",
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
@@ -759,7 +703,11 @@
 				);
 				INFOPLIST_FILE = exampleTests/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 9.0;
-				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@loader_path/Frameworks",
+				);
 				OTHER_LDFLAGS = (
 					"-ObjC",
 					"-lc++",
@@ -784,7 +732,11 @@
 				DEVELOPMENT_TEAM = "";
 				INFOPLIST_FILE = exampleTests/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 9.0;
-				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@loader_path/Frameworks",
+				);
 				OTHER_LDFLAGS = (
 					"-ObjC",
 					"-lc++",
@@ -810,7 +762,10 @@
 				DEVELOPMENT_TEAM = RP7C3H2395;
 				INFOPLIST_FILE = example/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 11.0;
-				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
 				MARKETING_VERSION = 1.0.6;
 				OTHER_LDFLAGS = (
 					"$(inherited)",
@@ -836,7 +791,10 @@
 				DEVELOPMENT_TEAM = RP7C3H2395;
 				INFOPLIST_FILE = example/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 11.0;
-				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
 				MARKETING_VERSION = 1.0.6;
 				OTHER_LDFLAGS = (
 					"$(inherited)",
@@ -865,7 +823,10 @@
 				ENABLE_TESTABILITY = YES;
 				GCC_NO_COMMON_BLOCKS = YES;
 				INFOPLIST_FILE = "example-tvOS/Info.plist";
-				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
 				OTHER_LDFLAGS = (
 					"$(inherited)",
 					"-ObjC",
@@ -893,7 +854,10 @@
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				GCC_NO_COMMON_BLOCKS = YES;
 				INFOPLIST_FILE = "example-tvOS/Info.plist";
-				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
 				OTHER_LDFLAGS = (
 					"$(inherited)",
 					"-ObjC",
@@ -920,7 +884,11 @@
 				ENABLE_TESTABILITY = YES;
 				GCC_NO_COMMON_BLOCKS = YES;
 				INFOPLIST_FILE = "example-tvOSTests/Info.plist";
-				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@loader_path/Frameworks",
+				);
 				OTHER_LDFLAGS = (
 					"$(inherited)",
 					"-ObjC",
@@ -947,7 +915,11 @@
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				GCC_NO_COMMON_BLOCKS = YES;
 				INFOPLIST_FILE = "example-tvOSTests/Info.plist";
-				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@loader_path/Frameworks",
+				);
 				OTHER_LDFLAGS = (
 					"$(inherited)",
 					"-ObjC",
