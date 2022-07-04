@@ -205,7 +205,9 @@
       self.onReady(@{});
     }
     if (_autoPlay) {
-      [_playbackController play];
+        [_playbackController play];
+    } else {
+        [_playbackController pause];
     }
   } else if (lifecycleEvent.eventType == kBCOVPlaybackSessionLifecycleEventPlay) {
     _playing = true;
