@@ -94,7 +94,7 @@
       if (error) {
         if (self.onError) {
           self.onError(@{
-            @"error":  error.localizedDescription ?: @"PlaybackBufferEmpty"
+            @"error":  error.localizedDescription ?: @""
           });
         }
       }
@@ -111,7 +111,7 @@
       if (error) {
         if (self.onError) {
           self.onError(@{
-            @"error":  error.localizedDescription ?: @"PlaybackBufferEmpty"
+            @"error":  error.localizedDescription ?: @""
           });
         }
       }
