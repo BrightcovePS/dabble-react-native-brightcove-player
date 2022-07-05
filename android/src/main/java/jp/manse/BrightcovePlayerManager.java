@@ -38,8 +38,8 @@ public class BrightcovePlayerManager extends ViewGroupManager<BrightcovePlayerVi
     public static final String EVENT_ON_CHANGE_DURATION_REGISTER_NAME = "onChangeDuration";
     public static final String EVENT_ON_UPDATE_BUFFER_PROGRESS_REGISTER_NAME = "onUpdateBufferProgress";
     public static final String EVENT_ON_TOGGLE_ANDROID_FULLSCREEN_REGISTER_NAME = "onToggleAndroidFullscreen";
-    public static final String EVENT_ON_VIDEO_SIZE_REGISTER_NAME = "onSizeVideo";
-    public static final String EVENT_ON_VIDEO_SIZE = "on_size_video";
+    public static final String EVENT_ON_VIDEO_SIZE_REGISTER_NAME = "onVideoSize";
+    public static final String EVENT_ON_VIDEO_SIZE = "on_video_size";
     public static final String EVENT_ON_ERROR = "on_error";
     public static final String EVENT_ON_ERROR_VIDEO_REGISTER_NAME = "onError";
     public static final int ONE_SEC = 1000;
