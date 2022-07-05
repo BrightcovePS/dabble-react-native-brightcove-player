@@ -94,15 +94,12 @@ public class BrightcovePlayerView extends RelativeLayout implements LifecycleEve
             rewind();
         }
     };
-    private final UpNextViewOverlay.OnPlayUpNextListener onPlayUpNextListener = new UpNextViewOverlay.OnPlayUpNextListener() {
-        @Override
-        public void onPlayNext(Video video) {
-            WritableMap event = Arguments.createMap();
-            event.putString(BrightcovePlayerManager.VIDEO_ID, video.getId());
-            event.putString(BrightcovePlayerManager.REFERENCE_ID, video.getReferenceId());
-            context.getJSModule(RCTEventEmitter.class).receiveEvent(BrightcovePlayerView.this.getId(), BrightcovePlayerManager.EVENT_ON_PLAY_NEXT_VIDEO, event);
-            playVideo(video);
-        }
+    private final UpNextViewOverlay.OnPlayUpNextListener onPlayUpNextListener = video -> {
+        WritableMap event = Arguments.createMap();
+        event.putString(BrightcovePlayerManager.VIDEO_ID, video.getId());
+        event.putString(BrightcovePlayerManager.REFERENCE_ID, video.getReferenceId());
+        sendJSEvent(BrightcovePlayerManager.EVENT_ON_PLAY_NEXT_VIDEO, event);
+        playVideo(video);
     };
     /**
      * Please do not use this variable any other purpose. it may lead into video size issue
@@ -512,6 +509,11 @@ public class BrightcovePlayerView extends RelativeLayout implements LifecycleEve
             RelativeLayout.LayoutParams layoutParams = new RelativeLayout.LayoutParams(videoWidth, videoHeight);
             layoutParams.addRule(CENTER_IN_PARENT, TRUE);
             playerVideoView.setLayoutParams(layoutParams);
+
+            WritableMap event = Arguments.createMap();
+            event.putInt(BrightcovePlayerManager.WIDTH, videoWidth);
+            event.putInt(BrightcovePlayerManager.HEIGHT, videoHeight);
+            sendJSEvent(BrightcovePlayerManager.EVENT_ON_VIDEO_SIZE, event);
 
             // Cache previous state of orientation and fullscreen to refresh video player size only these state changes
             this.prevOrientationForRefreshVideoLayout = orientation;
