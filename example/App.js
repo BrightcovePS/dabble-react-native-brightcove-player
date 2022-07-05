@@ -6,6 +6,7 @@ import {
   Text,
   TouchableOpacity,
   View,
+  Alert
 } from 'react-native';
 import {
   BrightcovePlayer,
@@ -120,19 +121,45 @@ export default class App extends Component {
     });
   };
 
+  onError = event => {
+    Alert.alert(
+      'onError',
+      '', // <- this part is optional, you can pass an empty string
+      [
+        {text: 'OK', onPress: () => console.log('OK Pressed')},
+      ],
+      {cancelable: false},
+    );
+    console.log("Error", event)
+  };
+
+  onVideoSize = event => {
+    console.log("Video Size", event.width, event.height)
+    Alert.alert(
+      'Video Size',
+      'w:' + event.width + '  h:' + event.height, // <- this part is optional, you can pass an empty string
+      [
+        {text: 'OK', onPress: () => console.log('OK Pressed')},
+      ],
+      {cancelable: false},
+    );
+  };
+
   render() {
     return (
       <View style={styles.container}>
         <StatusBar barStyle="light-content" />
         <BrightcovePlayer
+          autoPlay = {false}
           style={styles.video}
           accountId={ACCOUNT_ID}
           policyKey={POLICY_KEY}
           seekDuration={15000}
           playlistReferenceId={PLAYLIST_REF_ID}
-          autoPlay
           {...this.state.playback}
           onPlayNextVideo={this.onPlayNext}
+          onError={this.onError}
+          onVideoSize={this.onVideoSize}
         />
         <TouchableOpacity
           style={styles.playPauseButton}

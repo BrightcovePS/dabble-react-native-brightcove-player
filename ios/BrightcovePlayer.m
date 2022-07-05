@@ -15,6 +15,7 @@
 
 - (void)setup {
   _playbackController = [BCOVPlayerSDKManager.sharedManager createPlaybackController];
+  [self createNewPlaybackController];
   _playbackController.delegate = self;
   _playbackController.autoPlay = YES;
   _playbackController.autoAdvance = YES;
@@ -31,6 +32,43 @@
   
   [self addSubview:_playerView];
 }
+
+- (void)createNewPlaybackController {
+  // The playback controller with
+  // videos, or "clear" videos (no DRM protection).
+  BCOVPlayerSDKManager *sdkManager = [BCOVPlayerSDKManager sharedManager];
+
+  // Publisher/application IDs not required for Dynamic Delivery
+  self.authProxy = [[BCOVFPSBrightcoveAuthProxy alloc] initWithPublisherId:nil
+                                                             applicationId:nil];
+
+  // You can use the same auth proxy for the offline video manager
+  // and the call to create the FairPlay session provider.
+  BCOVOfflineVideoManager.sharedManager.authProxy = self.authProxy;
+
+  // Create the session provider chain
+  BCOVBasicSessionProviderOptions *options = [[BCOVBasicSessionProviderOptions alloc] init];
+  options.sourceSelectionPolicy = [BCOVBasicSourceSelectionPolicy sourceSelectionHLSWithScheme:kBCOVSourceURLSchemeHTTPS];
+  id<BCOVPlaybackSessionProvider> basicSessionProvider = [sdkManager createBasicSessionProviderWithOptions:options];
+  id<BCOVPlaybackSessionProvider> fairPlaySessionProvider = [sdkManager createFairPlaySessionProviderWithApplicationCertificate:nil
+                                                                                                             authorizationProxy:self.authProxy
+                                                                                                        upstreamSessionProvider:basicSessionProvider];
+
+  // Create the playback controller
+  id<BCOVPlaybackController> playbackController = [sdkManager createPlaybackControllerWithSessionProvider:fairPlaySessionProvider
+                                                                                             viewStrategy:nil];
+
+  // Start playing right away (the default value for autoAdvance is NO)
+  playbackController.autoAdvance = YES;
+  playbackController.autoPlay = YES;
+
+  // Register for delegate method callbacks
+  playbackController.delegate = self;
+
+  // Retain the playback controller
+  self.playbackController = playbackController;
+}
+
 
 - (void)setupService {
   if ((!_playbackService || _playbackServiceDirty) && _accountId && _policyKey) {
@@ -191,6 +229,15 @@
 }
 
 - (void)playbackController:(id<BCOVPlaybackController>)controller playbackSession:(id<BCOVPlaybackSession>)session didReceiveLifecycleEvent:(BCOVPlaybackSessionLifecycleEvent *)lifecycleEvent {
+  if (lifecycleEvent.eventType == kBCOVPlaybackSessionLifecycleEventError || lifecycleEvent.eventType == kBCOVPlaybackSessionLifecycleEventPlaybackBufferEmpty ) {
+    NSError *error = lifecycleEvent.properties[kBCOVPlaybackSessionEventKeyError];
+    if (self.onError) {
+      self.onError(@{
+        @"error":  error.localizedDescription ?: @"PlaybackBufferEmpty"
+      });
+    }
+  }
+
   if (lifecycleEvent.eventType == kBCOVPlaybackSessionLifecycleEventPlaybackBufferEmpty || lifecycleEvent.eventType == kBCOVPlaybackSessionLifecycleEventFail ||
       lifecycleEvent.eventType == kBCOVPlaybackSessionLifecycleEventError ||
       lifecycleEvent.eventType == kBCOVPlaybackSessionLifecycleEventTerminate) {
@@ -201,6 +248,7 @@
   if (lifecycleEvent.eventType == kBCOVPlaybackSessionLifecycleEventReady) {
     [self refreshVolume];
     [self refreshBitRate];
+    [_playerView checkVideoSize];
     if (self.onReady) {
       self.onReady(@{});
     }
@@ -298,6 +346,15 @@
   [nextVideo setObject: _videoId  forKey: @"videoId"];
   if (self.onPlayNextVideo) {
     self.onPlayNextVideo(nextVideo);
+  }
+}
+
+-(void)videoSize:(double)width height:(double) height {
+  NSMutableDictionary *videoSize = [NSMutableDictionary dictionary];
+  [videoSize setObject: [NSNumber numberWithFloat: width]  forKey: @"width"];
+  [videoSize setObject: [NSNumber numberWithFloat: height]  forKey: @"height"];
+  if (self.onVideoSize) {
+  self.onVideoSize(videoSize);
   }
 }
 
