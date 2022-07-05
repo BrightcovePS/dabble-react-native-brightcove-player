@@ -40,6 +40,8 @@ public class BrightcovePlayerManager extends ViewGroupManager<BrightcovePlayerVi
     public static final String EVENT_ON_TOGGLE_ANDROID_FULLSCREEN_REGISTER_NAME = "onToggleAndroidFullscreen";
     public static final String EVENT_ON_VIDEO_SIZE_REGISTER_NAME = "onSizeVideo";
     public static final String EVENT_ON_VIDEO_SIZE = "on_size_video";
+    public static final String EVENT_ON_ERROR = "on_error";
+    public static final String EVENT_ON_ERROR_VIDEO_REGISTER_NAME = "onError";
     public static final int ONE_SEC = 1000;
     public static final String VIDEO_ID = "videoId";
     public static final String REFERENCE_ID = "referenceId";
@@ -58,7 +60,8 @@ public class BrightcovePlayerManager extends ViewGroupManager<BrightcovePlayerVi
     public static final String SEEK_DURATION = "seekDuration";
     public static final String HEIGHT = "height";
     public static final String WIDTH = "width";
-    
+    public static final String ERROR = "error";
+
     private final ReactApplicationContext applicationContext;
 
     public BrightcovePlayerManager(ReactApplicationContext context) {
@@ -190,7 +193,8 @@ public class BrightcovePlayerManager extends ViewGroupManager<BrightcovePlayerVi
         map.put(EVENT_UPDATE_BUFFER_PROGRESS, (Object) MapBuilder.of(REGISTRATION_NAME, EVENT_ON_UPDATE_BUFFER_PROGRESS_REGISTER_NAME));
         map.put(EVENT_TOGGLE_ANDROID_FULLSCREEN, (Object) MapBuilder.of(REGISTRATION_NAME, EVENT_ON_TOGGLE_ANDROID_FULLSCREEN_REGISTER_NAME));
         map.put(EVENT_ON_PLAY_NEXT_VIDEO, (Object) MapBuilder.of(REGISTRATION_NAME, EVENT_ON_PLAY_NEXT_VIDEO_REGISTER_NAME));
-        map.put(EVENT_ON_VIDEO_SIZE, (Object) MapBuilder.of(REGISTRATION_NAME, EVENT_ON_VIDEO_SIZE_REGISTER_NAME));
+        map.put(EVENT_ON_VIDEO_SIZE, MapBuilder.of(REGISTRATION_NAME, EVENT_ON_VIDEO_SIZE_REGISTER_NAME));
+        map.put(EVENT_ON_ERROR, MapBuilder.of(REGISTRATION_NAME, EVENT_ON_ERROR_VIDEO_REGISTER_NAME));
         return map;
     }
 }

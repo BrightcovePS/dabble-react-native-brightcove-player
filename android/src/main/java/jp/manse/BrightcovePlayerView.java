@@ -195,6 +195,18 @@ public class BrightcovePlayerView extends RelativeLayout implements LifecycleEve
                 case EventType.DID_ENTER_FULL_SCREEN:
                     onToggleFullScreen();
                     break;
+                case EventType.ERROR:
+                case EventType.AD_ERROR:
+                case EventType.CLOSED_CAPTIONING_ERROR:
+                case EventType.GSC_ERROR:
+                case EventType.ODRM_LICENSE_ERROR:
+                case EventType.ODRM_LICENSE_NOT_AVAILABLE:
+                case EventType.ODRM_PLAYBACK_NOT_ALLOWED:
+                case EventType.ODRM_SOURCE_NOT_FOUND:
+                case EventType.SOURCE_NOT_FOUND:
+                case EventType.SOURCE_NOT_PLAYABLE:
+                    onError(event.getType());
+                    break;
             }
         };
         eventEmitter.on(EventType.VIDEO_SIZE_KNOWN, eventListener);
@@ -208,6 +220,18 @@ public class BrightcovePlayerView extends RelativeLayout implements LifecycleEve
         eventEmitter.on(EventType.DID_ENTER_FULL_SCREEN, eventListener);
         eventEmitter.on(EventType.VIDEO_DURATION_CHANGED, eventListener);
         eventEmitter.on(EventType.BUFFERED_UPDATE, eventListener);
+
+        // This events are report as error in react native bridge
+        eventEmitter.on(EventType.ERROR, eventListener);
+        eventEmitter.on(EventType.AD_ERROR, eventListener);
+        eventEmitter.on(EventType.CLOSED_CAPTIONING_ERROR, eventListener);
+        eventEmitter.on(EventType.GSC_ERROR, eventListener);
+        eventEmitter.on(EventType.ODRM_LICENSE_ERROR, eventListener);
+        eventEmitter.on(EventType.ODRM_LICENSE_NOT_AVAILABLE, eventListener);
+        eventEmitter.on(EventType.ODRM_PLAYBACK_NOT_ALLOWED, eventListener);
+        eventEmitter.on(EventType.ODRM_SOURCE_NOT_FOUND, eventListener);
+        eventEmitter.on(EventType.SOURCE_NOT_FOUND, eventListener);
+        eventEmitter.on(EventType.SOURCE_NOT_PLAYABLE, eventListener);
         setSeekControlConfig();
     }
 
@@ -563,6 +587,12 @@ public class BrightcovePlayerView extends RelativeLayout implements LifecycleEve
             upNextViewOverlay.resetUpNextCancel();
             playerVideoView.seekTo(seekPos);
         }
+    }
+
+    private void onError(String message) {
+        WritableMap map = Arguments.createMap();
+        map.putString(BrightcovePlayerManager.ERROR, message);
+        sendJSEvent(BrightcovePlayerManager.EVENT_ON_ERROR, map);
     }
 
     @Override
