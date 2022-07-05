@@ -91,6 +91,13 @@
       return;
     }
     [_playbackService findVideoWithVideoID:_videoId parameters:nil completion:^(BCOVVideo *video, NSDictionary *jsonResponse, NSError *error) {
+      if (error) {
+        if (self.onError) {
+          self.onError(@{
+            @"error":  error.localizedDescription ?: @"PlaybackBufferEmpty"
+          });
+        }
+      }
       if (video) {
         [self setupVideoProperties: video];
         [self.playbackController setVideos: @[ video ]];
@@ -101,6 +108,13 @@
       return;
     }
     [_playbackService findVideoWithReferenceID:_referenceId parameters:nil completion:^(BCOVVideo *video, NSDictionary *jsonResponse, NSError *error) {
+      if (error) {
+        if (self.onError) {
+          self.onError(@{
+            @"error":  error.localizedDescription ?: @"PlaybackBufferEmpty"
+          });
+        }
+      }
       if (video) {
         [self setupVideoProperties: video];
         [self.playbackController setVideos: @[ video ]];
@@ -229,11 +243,14 @@
 }
 
 - (void)playbackController:(id<BCOVPlaybackController>)controller playbackSession:(id<BCOVPlaybackSession>)session didReceiveLifecycleEvent:(BCOVPlaybackSessionLifecycleEvent *)lifecycleEvent {
-  if (lifecycleEvent.eventType == kBCOVPlaybackSessionLifecycleEventError || lifecycleEvent.eventType == kBCOVPlaybackSessionLifecycleEventPlaybackBufferEmpty ) {
+  if ((lifecycleEvent.eventType == kBCOVPlaybackSessionLifecycleEventFail) ||
+      (lifecycleEvent.eventType == kBCOVPlaybackSessionLifecycleEventFailedToPlayToEndTime) ||
+      (lifecycleEvent.eventType == kBCOVPlaybackSessionLifecycleEventResumeFail) ||
+      (lifecycleEvent.eventType == kBCOVPlaybackSessionLifecycleEventError || lifecycleEvent.eventType == kBCOVPlaybackSessionLifecycleEventPlaybackStalled)) {
     NSError *error = lifecycleEvent.properties[kBCOVPlaybackSessionEventKeyError];
     if (self.onError) {
       self.onError(@{
-        @"error":  error.localizedDescription ?: @"PlaybackBufferEmpty"
+          @"error": lifecycleEvent.eventType ?: @"PlaybackBufferEmpty"
       });
     }
   }
