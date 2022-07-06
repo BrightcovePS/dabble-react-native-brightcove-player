@@ -94,15 +94,12 @@ public class BrightcovePlayerView extends RelativeLayout implements LifecycleEve
             rewind();
         }
     };
-    private final UpNextViewOverlay.OnPlayUpNextListener onPlayUpNextListener = new UpNextViewOverlay.OnPlayUpNextListener() {
-        @Override
-        public void onPlayNext(Video video) {
-            WritableMap event = Arguments.createMap();
-            event.putString(BrightcovePlayerManager.VIDEO_ID, video.getId());
-            event.putString(BrightcovePlayerManager.REFERENCE_ID, video.getReferenceId());
-            context.getJSModule(RCTEventEmitter.class).receiveEvent(BrightcovePlayerView.this.getId(), BrightcovePlayerManager.EVENT_ON_PLAY_NEXT_VIDEO, event);
-            playVideo(video);
-        }
+    private final UpNextViewOverlay.OnPlayUpNextListener onPlayUpNextListener = video -> {
+        WritableMap event = Arguments.createMap();
+        event.putString(BrightcovePlayerManager.VIDEO_ID, video.getId());
+        event.putString(BrightcovePlayerManager.REFERENCE_ID, video.getReferenceId());
+        sendJSEvent(BrightcovePlayerManager.EVENT_ON_PLAY_NEXT_VIDEO, event);
+        playVideo(video);
     };
     /**
      * Please do not use this variable any other purpose. it may lead into video size issue
@@ -198,6 +195,18 @@ public class BrightcovePlayerView extends RelativeLayout implements LifecycleEve
                 case EventType.DID_ENTER_FULL_SCREEN:
                     onToggleFullScreen();
                     break;
+                case EventType.ERROR:
+                case EventType.AD_ERROR:
+                case EventType.CLOSED_CAPTIONING_ERROR:
+                case EventType.GSC_ERROR:
+                case EventType.ODRM_LICENSE_ERROR:
+                case EventType.ODRM_LICENSE_NOT_AVAILABLE:
+                case EventType.ODRM_PLAYBACK_NOT_ALLOWED:
+                case EventType.ODRM_SOURCE_NOT_FOUND:
+                case EventType.SOURCE_NOT_FOUND:
+                case EventType.SOURCE_NOT_PLAYABLE:
+                    onError(event.getType());
+                    break;
             }
         };
         eventEmitter.on(EventType.VIDEO_SIZE_KNOWN, eventListener);
@@ -211,6 +220,18 @@ public class BrightcovePlayerView extends RelativeLayout implements LifecycleEve
         eventEmitter.on(EventType.DID_ENTER_FULL_SCREEN, eventListener);
         eventEmitter.on(EventType.VIDEO_DURATION_CHANGED, eventListener);
         eventEmitter.on(EventType.BUFFERED_UPDATE, eventListener);
+
+        // This events are report as error in react native bridge
+        eventEmitter.on(EventType.ERROR, eventListener);
+        eventEmitter.on(EventType.AD_ERROR, eventListener);
+        eventEmitter.on(EventType.CLOSED_CAPTIONING_ERROR, eventListener);
+        eventEmitter.on(EventType.GSC_ERROR, eventListener);
+        eventEmitter.on(EventType.ODRM_LICENSE_ERROR, eventListener);
+        eventEmitter.on(EventType.ODRM_LICENSE_NOT_AVAILABLE, eventListener);
+        eventEmitter.on(EventType.ODRM_PLAYBACK_NOT_ALLOWED, eventListener);
+        eventEmitter.on(EventType.ODRM_SOURCE_NOT_FOUND, eventListener);
+        eventEmitter.on(EventType.SOURCE_NOT_FOUND, eventListener);
+        eventEmitter.on(EventType.SOURCE_NOT_PLAYABLE, eventListener);
         setSeekControlConfig();
     }
 
@@ -513,6 +534,11 @@ public class BrightcovePlayerView extends RelativeLayout implements LifecycleEve
             layoutParams.addRule(CENTER_IN_PARENT, TRUE);
             playerVideoView.setLayoutParams(layoutParams);
 
+            WritableMap event = Arguments.createMap();
+            event.putInt(BrightcovePlayerManager.WIDTH, videoWidth);
+            event.putInt(BrightcovePlayerManager.HEIGHT, videoHeight);
+            sendJSEvent(BrightcovePlayerManager.EVENT_ON_VIDEO_SIZE, event);
+
             // Cache previous state of orientation and fullscreen to refresh video player size only these state changes
             this.prevOrientationForRefreshVideoLayout = orientation;
             this.prevFullscreenForRefreshVideoLayout = playerVideoView.isFullScreen();
@@ -561,6 +587,12 @@ public class BrightcovePlayerView extends RelativeLayout implements LifecycleEve
             upNextViewOverlay.resetUpNextCancel();
             playerVideoView.seekTo(seekPos);
         }
+    }
+
+    private void onError(String message) {
+        WritableMap map = Arguments.createMap();
+        map.putString(BrightcovePlayerManager.ERROR, message);
+        sendJSEvent(BrightcovePlayerManager.EVENT_ON_ERROR, map);
     }
 
     @Override

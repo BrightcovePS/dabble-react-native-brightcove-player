@@ -44,6 +44,12 @@ class BrightcovePlayer extends Component {
             height: '100%'
           }
         ]}
+        onVideoSize={event =>
+          this.props.onVideoSize && this.props.onVideoSize(event.nativeEvent)
+        }
+        onError={event =>
+          this.props.onError && this.props.onError(event.nativeEvent)
+        }
         onReady={event =>
           this.props.onReady && this.props.onReady(event.nativeEvent)
         }
@@ -139,7 +145,9 @@ BrightcovePlayer.propTypes = {
   onUpdateBufferProgress: PropTypes.func,
   onEnterFullscreen: PropTypes.func,
   onExitFullscreen: PropTypes.func,
-  onPlayNextVideo:PropTypes.func
+  onPlayNextVideo:PropTypes.func,
+  onError: PropTypes.func,
+  onVideoSize: PropTypes.func,
 };
 
 BrightcovePlayer.defaultProps = {};

@@ -15,6 +15,7 @@
 
 - (void)setup {
   _playbackController = [BCOVPlayerSDKManager.sharedManager createPlaybackController];
+  [self createNewPlaybackController];
   _playbackController.delegate = self;
   _playbackController.autoPlay = YES;
   _playbackController.autoAdvance = YES;
@@ -31,6 +32,43 @@
   
   [self addSubview:_playerView];
 }
+
+- (void)createNewPlaybackController {
+  // The playback controller with
+  // videos, or "clear" videos (no DRM protection).
+  BCOVPlayerSDKManager *sdkManager = [BCOVPlayerSDKManager sharedManager];
+
+  // Publisher/application IDs not required for Dynamic Delivery
+  self.authProxy = [[BCOVFPSBrightcoveAuthProxy alloc] initWithPublisherId:nil
+                                                             applicationId:nil];
+
+  // You can use the same auth proxy for the offline video manager
+  // and the call to create the FairPlay session provider.
+  BCOVOfflineVideoManager.sharedManager.authProxy = self.authProxy;
+
+  // Create the session provider chain
+  BCOVBasicSessionProviderOptions *options = [[BCOVBasicSessionProviderOptions alloc] init];
+  options.sourceSelectionPolicy = [BCOVBasicSourceSelectionPolicy sourceSelectionHLSWithScheme:kBCOVSourceURLSchemeHTTPS];
+  id<BCOVPlaybackSessionProvider> basicSessionProvider = [sdkManager createBasicSessionProviderWithOptions:options];
+  id<BCOVPlaybackSessionProvider> fairPlaySessionProvider = [sdkManager createFairPlaySessionProviderWithApplicationCertificate:nil
+                                                                                                             authorizationProxy:self.authProxy
+                                                                                                        upstreamSessionProvider:basicSessionProvider];
+
+  // Create the playback controller
+  id<BCOVPlaybackController> playbackController = [sdkManager createPlaybackControllerWithSessionProvider:fairPlaySessionProvider
+                                                                                             viewStrategy:nil];
+
+  // Start playing right away (the default value for autoAdvance is NO)
+  playbackController.autoAdvance = YES;
+  playbackController.autoPlay = YES;
+
+  // Register for delegate method callbacks
+  playbackController.delegate = self;
+
+  // Retain the playback controller
+  self.playbackController = playbackController;
+}
+
 
 - (void)setupService {
   if ((!_playbackService || _playbackServiceDirty) && _accountId && _policyKey) {
@@ -53,6 +91,13 @@
       return;
     }
     [_playbackService findVideoWithVideoID:_videoId parameters:nil completion:^(BCOVVideo *video, NSDictionary *jsonResponse, NSError *error) {
+      if (error) {
+        if (self.onError) {
+          self.onError(@{
+            @"error":  error.localizedDescription ?: @""
+          });
+        }
+      }
       if (video) {
         [self setupVideoProperties: video];
         [self.playbackController setVideos: @[ video ]];
@@ -63,6 +108,13 @@
       return;
     }
     [_playbackService findVideoWithReferenceID:_referenceId parameters:nil completion:^(BCOVVideo *video, NSDictionary *jsonResponse, NSError *error) {
+      if (error) {
+        if (self.onError) {
+          self.onError(@{
+            @"error":  error.localizedDescription ?: @""
+          });
+        }
+      }
       if (video) {
         [self setupVideoProperties: video];
         [self.playbackController setVideos: @[ video ]];
@@ -191,6 +243,18 @@
 }
 
 - (void)playbackController:(id<BCOVPlaybackController>)controller playbackSession:(id<BCOVPlaybackSession>)session didReceiveLifecycleEvent:(BCOVPlaybackSessionLifecycleEvent *)lifecycleEvent {
+  if ((lifecycleEvent.eventType == kBCOVPlaybackSessionLifecycleEventFail) ||
+      (lifecycleEvent.eventType == kBCOVPlaybackSessionLifecycleEventFailedToPlayToEndTime) ||
+      (lifecycleEvent.eventType == kBCOVPlaybackSessionLifecycleEventResumeFail) ||
+      (lifecycleEvent.eventType == kBCOVPlaybackSessionLifecycleEventError || lifecycleEvent.eventType == kBCOVPlaybackSessionLifecycleEventPlaybackStalled)) {
+    NSError *error = lifecycleEvent.properties[kBCOVPlaybackSessionEventKeyError];
+    if (self.onError) {
+      self.onError(@{
+          @"error": lifecycleEvent.eventType ?: @"PlaybackBufferEmpty"
+      });
+    }
+  }
+
   if (lifecycleEvent.eventType == kBCOVPlaybackSessionLifecycleEventPlaybackBufferEmpty || lifecycleEvent.eventType == kBCOVPlaybackSessionLifecycleEventFail ||
       lifecycleEvent.eventType == kBCOVPlaybackSessionLifecycleEventError ||
       lifecycleEvent.eventType == kBCOVPlaybackSessionLifecycleEventTerminate) {
@@ -201,11 +265,14 @@
   if (lifecycleEvent.eventType == kBCOVPlaybackSessionLifecycleEventReady) {
     [self refreshVolume];
     [self refreshBitRate];
+    [_playerView checkVideoSize];
     if (self.onReady) {
       self.onReady(@{});
     }
     if (_autoPlay) {
-      [_playbackController play];
+        [_playbackController play];
+    } else {
+        [_playbackController pause];
     }
   } else if (lifecycleEvent.eventType == kBCOVPlaybackSessionLifecycleEventPlay) {
     _playing = true;
@@ -296,6 +363,15 @@
   [nextVideo setObject: _videoId  forKey: @"videoId"];
   if (self.onPlayNextVideo) {
     self.onPlayNextVideo(nextVideo);
+  }
+}
+
+-(void)videoSize:(double)width height:(double) height {
+  NSMutableDictionary *videoSize = [NSMutableDictionary dictionary];
+  [videoSize setObject: [NSNumber numberWithFloat: width]  forKey: @"width"];
+  [videoSize setObject: [NSNumber numberWithFloat: height]  forKey: @"height"];
+  if (self.onVideoSize) {
+  self.onVideoSize(videoSize);
   }
 }
 

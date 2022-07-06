@@ -240,7 +240,7 @@ public class UpNextViewOverlay {
         if (playList != null) {
             for (int i = 0; i < playList.getVideos().size(); i++) {
                 Video video = playList.getVideos().get(i);
-                if (i < playList.getVideos().size() - 1 && (video.getId().equals(videoId) || video.getReferenceId().equals(videoReferenceId))) {
+                if (i < playList.getVideos().size() - 1 && video.getId().equals(videoId)) {
                     nextVideo = playList.getVideos().get(i + 1);
                     break;
                 }

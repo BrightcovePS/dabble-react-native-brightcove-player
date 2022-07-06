@@ -8,6 +8,11 @@ type NextVideo = {
   referenceId: string;
 };
 
+type VideoSize = {
+  width: number;
+  height: number;
+};
+
 export type BrightcovePlayerProps = {
   policyKey?: string;
   accountId?: string;
@@ -34,6 +39,8 @@ export type BrightcovePlayerProps = {
   onEnterFullscreen?: () => void;
   onExitFullscreen?: () => void;
   onPlayNextVideo?: (nextVideo: NextVideo) => void;
+  onError?: ({ error: string }) => void;
+  onVideoSize?: (videoSize: VideoSize) => void;
   style?: ViewStyle;
 };
 

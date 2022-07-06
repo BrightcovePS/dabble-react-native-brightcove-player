@@ -12,9 +12,11 @@
 #import <React/RCTBridge.h>
 #import <React/UIView+React.h>
 #import <RCTBrightcovePlayer/RCTBrightcovePlayer.h>
+#import <BrightcovePlayerSDK/BCOVFPSBrightcoveAuthProxy.h>
 //@class PlayerView;
 @interface BrightcovePlayer : UIView<BCOVOfflineVideoManagerDelegate>
 
+@property (nonatomic) BCOVFPSBrightcoveAuthProxy *authProxy;
 @property (nonatomic) BCOVPlaybackService *playbackService;
 @property (nonatomic) id<BCOVPlaybackController> playbackController;
 @property (nonatomic) id<BCOVPlaybackSession> playbackSession;
@@ -44,6 +46,8 @@
 @property (nonatomic, copy) RCTDirectEventBlock onEnterFullscreen;
 @property (nonatomic, copy) RCTDirectEventBlock onExitFullscreen;
 @property (nonatomic, copy) RCTDirectEventBlock onPlayNextVideo;
+@property (nonatomic, copy) RCTDirectEventBlock onVideoSize;
+@property (nonatomic, copy) RCTDirectEventBlock onError;
 
 -(void) seekTo:(NSNumber *)time;
 -(void)dispose;
