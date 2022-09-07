@@ -17,7 +17,7 @@
   _playbackController = [BCOVPlayerSDKManager.sharedManager createPlaybackController];
   [self createNewPlaybackController];
   _playbackController.delegate = self;
-  _playbackController.autoPlay = YES;
+  _playbackController.autoPlay = _autoPlay;
   _playbackController.autoAdvance = YES;
   _playbackController.allowsExternalPlayback = YES;
   _playbackController.allowsBackgroundAudioPlayback = YES;
@@ -28,7 +28,7 @@
   _playerView.backgroundColor = UIColor.blackColor;
   
   _targetVolume = 1.0;
-  _autoPlay = NO;
+  //_autoPlay = NO;
   
   [self addSubview:_playerView];
 }
@@ -60,7 +60,7 @@
 
   // Start playing right away (the default value for autoAdvance is NO)
   playbackController.autoAdvance = YES;
-  playbackController.autoPlay = YES;
+  playbackController.autoPlay = _autoPlay;
 
   // Register for delegate method callbacks
   playbackController.delegate = self;
@@ -176,6 +176,7 @@
 }
 - (void)setAutoPlay:(BOOL)autoPlay {
   _autoPlay = autoPlay;
+  _playbackController.autoPlay = _autoPlay
 }
 
 - (void)setPlay:(BOOL)play {
@@ -269,11 +270,11 @@
     if (self.onReady) {
       self.onReady(@{});
     }
-    if (_autoPlay) {
-        [_playbackController play];
-    } else {
-        [_playbackController pause];
-    }
+//    if (_autoPlay) {
+//        [_playbackController play];
+//    } else {
+//        [_playbackController pause];
+//    }
   } else if (lifecycleEvent.eventType == kBCOVPlaybackSessionLifecycleEventPlay) {
     _playing = true;
     [self refreshPlaybackRate];
