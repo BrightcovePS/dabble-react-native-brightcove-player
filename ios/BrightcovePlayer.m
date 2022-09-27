@@ -336,8 +336,11 @@
   }
 }
 
--(void)dispose {
-  [self.playbackController setVideos:@[]];
+-(void)dispose { //RBR -104
+    [_playerView clearSubscriber];
+    [self.playbackController pause];
+    [self.playbackController setVideos:@[]];
+    _playbackController = nil;
 }
 
 - (UIViewController *)parentViewController {
