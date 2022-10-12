@@ -11,9 +11,9 @@
 #import <BrightcovePlayerSDK/BCOVOfflineVideoManager.h>
 #import <React/RCTBridge.h>
 #import <React/UIView+React.h>
-#import <RCTBrightcovePlayer/RCTBrightcovePlayer.h>
+//#import <RCTBrightcovePlayer/RCTBrightcovePlayer.h>
 #import <BrightcovePlayerSDK/BCOVFPSBrightcoveAuthProxy.h>
-//@class PlayerView;
+@class PlayerView;
 @interface BrightcovePlayer : UIView<BCOVOfflineVideoManagerDelegate>
 
 @property (nonatomic) BCOVFPSBrightcoveAuthProxy *authProxy;

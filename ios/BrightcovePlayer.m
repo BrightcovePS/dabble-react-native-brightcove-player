@@ -1,6 +1,6 @@
 #import "BrightcovePlayer.h"
 #import "BrightcovePlayerOfflineVideoManager.h"
-//#import "react_native_brightcove_player-Swift.h"
+#import "react_native_brightcove_player-Swift.h"
 @interface BrightcovePlayer () <BCOVPlaybackControllerDelegate, BCOVPUIPlayerViewDelegate, RCTPlayerProtocol>
 @end
 
@@ -176,7 +176,7 @@
 }
 - (void)setAutoPlay:(BOOL)autoPlay {
   _autoPlay = autoPlay;
-  _playbackController.autoPlay = _autoPlay
+  _playbackController.autoPlay = _autoPlay;
 }
 
 - (void)setPlay:(BOOL)play {

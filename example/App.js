@@ -135,14 +135,14 @@ export default class App extends Component {
 
   onVideoSize = event => {
     console.log("Video Size", event.width, event.height)
-    Alert.alert(
-      'Video Size',
-      'w:' + event.width + '  h:' + event.height, // <- this part is optional, you can pass an empty string
-      [
-        {text: 'OK', onPress: () => console.log('OK Pressed')},
-      ],
-      {cancelable: false},
-    );
+    // Alert.alert(
+    //   'Video Size',
+    //   'w:' + event.width + '  h:' + event.height, // <- this part is optional, you can pass an empty string
+    //   [
+    //     {text: 'OK', onPress: () => console.log('OK Pressed')},
+    //   ],
+    //   {cancelable: false},
+    // );
   };
 
   render() {
