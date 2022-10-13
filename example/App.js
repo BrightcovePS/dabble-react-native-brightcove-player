@@ -74,12 +74,12 @@ export default class App extends Component {
       playback:
         downloadStatus && downloadStatus.downloadProgress === 1
           ? {
-              videoToken: downloadStatus.videoToken,
-              play: true
+              ...this.state.playback,
+              videoToken: downloadStatus.videoToken
             }
           : {
-              videoId: item.videoId,
-              play: true
+              ...this.state.playback,
+              videoId: item.videoId
             },
     });
   }
@@ -122,15 +122,21 @@ export default class App extends Component {
   };
 
   onError = event => {
-    Alert.alert(
-      'onError',
-      '', // <- this part is optional, you can pass an empty string
-      [
-        {text: 'OK', onPress: () => console.log('OK Pressed')},
-      ],
-      {cancelable: false},
-    );
+    // Alert.alert(
+    //   'onError',
+    //   '', // <- this part is optional, you can pass an empty string
+    //   [
+    //     {text: 'OK', onPress: () => console.log('OK Pressed')},
+    //   ],
+    //   {cancelable: false},
+    // );
     console.log("Error", event)
+  };
+  onPause = event => {
+    console.log("Pause called")
+  };
+  onPlay = event => {
+    console.log("Play called")
   };
 
   onVideoSize = event => {
@@ -160,6 +166,8 @@ export default class App extends Component {
           onPlayNextVideo={this.onPlayNext}
           onError={this.onError}
           onVideoSize={this.onVideoSize}
+          onPause={this.onPause}
+          onPlay={this.onPlay}
         />
         <TouchableOpacity
           style={styles.playPauseButton}
@@ -242,7 +250,7 @@ const styles = StyleSheet.create({
   },
   video: {
     width: '100%',
-    height: 260,
+    height: 260
   },
   list: {
     flex: 1,
