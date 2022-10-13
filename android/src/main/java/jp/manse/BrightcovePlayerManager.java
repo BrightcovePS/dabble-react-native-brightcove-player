@@ -61,6 +61,8 @@ public class BrightcovePlayerManager extends ViewGroupManager<BrightcovePlayerVi
     public static final String HEIGHT = "height";
     public static final String WIDTH = "width";
     public static final String ERROR = "error";
+    public static final String DISPOSE = "dispose";
+    public static final int COMMAND_DISPOSE = 2;
 
     private final ReactApplicationContext applicationContext;
 
@@ -154,10 +156,10 @@ public class BrightcovePlayerManager extends ViewGroupManager<BrightcovePlayerVi
 
     @Override
     public Map<String, Integer> getCommandsMap() {
-        return MapBuilder.of(
-                EventType.SEEK_TO,
-                COMMAND_SEEK_TO
-        );
+        Map<String, Integer> commandMap = new HashMap<>();
+        commandMap.put(EventType.SEEK_TO, COMMAND_SEEK_TO);
+        commandMap.put(DISPOSE, COMMAND_DISPOSE);
+        return commandMap;
     }
 
     @ReactProp(name = SEEK_DURATION)
@@ -165,13 +167,14 @@ public class BrightcovePlayerManager extends ViewGroupManager<BrightcovePlayerVi
         view.setSeekDuration((long) seekDuration);
     }
 
-
     @Override
     public void receiveCommand(BrightcovePlayerView view, int commandType, @Nullable ReadableArray args) {
         Assertions.assertNotNull(view);
         Assertions.assertNotNull(args);
         if (commandType == COMMAND_SEEK_TO && args != null) {
             view.seekTo((long) (args.getDouble(0) * ONE_SEC));
+        } else if (commandType == COMMAND_DISPOSE) {
+            view.dispose();
         }
     }
 
