@@ -79,7 +79,7 @@ public class BrightcovePlayerView extends RelativeLayout implements LifecycleEve
     private String referenceId;
     private String videoToken;
     private long seekDuration = SEEK_OFFSET;
-    private boolean autoPlay = true;
+    private boolean autoPlay = false;
     private boolean playing = false;
     private int bitRate = 0;
     private float playbackRate = 1;
@@ -101,21 +101,9 @@ public class BrightcovePlayerView extends RelativeLayout implements LifecycleEve
         sendJSEvent(BrightcovePlayerManager.EVENT_ON_PLAY_NEXT_VIDEO, event);
         playVideo(video);
     };
-    /**
-     * Please do not use this variable any other purpose. it may lead into video size issue
-     * one of condition to refresh the video size
-     **/
-    private int prevOrientationForRefreshVideoLayout = Configuration.ORIENTATION_PORTRAIT;
 
-    /**
-     * Please do not use this variable any other purpose. it may lead into video size issue
-     * one of condition to refresh the video size
-     **/
-    private boolean prevFullscreenForRefreshVideoLayout = false;
-
-    // Storing this view height and width for accurate video sizing on refresh layout operation
-    private int viewHeight;
-    private int viewWidth;
+    private float aspectRatio;
+    private VideoSize videoSize = new VideoSize();
 
     public BrightcovePlayerView(ThemedReactContext context, ReactApplicationContext applicationContext) {
         super(context);
@@ -140,7 +128,8 @@ public class BrightcovePlayerView extends RelativeLayout implements LifecycleEve
         EventListener eventListener = event -> {
             switch (event.getType()) {
                 case EventType.VIDEO_SIZE_KNOWN:
-                    refreshVideoLayoutSize(true);
+                    calculateAspectRatio(event);
+                    refreshVideoLayoutSize();
                     updateBitRate();
                     updatePlaybackRate();
                     break;
@@ -166,7 +155,7 @@ public class BrightcovePlayerView extends RelativeLayout implements LifecycleEve
                     if (playHead != null) {
                         progressMap.putDouble(CURRENT_TIME, playHead / ONE_SEC_DOUBLE);
                     }
-                    refreshVideoLayoutSize(false);
+                    refreshVideoLayoutSize();
                     sendJSEvent(BrightcovePlayerManager.EVENT_PROGRESS, progressMap);
                     break;
                 case EventType.VIDEO_DURATION_CHANGED:
@@ -189,11 +178,11 @@ public class BrightcovePlayerView extends RelativeLayout implements LifecycleEve
                 case EventType.ENTER_FULL_SCREEN:
                 case EventType.EXIT_FULL_SCREEN:
                     mediaController.hide();
-                    requestLayout();
                     break;
                 case EventType.DID_EXIT_FULL_SCREEN:
                 case EventType.DID_ENTER_FULL_SCREEN:
                     onToggleFullScreen();
+                    updateVideoSizeAfterADelay();
                     break;
                 case EventType.ERROR:
                 case EventType.AD_ERROR:
@@ -493,56 +482,56 @@ public class BrightcovePlayerView extends RelativeLayout implements LifecycleEve
      * Fullscreen / normal mode.
      * Portrait / landscape
      *
-     * @param isVideoSizeKnownEvent to apply video size without any conditions on [EventType.VIDEO_SIZE_KNOWN] event listen
      **/
-    private void refreshVideoLayoutSize(boolean isVideoSizeKnownEvent) {
-        int orientation = getResources().getConfiguration().orientation;
+    private void refreshVideoLayoutSize() {
 
-        if (isVideoSizeKnownEvent || orientation != this.prevOrientationForRefreshVideoLayout || playerVideoView.isFullScreen() != prevFullscreenForRefreshVideoLayout) {
-            // Get the width and height from player surface view render view
-            float width = Objects.requireNonNull(playerVideoView.getRenderView()).getWidth();
-            float height = Objects.requireNonNull(playerVideoView.getRenderView()).getHeight();
+        int viewWidth = getMeasuredWidth();
+        int viewHeight = getMeasuredHeight();
 
-            int videoWidth = (int) width;
-            int videoHeight = (int) height;
-            float aspectRatio;
+        if ((viewHeight > 0 && viewWidth > 0)) {
 
-            // Calculate video player size as per player surface view render size
-            if (viewWidth > viewHeight) {
-                aspectRatio = width / height;
-                videoHeight = viewHeight;
-                videoWidth = (int) (videoHeight * aspectRatio);
-            } else if (viewHeight > viewWidth) {
-                aspectRatio = height / width;
-                videoWidth = viewWidth;
-                videoHeight = (int) (videoWidth * aspectRatio);
+            VideoSize calculatedSize = calculateVideoSize(viewWidth, viewHeight);
+            if (!calculatedSize.equals(videoSize)) {
+                videoSize = calculatedSize;
+
+                // Apply video width and height to player view
+                RelativeLayout.LayoutParams layoutParams = new RelativeLayout.LayoutParams(videoSize.width, videoSize.height);
+                layoutParams.addRule(CENTER_IN_PARENT, TRUE);
+                playerVideoView.setLayoutParams(layoutParams);
+
+                WritableMap event = Arguments.createMap();
+                event.putInt(BrightcovePlayerManager.WIDTH, videoSize.width);
+                event.putInt(BrightcovePlayerManager.HEIGHT, videoSize.height);
+                sendJSEvent(BrightcovePlayerManager.EVENT_ON_VIDEO_SIZE, event);
             }
-
-            // Reconfiguring the previously calculated video size when calculated video width/height overflow on screen
-            if (videoWidth > viewWidth) {
-                aspectRatio = height / width;
-                videoWidth = viewWidth;
-                videoHeight = (int) (videoWidth * aspectRatio);
-            } else if (videoHeight > viewHeight) {
-                aspectRatio = width / height;
-                videoHeight = viewHeight;
-                videoWidth = (int) (videoHeight * aspectRatio);
-            }
-
-            // Apply video width and height to player view
-            RelativeLayout.LayoutParams layoutParams = new RelativeLayout.LayoutParams(videoWidth, videoHeight);
-            layoutParams.addRule(CENTER_IN_PARENT, TRUE);
-            playerVideoView.setLayoutParams(layoutParams);
-
-            WritableMap event = Arguments.createMap();
-            event.putInt(BrightcovePlayerManager.WIDTH, videoWidth);
-            event.putInt(BrightcovePlayerManager.HEIGHT, videoHeight);
-            sendJSEvent(BrightcovePlayerManager.EVENT_ON_VIDEO_SIZE, event);
-
-            // Cache previous state of orientation and fullscreen to refresh video player size only these state changes
-            this.prevOrientationForRefreshVideoLayout = orientation;
-            this.prevFullscreenForRefreshVideoLayout = playerVideoView.isFullScreen();
         }
+    }
+
+    private VideoSize calculateVideoSize(int viewWidth, int viewHeight){
+        VideoSize videoSize = new VideoSize();
+        if (viewWidth > viewHeight) {
+            videoSize.height = viewHeight;
+            videoSize.width = (int) (viewHeight * aspectRatio);
+        } else {
+            videoSize.width = viewWidth;
+            videoSize.height = (int) (viewWidth / aspectRatio);
+        }
+
+        // Reconfiguring the previously calculated video size when calculated video width/height overflow on screen
+        if (videoSize.width > viewWidth) {
+            videoSize.width = viewWidth;
+            videoSize.height = (int) (viewWidth / aspectRatio);
+        } else if (videoSize.height > viewHeight) {
+            videoSize.height = viewHeight;
+            videoSize.width = (int) (viewHeight * aspectRatio);
+        }
+        return videoSize;
+    }
+
+    private void calculateAspectRatio(Event event) {
+        int width = (int) event.getProperty(Event.VIDEO_WIDTH);
+        int height = (int) event.getProperty(Event.VIDEO_HEIGHT);
+        aspectRatio = ((float) width / height);
     }
 
     private void printKeys(Map<String, Object> map) {
@@ -589,6 +578,10 @@ public class BrightcovePlayerView extends RelativeLayout implements LifecycleEve
         }
     }
 
+    private void updateVideoSizeAfterADelay() {
+        new Handler().postDelayed(this::refreshVideoLayoutSize, 500);
+    }
+
     private void onError(String message) {
         WritableMap map = Arguments.createMap();
         map.putString(BrightcovePlayerManager.ERROR, message);
@@ -599,9 +592,6 @@ public class BrightcovePlayerView extends RelativeLayout implements LifecycleEve
     protected void onSizeChanged(int width, int height, int oldw, int oldh) {
         upNextViewOverlay.onPlayerSizeChanged(width, height);
         super.onSizeChanged(width, height, oldw, oldh);
-        // Storing view size to calculate video view in better manner
-        viewHeight = height;
-        viewWidth = width;
     }
 
     @Override
@@ -618,11 +608,7 @@ public class BrightcovePlayerView extends RelativeLayout implements LifecycleEve
 
     @Override
     public void onHostDestroy() {
-        this.playerVideoView.destroyDrawingCache();
-        this.playerVideoView.clear();
-        upNextViewOverlay.dispose();
-        this.removeAllViews();
-        this.applicationContext.removeLifecycleEventListener(this);
+        dispose();
     }
 
     @Override
@@ -641,6 +627,42 @@ public class BrightcovePlayerView extends RelativeLayout implements LifecycleEve
         // Pause the video when it looses focus
         if (!hasFocus && playerVideoView.isPlaying()) {
             playerVideoView.pause();
+        }
+    }
+
+    @Override
+    public void dispatchConfigurationChanged(Configuration newConfig) {
+        super.dispatchConfigurationChanged(newConfig);
+        updateVideoSizeAfterADelay();
+    }
+
+    public void dispose() {
+        audioFocusManager.unregisterListener();
+        Objects.requireNonNull(playerVideoView.getRenderView()).release();
+        playerVideoView.destroyDrawingCache();
+        playerVideoView.clear();
+        playerVideoView.removeListeners();
+        upNextViewOverlay.dispose();
+        playerVideoView.getBrightcoveMediaController().removeListeners();
+        this.removeAllViews();
+        this.applicationContext.removeLifecycleEventListener(this);
+    }
+
+    static class VideoSize {
+        public int height;
+        public int width;
+
+        @Override
+        public boolean equals(Object size) {
+            if (this == size) return true;
+            if (size == null || getClass() != size.getClass()) return false;
+            VideoSize videoSize = (VideoSize) size;
+            return height == videoSize.height && width == videoSize.width;
+        }
+
+        @Override
+        public int hashCode() {
+            return Objects.hash(height, width);
         }
     }
 }
