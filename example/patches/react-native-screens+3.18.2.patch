@@ -1,0 +1,598 @@
+diff --git a/node_modules/react-native-screens/android/build.gradle b/node_modules/react-native-screens/android/build.gradle
+index 58fe0e4..ec7db75 100644
+--- a/node_modules/react-native-screens/android/build.gradle
++++ b/node_modules/react-native-screens/android/build.gradle
+@@ -97,7 +97,11 @@ repositories {
+         // https://github.com/facebook/react-native/blob/1e8f3b11027fe0a7514b4fc97d0798d3c64bc895/local-cli/templates/HelloWorld/android/build.gradle#L21
+         url "$projectDir/../node_modules/react-native/android"
+     }
+-    mavenCentral()
++    mavenCentral {
++        content {
++            excludeGroup("com.facebook.react")
++        }
++    }
+     mavenLocal()
+     google()
+ }
+diff --git a/node_modules/react-native-screens/android/build/intermediates/aapt_friendly_merged_manifests/debug/aapt/AndroidManifest.xml b/node_modules/react-native-screens/android/build/intermediates/aapt_friendly_merged_manifests/debug/aapt/AndroidManifest.xml
+new file mode 100644
+index 0000000..24b6f33
+--- /dev/null
++++ b/node_modules/react-native-screens/android/build/intermediates/aapt_friendly_merged_manifests/debug/aapt/AndroidManifest.xml
+@@ -0,0 +1,9 @@
++<?xml version="1.0" encoding="utf-8"?>
++<manifest xmlns:android="http://schemas.android.com/apk/res/android"
++    package="com.swmansion.rnscreens" >
++
++    <uses-sdk
++        android:minSdkVersion="21"
++        android:targetSdkVersion="32" />
++
++</manifest>
+\ No newline at end of file
+diff --git a/node_modules/react-native-screens/android/build/intermediates/aapt_friendly_merged_manifests/debug/aapt/output-metadata.json b/node_modules/react-native-screens/android/build/intermediates/aapt_friendly_merged_manifests/debug/aapt/output-metadata.json
+new file mode 100644
+index 0000000..37294a0
+--- /dev/null
++++ b/node_modules/react-native-screens/android/build/intermediates/aapt_friendly_merged_manifests/debug/aapt/output-metadata.json
+@@ -0,0 +1,18 @@
++{
++  "version": 3,
++  "artifactType": {
++    "type": "AAPT_FRIENDLY_MERGED_MANIFESTS",
++    "kind": "Directory"
++  },
++  "applicationId": "com.swmansion.rnscreens",
++  "variantName": "debug",
++  "elements": [
++    {
++      "type": "SINGLE",
++      "filters": [],
++      "attributes": [],
++      "outputFile": "AndroidManifest.xml"
++    }
++  ],
++  "elementType": "File"
++}
+\ No newline at end of file
+diff --git a/node_modules/react-native-screens/android/build/intermediates/aar_metadata/debug/aar-metadata.properties b/node_modules/react-native-screens/android/build/intermediates/aar_metadata/debug/aar-metadata.properties
+new file mode 100644
+index 0000000..8c9c699
+--- /dev/null
++++ b/node_modules/react-native-screens/android/build/intermediates/aar_metadata/debug/aar-metadata.properties
+@@ -0,0 +1,4 @@
++aarFormatVersion=1.0
++aarMetadataVersion=1.0
++minCompileSdk=1
++minAndroidGradlePluginVersion=1.0.0
+diff --git a/node_modules/react-native-screens/android/build/intermediates/compiled_local_resources/debug/out/anim_rns_default_enter_in.xml.flat b/node_modules/react-native-screens/android/build/intermediates/compiled_local_resources/debug/out/anim_rns_default_enter_in.xml.flat
+new file mode 100644
+index 0000000..6b0493e
+Binary files /dev/null and b/node_modules/react-native-screens/android/build/intermediates/compiled_local_resources/debug/out/anim_rns_default_enter_in.xml.flat differ
+diff --git a/node_modules/react-native-screens/android/build/intermediates/compiled_local_resources/debug/out/anim_rns_default_enter_out.xml.flat b/node_modules/react-native-screens/android/build/intermediates/compiled_local_resources/debug/out/anim_rns_default_enter_out.xml.flat
+new file mode 100644
+index 0000000..c3292eb
+Binary files /dev/null and b/node_modules/react-native-screens/android/build/intermediates/compiled_local_resources/debug/out/anim_rns_default_enter_out.xml.flat differ
+diff --git a/node_modules/react-native-screens/android/build/intermediates/compiled_local_resources/debug/out/anim_rns_default_exit_in.xml.flat b/node_modules/react-native-screens/android/build/intermediates/compiled_local_resources/debug/out/anim_rns_default_exit_in.xml.flat
+new file mode 100644
+index 0000000..0f0fc1a
+Binary files /dev/null and b/node_modules/react-native-screens/android/build/intermediates/compiled_local_resources/debug/out/anim_rns_default_exit_in.xml.flat differ
+diff --git a/node_modules/react-native-screens/android/build/intermediates/compiled_local_resources/debug/out/anim_rns_default_exit_out.xml.flat b/node_modules/react-native-screens/android/build/intermediates/compiled_local_resources/debug/out/anim_rns_default_exit_out.xml.flat
+new file mode 100644
+index 0000000..c6c37bd
+Binary files /dev/null and b/node_modules/react-native-screens/android/build/intermediates/compiled_local_resources/debug/out/anim_rns_default_exit_out.xml.flat differ
+diff --git a/node_modules/react-native-screens/android/build/intermediates/compiled_local_resources/debug/out/anim_rns_fade_from_bottom.xml.flat b/node_modules/react-native-screens/android/build/intermediates/compiled_local_resources/debug/out/anim_rns_fade_from_bottom.xml.flat
+new file mode 100644
+index 0000000..c92ba86
+Binary files /dev/null and b/node_modules/react-native-screens/android/build/intermediates/compiled_local_resources/debug/out/anim_rns_fade_from_bottom.xml.flat differ
+diff --git a/node_modules/react-native-screens/android/build/intermediates/compiled_local_resources/debug/out/anim_rns_fade_in.xml.flat b/node_modules/react-native-screens/android/build/intermediates/compiled_local_resources/debug/out/anim_rns_fade_in.xml.flat
+new file mode 100644
+index 0000000..8187a2b
+Binary files /dev/null and b/node_modules/react-native-screens/android/build/intermediates/compiled_local_resources/debug/out/anim_rns_fade_in.xml.flat differ
+diff --git a/node_modules/react-native-screens/android/build/intermediates/compiled_local_resources/debug/out/anim_rns_fade_out.xml.flat b/node_modules/react-native-screens/android/build/intermediates/compiled_local_resources/debug/out/anim_rns_fade_out.xml.flat
+new file mode 100644
+index 0000000..9705759
+Binary files /dev/null and b/node_modules/react-native-screens/android/build/intermediates/compiled_local_resources/debug/out/anim_rns_fade_out.xml.flat differ
+diff --git a/node_modules/react-native-screens/android/build/intermediates/compiled_local_resources/debug/out/anim_rns_fade_to_bottom.xml.flat b/node_modules/react-native-screens/android/build/intermediates/compiled_local_resources/debug/out/anim_rns_fade_to_bottom.xml.flat
+new file mode 100644
+index 0000000..c30b80a
+Binary files /dev/null and b/node_modules/react-native-screens/android/build/intermediates/compiled_local_resources/debug/out/anim_rns_fade_to_bottom.xml.flat differ
+diff --git a/node_modules/react-native-screens/android/build/intermediates/compiled_local_resources/debug/out/anim_rns_no_animation_20.xml.flat b/node_modules/react-native-screens/android/build/intermediates/compiled_local_resources/debug/out/anim_rns_no_animation_20.xml.flat
+new file mode 100644
+index 0000000..3369f6c
+Binary files /dev/null and b/node_modules/react-native-screens/android/build/intermediates/compiled_local_resources/debug/out/anim_rns_no_animation_20.xml.flat differ
+diff --git a/node_modules/react-native-screens/android/build/intermediates/compiled_local_resources/debug/out/anim_rns_no_animation_250.xml.flat b/node_modules/react-native-screens/android/build/intermediates/compiled_local_resources/debug/out/anim_rns_no_animation_250.xml.flat
+new file mode 100644
+index 0000000..a15f05e
+Binary files /dev/null and b/node_modules/react-native-screens/android/build/intermediates/compiled_local_resources/debug/out/anim_rns_no_animation_250.xml.flat differ
+diff --git a/node_modules/react-native-screens/android/build/intermediates/compiled_local_resources/debug/out/anim_rns_no_animation_350.xml.flat b/node_modules/react-native-screens/android/build/intermediates/compiled_local_resources/debug/out/anim_rns_no_animation_350.xml.flat
+new file mode 100644
+index 0000000..bff7d9d
+Binary files /dev/null and b/node_modules/react-native-screens/android/build/intermediates/compiled_local_resources/debug/out/anim_rns_no_animation_350.xml.flat differ
+diff --git a/node_modules/react-native-screens/android/build/intermediates/compiled_local_resources/debug/out/anim_rns_no_animation_medium.xml.flat b/node_modules/react-native-screens/android/build/intermediates/compiled_local_resources/debug/out/anim_rns_no_animation_medium.xml.flat
+new file mode 100644
+index 0000000..a561b72
+Binary files /dev/null and b/node_modules/react-native-screens/android/build/intermediates/compiled_local_resources/debug/out/anim_rns_no_animation_medium.xml.flat differ
+diff --git a/node_modules/react-native-screens/android/build/intermediates/compiled_local_resources/debug/out/anim_rns_slide_in_from_bottom.xml.flat b/node_modules/react-native-screens/android/build/intermediates/compiled_local_resources/debug/out/anim_rns_slide_in_from_bottom.xml.flat
+new file mode 100644
+index 0000000..7f7b848
+Binary files /dev/null and b/node_modules/react-native-screens/android/build/intermediates/compiled_local_resources/debug/out/anim_rns_slide_in_from_bottom.xml.flat differ
+diff --git a/node_modules/react-native-screens/android/build/intermediates/compiled_local_resources/debug/out/anim_rns_slide_in_from_left.xml.flat b/node_modules/react-native-screens/android/build/intermediates/compiled_local_resources/debug/out/anim_rns_slide_in_from_left.xml.flat
+new file mode 100644
+index 0000000..91d8c4c
+Binary files /dev/null and b/node_modules/react-native-screens/android/build/intermediates/compiled_local_resources/debug/out/anim_rns_slide_in_from_left.xml.flat differ
+diff --git a/node_modules/react-native-screens/android/build/intermediates/compiled_local_resources/debug/out/anim_rns_slide_in_from_right.xml.flat b/node_modules/react-native-screens/android/build/intermediates/compiled_local_resources/debug/out/anim_rns_slide_in_from_right.xml.flat
+new file mode 100644
+index 0000000..43f3815
+Binary files /dev/null and b/node_modules/react-native-screens/android/build/intermediates/compiled_local_resources/debug/out/anim_rns_slide_in_from_right.xml.flat differ
+diff --git a/node_modules/react-native-screens/android/build/intermediates/compiled_local_resources/debug/out/anim_rns_slide_out_to_bottom.xml.flat b/node_modules/react-native-screens/android/build/intermediates/compiled_local_resources/debug/out/anim_rns_slide_out_to_bottom.xml.flat
+new file mode 100644
+index 0000000..6d3b9ae
+Binary files /dev/null and b/node_modules/react-native-screens/android/build/intermediates/compiled_local_resources/debug/out/anim_rns_slide_out_to_bottom.xml.flat differ
+diff --git a/node_modules/react-native-screens/android/build/intermediates/compiled_local_resources/debug/out/anim_rns_slide_out_to_left.xml.flat b/node_modules/react-native-screens/android/build/intermediates/compiled_local_resources/debug/out/anim_rns_slide_out_to_left.xml.flat
+new file mode 100644
+index 0000000..94ea122
+Binary files /dev/null and b/node_modules/react-native-screens/android/build/intermediates/compiled_local_resources/debug/out/anim_rns_slide_out_to_left.xml.flat differ
+diff --git a/node_modules/react-native-screens/android/build/intermediates/compiled_local_resources/debug/out/anim_rns_slide_out_to_right.xml.flat b/node_modules/react-native-screens/android/build/intermediates/compiled_local_resources/debug/out/anim_rns_slide_out_to_right.xml.flat
+new file mode 100644
+index 0000000..b9a0077
+Binary files /dev/null and b/node_modules/react-native-screens/android/build/intermediates/compiled_local_resources/debug/out/anim_rns_slide_out_to_right.xml.flat differ
+diff --git a/node_modules/react-native-screens/android/build/intermediates/incremental/debug/packageDebugResources/compile-file-map.properties b/node_modules/react-native-screens/android/build/intermediates/incremental/debug/packageDebugResources/compile-file-map.properties
+new file mode 100644
+index 0000000..e959656
+--- /dev/null
++++ b/node_modules/react-native-screens/android/build/intermediates/incremental/debug/packageDebugResources/compile-file-map.properties
+@@ -0,0 +1,19 @@
++#Thu Apr 13 16:33:42 IST 2023
++com.swmansion.rnscreens.react-native-screens-main-7\:/anim/rns_fade_to_bottom.xml=/Users/palaniarunagiri/Documents/Develop/react-native-projects/One31-React-Native-Wrapper/example/node_modules/react-native-screens/android/build/intermediates/packaged_res/debug/anim/rns_fade_to_bottom.xml
++com.swmansion.rnscreens.react-native-screens-main-7\:/anim/rns_fade_out.xml=/Users/palaniarunagiri/Documents/Develop/react-native-projects/One31-React-Native-Wrapper/example/node_modules/react-native-screens/android/build/intermediates/packaged_res/debug/anim/rns_fade_out.xml
++com.swmansion.rnscreens.react-native-screens-main-7\:/anim/rns_no_animation_20.xml=/Users/palaniarunagiri/Documents/Develop/react-native-projects/One31-React-Native-Wrapper/example/node_modules/react-native-screens/android/build/intermediates/packaged_res/debug/anim/rns_no_animation_20.xml
++com.swmansion.rnscreens.react-native-screens-main-7\:/anim/rns_default_exit_out.xml=/Users/palaniarunagiri/Documents/Develop/react-native-projects/One31-React-Native-Wrapper/example/node_modules/react-native-screens/android/build/intermediates/packaged_res/debug/anim/rns_default_exit_out.xml
++com.swmansion.rnscreens.react-native-screens-main-7\:/anim/rns_default_exit_in.xml=/Users/palaniarunagiri/Documents/Develop/react-native-projects/One31-React-Native-Wrapper/example/node_modules/react-native-screens/android/build/intermediates/packaged_res/debug/anim/rns_default_exit_in.xml
++com.swmansion.rnscreens.react-native-screens-main-7\:/anim/rns_default_enter_in.xml=/Users/palaniarunagiri/Documents/Develop/react-native-projects/One31-React-Native-Wrapper/example/node_modules/react-native-screens/android/build/intermediates/packaged_res/debug/anim/rns_default_enter_in.xml
++com.swmansion.rnscreens.react-native-screens-main-7\:/anim/rns_slide_in_from_left.xml=/Users/palaniarunagiri/Documents/Develop/react-native-projects/One31-React-Native-Wrapper/example/node_modules/react-native-screens/android/build/intermediates/packaged_res/debug/anim/rns_slide_in_from_left.xml
++com.swmansion.rnscreens.react-native-screens-main-7\:/anim/rns_slide_out_to_left.xml=/Users/palaniarunagiri/Documents/Develop/react-native-projects/One31-React-Native-Wrapper/example/node_modules/react-native-screens/android/build/intermediates/packaged_res/debug/anim/rns_slide_out_to_left.xml
++com.swmansion.rnscreens.react-native-screens-main-7\:/anim/rns_default_enter_out.xml=/Users/palaniarunagiri/Documents/Develop/react-native-projects/One31-React-Native-Wrapper/example/node_modules/react-native-screens/android/build/intermediates/packaged_res/debug/anim/rns_default_enter_out.xml
++com.swmansion.rnscreens.react-native-screens-main-7\:/anim/rns_no_animation_250.xml=/Users/palaniarunagiri/Documents/Develop/react-native-projects/One31-React-Native-Wrapper/example/node_modules/react-native-screens/android/build/intermediates/packaged_res/debug/anim/rns_no_animation_250.xml
++com.swmansion.rnscreens.react-native-screens-main-7\:/anim/rns_no_animation_medium.xml=/Users/palaniarunagiri/Documents/Develop/react-native-projects/One31-React-Native-Wrapper/example/node_modules/react-native-screens/android/build/intermediates/packaged_res/debug/anim/rns_no_animation_medium.xml
++com.swmansion.rnscreens.react-native-screens-main-7\:/anim/rns_slide_in_from_bottom.xml=/Users/palaniarunagiri/Documents/Develop/react-native-projects/One31-React-Native-Wrapper/example/node_modules/react-native-screens/android/build/intermediates/packaged_res/debug/anim/rns_slide_in_from_bottom.xml
++com.swmansion.rnscreens.react-native-screens-main-7\:/anim/rns_fade_from_bottom.xml=/Users/palaniarunagiri/Documents/Develop/react-native-projects/One31-React-Native-Wrapper/example/node_modules/react-native-screens/android/build/intermediates/packaged_res/debug/anim/rns_fade_from_bottom.xml
++com.swmansion.rnscreens.react-native-screens-main-7\:/anim/rns_no_animation_350.xml=/Users/palaniarunagiri/Documents/Develop/react-native-projects/One31-React-Native-Wrapper/example/node_modules/react-native-screens/android/build/intermediates/packaged_res/debug/anim/rns_no_animation_350.xml
++com.swmansion.rnscreens.react-native-screens-main-7\:/anim/rns_slide_in_from_right.xml=/Users/palaniarunagiri/Documents/Develop/react-native-projects/One31-React-Native-Wrapper/example/node_modules/react-native-screens/android/build/intermediates/packaged_res/debug/anim/rns_slide_in_from_right.xml
++com.swmansion.rnscreens.react-native-screens-main-7\:/anim/rns_fade_in.xml=/Users/palaniarunagiri/Documents/Develop/react-native-projects/One31-React-Native-Wrapper/example/node_modules/react-native-screens/android/build/intermediates/packaged_res/debug/anim/rns_fade_in.xml
++com.swmansion.rnscreens.react-native-screens-main-7\:/anim/rns_slide_out_to_right.xml=/Users/palaniarunagiri/Documents/Develop/react-native-projects/One31-React-Native-Wrapper/example/node_modules/react-native-screens/android/build/intermediates/packaged_res/debug/anim/rns_slide_out_to_right.xml
++com.swmansion.rnscreens.react-native-screens-main-7\:/anim/rns_slide_out_to_bottom.xml=/Users/palaniarunagiri/Documents/Develop/react-native-projects/One31-React-Native-Wrapper/example/node_modules/react-native-screens/android/build/intermediates/packaged_res/debug/anim/rns_slide_out_to_bottom.xml
+diff --git a/node_modules/react-native-screens/android/build/intermediates/incremental/debug/packageDebugResources/merger.xml b/node_modules/react-native-screens/android/build/intermediates/incremental/debug/packageDebugResources/merger.xml
+new file mode 100644
+index 0000000..5b36109
+--- /dev/null
++++ b/node_modules/react-native-screens/android/build/intermediates/incremental/debug/packageDebugResources/merger.xml
+@@ -0,0 +1,2 @@
++<?xml version="1.0" encoding="utf-8"?>
++<merger version="3"><dataSet aapt-namespace="http://schemas.android.com/apk/res-auto" config="main$Generated" generated="true" ignore_pattern="!.svn:!.git:!.ds_store:!*.scc:.*:&lt;dir>_*:!CVS:!thumbs.db:!picasa.ini:!*~"><source path="/Users/palaniarunagiri/Documents/Develop/react-native-projects/One31-React-Native-Wrapper/example/node_modules/react-native-screens/android/src/main/res"/><source path="/Users/palaniarunagiri/Documents/Develop/react-native-projects/One31-React-Native-Wrapper/example/node_modules/react-native-screens/android/build/generated/res/rs/debug"/><source path="/Users/palaniarunagiri/Documents/Develop/react-native-projects/One31-React-Native-Wrapper/example/node_modules/react-native-screens/android/build/generated/res/resValues/debug"/></dataSet><dataSet aapt-namespace="http://schemas.android.com/apk/res-auto" config="main" generated-set="main$Generated" ignore_pattern="!.svn:!.git:!.ds_store:!*.scc:.*:&lt;dir>_*:!CVS:!thumbs.db:!picasa.ini:!*~"><source path="/Users/palaniarunagiri/Documents/Develop/react-native-projects/One31-React-Native-Wrapper/example/node_modules/react-native-screens/android/src/main/res"><file name="rns_slide_in_from_right" path="/Users/palaniarunagiri/Documents/Develop/react-native-projects/One31-React-Native-Wrapper/example/node_modules/react-native-screens/android/src/main/res/anim/rns_slide_in_from_right.xml" qualifiers="" type="anim"/><file name="rns_fade_in" path="/Users/palaniarunagiri/Documents/Develop/react-native-projects/One31-React-Native-Wrapper/example/node_modules/react-native-screens/android/src/main/res/anim/rns_fade_in.xml" qualifiers="" type="anim"/><file name="rns_slide_out_to_right" path="/Users/palaniarunagiri/Documents/Develop/react-native-projects/One31-React-Native-Wrapper/example/node_modules/react-native-screens/android/src/main/res/anim/rns_slide_out_to_right.xml" qualifiers="" type="anim"/><file name="rns_slide_out_to_left" path="/Users/palaniarunagiri/Documents/Develop/react-native-projects/One31-React-Native-Wrapper/example/node_modules/react-native-screens/android/src/main/res/anim/rns_slide_out_to_left.xml" qualifiers="" type="anim"/><file name="rns_default_enter_out" path="/Users/palaniarunagiri/Documents/Develop/react-native-projects/One31-React-Native-Wrapper/example/node_modules/react-native-screens/android/src/main/res/anim/rns_default_enter_out.xml" qualifiers="" type="anim"/><file name="rns_slide_in_from_bottom" path="/Users/palaniarunagiri/Documents/Develop/react-native-projects/One31-React-Native-Wrapper/example/node_modules/react-native-screens/android/src/main/res/anim/rns_slide_in_from_bottom.xml" qualifiers="" type="anim"/><file name="rns_no_animation_medium" path="/Users/palaniarunagiri/Documents/Develop/react-native-projects/One31-React-Native-Wrapper/example/node_modules/react-native-screens/android/src/main/res/anim/rns_no_animation_medium.xml" qualifiers="" type="anim"/><file name="rns_default_exit_out" path="/Users/palaniarunagiri/Documents/Develop/react-native-projects/One31-React-Native-Wrapper/example/node_modules/react-native-screens/android/src/main/res/anim/rns_default_exit_out.xml" qualifiers="" type="anim"/><file name="rns_no_animation_20" path="/Users/palaniarunagiri/Documents/Develop/react-native-projects/One31-React-Native-Wrapper/example/node_modules/react-native-screens/android/src/main/res/anim/rns_no_animation_20.xml" qualifiers="" type="anim"/><file name="rns_fade_from_bottom" path="/Users/palaniarunagiri/Documents/Develop/react-native-projects/One31-React-Native-Wrapper/example/node_modules/react-native-screens/android/src/main/res/anim/rns_fade_from_bottom.xml" qualifiers="" type="anim"/><file name="rns_no_animation_350" path="/Users/palaniarunagiri/Documents/Develop/react-native-projects/One31-React-Native-Wrapper/example/node_modules/react-native-screens/android/src/main/res/anim/rns_no_animation_350.xml" qualifiers="" type="anim"/><file name="rns_fade_out" path="/Users/palaniarunagiri/Documents/Develop/react-native-projects/One31-React-Native-Wrapper/example/node_modules/react-native-screens/android/src/main/res/anim/rns_fade_out.xml" qualifiers="" type="anim"/><file name="rns_fade_to_bottom" path="/Users/palaniarunagiri/Documents/Develop/react-native-projects/One31-React-Native-Wrapper/example/node_modules/react-native-screens/android/src/main/res/anim/rns_fade_to_bottom.xml" qualifiers="" type="anim"/><file name="rns_slide_in_from_left" path="/Users/palaniarunagiri/Documents/Develop/react-native-projects/One31-React-Native-Wrapper/example/node_modules/react-native-screens/android/src/main/res/anim/rns_slide_in_from_left.xml" qualifiers="" type="anim"/><file name="rns_default_exit_in" path="/Users/palaniarunagiri/Documents/Develop/react-native-projects/One31-React-Native-Wrapper/example/node_modules/react-native-screens/android/src/main/res/anim/rns_default_exit_in.xml" qualifiers="" type="anim"/><file name="rns_no_animation_250" path="/Users/palaniarunagiri/Documents/Develop/react-native-projects/One31-React-Native-Wrapper/example/node_modules/react-native-screens/android/src/main/res/anim/rns_no_animation_250.xml" qualifiers="" type="anim"/><file name="rns_default_enter_in" path="/Users/palaniarunagiri/Documents/Develop/react-native-projects/One31-React-Native-Wrapper/example/node_modules/react-native-screens/android/src/main/res/anim/rns_default_enter_in.xml" qualifiers="" type="anim"/><file name="rns_slide_out_to_bottom" path="/Users/palaniarunagiri/Documents/Develop/react-native-projects/One31-React-Native-Wrapper/example/node_modules/react-native-screens/android/src/main/res/anim/rns_slide_out_to_bottom.xml" qualifiers="" type="anim"/></source><source path="/Users/palaniarunagiri/Documents/Develop/react-native-projects/One31-React-Native-Wrapper/example/node_modules/react-native-screens/android/build/generated/res/rs/debug"/><source path="/Users/palaniarunagiri/Documents/Develop/react-native-projects/One31-React-Native-Wrapper/example/node_modules/react-native-screens/android/build/generated/res/resValues/debug"/></dataSet><dataSet aapt-namespace="http://schemas.android.com/apk/res-auto" config="debug$Generated" generated="true" ignore_pattern="!.svn:!.git:!.ds_store:!*.scc:.*:&lt;dir>_*:!CVS:!thumbs.db:!picasa.ini:!*~"><source path="/Users/palaniarunagiri/Documents/Develop/react-native-projects/One31-React-Native-Wrapper/example/node_modules/react-native-screens/android/src/debug/res"/></dataSet><dataSet aapt-namespace="http://schemas.android.com/apk/res-auto" config="debug" generated-set="debug$Generated" ignore_pattern="!.svn:!.git:!.ds_store:!*.scc:.*:&lt;dir>_*:!CVS:!thumbs.db:!picasa.ini:!*~"><source path="/Users/palaniarunagiri/Documents/Develop/react-native-projects/One31-React-Native-Wrapper/example/node_modules/react-native-screens/android/src/debug/res"/></dataSet><mergedItems/></merger>
+\ No newline at end of file
+diff --git a/node_modules/react-native-screens/android/build/intermediates/incremental/mergeDebugShaders/merger.xml b/node_modules/react-native-screens/android/build/intermediates/incremental/mergeDebugShaders/merger.xml
+new file mode 100644
+index 0000000..9140d5e
+--- /dev/null
++++ b/node_modules/react-native-screens/android/build/intermediates/incremental/mergeDebugShaders/merger.xml
+@@ -0,0 +1,2 @@
++<?xml version="1.0" encoding="utf-8"?>
++<merger version="3"><dataSet config="main" ignore_pattern="!.svn:!.git:!.ds_store:!*.scc:.*:&lt;dir>_*:!CVS:!thumbs.db:!picasa.ini:!*~"><source path="/Users/palaniarunagiri/Documents/Develop/react-native-projects/One31-React-Native-Wrapper/example/node_modules/react-native-screens/android/src/main/shaders"/></dataSet><dataSet config="debug" ignore_pattern="!.svn:!.git:!.ds_store:!*.scc:.*:&lt;dir>_*:!CVS:!thumbs.db:!picasa.ini:!*~"><source path="/Users/palaniarunagiri/Documents/Develop/react-native-projects/One31-React-Native-Wrapper/example/node_modules/react-native-screens/android/src/debug/shaders"/></dataSet></merger>
+\ No newline at end of file
+diff --git a/node_modules/react-native-screens/android/build/intermediates/incremental/packageDebugAssets/merger.xml b/node_modules/react-native-screens/android/build/intermediates/incremental/packageDebugAssets/merger.xml
+new file mode 100644
+index 0000000..876fc2b
+--- /dev/null
++++ b/node_modules/react-native-screens/android/build/intermediates/incremental/packageDebugAssets/merger.xml
+@@ -0,0 +1,2 @@
++<?xml version="1.0" encoding="utf-8"?>
++<merger version="3"><dataSet config="main" ignore_pattern="!.svn:!.git:!.ds_store:!*.scc:.*:&lt;dir>_*:!CVS:!thumbs.db:!picasa.ini:!*~"><source path="/Users/palaniarunagiri/Documents/Develop/react-native-projects/One31-React-Native-Wrapper/example/node_modules/react-native-screens/android/src/main/assets"/><source path="/Users/palaniarunagiri/Documents/Develop/react-native-projects/One31-React-Native-Wrapper/example/node_modules/react-native-screens/android/build/intermediates/shader_assets/debug/out"/></dataSet><dataSet config="debug" ignore_pattern="!.svn:!.git:!.ds_store:!*.scc:.*:&lt;dir>_*:!CVS:!thumbs.db:!picasa.ini:!*~"><source path="/Users/palaniarunagiri/Documents/Develop/react-native-projects/One31-React-Native-Wrapper/example/node_modules/react-native-screens/android/src/debug/assets"/></dataSet></merger>
+\ No newline at end of file
+diff --git a/node_modules/react-native-screens/android/build/intermediates/local_only_symbol_list/debug/R-def.txt b/node_modules/react-native-screens/android/build/intermediates/local_only_symbol_list/debug/R-def.txt
+new file mode 100644
+index 0000000..20b674f
+--- /dev/null
++++ b/node_modules/react-native-screens/android/build/intermediates/local_only_symbol_list/debug/R-def.txt
+@@ -0,0 +1,20 @@
++R_DEF: Internal format may change without notice
++local
++anim rns_default_enter_in
++anim rns_default_enter_out
++anim rns_default_exit_in
++anim rns_default_exit_out
++anim rns_fade_from_bottom
++anim rns_fade_in
++anim rns_fade_out
++anim rns_fade_to_bottom
++anim rns_no_animation_20
++anim rns_no_animation_250
++anim rns_no_animation_350
++anim rns_no_animation_medium
++anim rns_slide_in_from_bottom
++anim rns_slide_in_from_left
++anim rns_slide_in_from_right
++anim rns_slide_out_to_bottom
++anim rns_slide_out_to_left
++anim rns_slide_out_to_right
+diff --git a/node_modules/react-native-screens/android/build/intermediates/manifest_merge_blame_file/debug/manifest-merger-blame-debug-report.txt b/node_modules/react-native-screens/android/build/intermediates/manifest_merge_blame_file/debug/manifest-merger-blame-debug-report.txt
+new file mode 100644
+index 0000000..c038e36
+--- /dev/null
++++ b/node_modules/react-native-screens/android/build/intermediates/manifest_merge_blame_file/debug/manifest-merger-blame-debug-report.txt
+@@ -0,0 +1,11 @@
++1<?xml version="1.0" encoding="utf-8"?>
++2<manifest xmlns:android="http://schemas.android.com/apk/res/android"
++3    package="com.swmansion.rnscreens" >
++4
++5    <uses-sdk
++6        android:minSdkVersion="21"
++6-->/Users/palaniarunagiri/Documents/Develop/react-native-projects/One31-React-Native-Wrapper/example/node_modules/react-native-screens/android/src/main/AndroidManifest.xml
++7        android:targetSdkVersion="32" />
++7-->/Users/palaniarunagiri/Documents/Develop/react-native-projects/One31-React-Native-Wrapper/example/node_modules/react-native-screens/android/src/main/AndroidManifest.xml
++8
++9</manifest>
+diff --git a/node_modules/react-native-screens/android/build/intermediates/merged_manifest/debug/AndroidManifest.xml b/node_modules/react-native-screens/android/build/intermediates/merged_manifest/debug/AndroidManifest.xml
+new file mode 100644
+index 0000000..24b6f33
+--- /dev/null
++++ b/node_modules/react-native-screens/android/build/intermediates/merged_manifest/debug/AndroidManifest.xml
+@@ -0,0 +1,9 @@
++<?xml version="1.0" encoding="utf-8"?>
++<manifest xmlns:android="http://schemas.android.com/apk/res/android"
++    package="com.swmansion.rnscreens" >
++
++    <uses-sdk
++        android:minSdkVersion="21"
++        android:targetSdkVersion="32" />
++
++</manifest>
+\ No newline at end of file
+diff --git a/node_modules/react-native-screens/android/build/intermediates/navigation_json/debug/navigation.json b/node_modules/react-native-screens/android/build/intermediates/navigation_json/debug/navigation.json
+new file mode 100644
+index 0000000..0637a08
+--- /dev/null
++++ b/node_modules/react-native-screens/android/build/intermediates/navigation_json/debug/navigation.json
+@@ -0,0 +1 @@
++[]
+\ No newline at end of file
+diff --git a/node_modules/react-native-screens/android/build/intermediates/packaged_manifests/debug/output-metadata.json b/node_modules/react-native-screens/android/build/intermediates/packaged_manifests/debug/output-metadata.json
+new file mode 100644
+index 0000000..402190a
+--- /dev/null
++++ b/node_modules/react-native-screens/android/build/intermediates/packaged_manifests/debug/output-metadata.json
+@@ -0,0 +1,18 @@
++{
++  "version": 3,
++  "artifactType": {
++    "type": "PACKAGED_MANIFESTS",
++    "kind": "Directory"
++  },
++  "applicationId": "com.swmansion.rnscreens",
++  "variantName": "debug",
++  "elements": [
++    {
++      "type": "SINGLE",
++      "filters": [],
++      "attributes": [],
++      "outputFile": "../../merged_manifest/debug/AndroidManifest.xml"
++    }
++  ],
++  "elementType": "File"
++}
+\ No newline at end of file
+diff --git a/node_modules/react-native-screens/android/build/intermediates/packaged_res/debug/anim/rns_default_enter_in.xml b/node_modules/react-native-screens/android/build/intermediates/packaged_res/debug/anim/rns_default_enter_in.xml
+new file mode 100644
+index 0000000..4398c7e
+--- /dev/null
++++ b/node_modules/react-native-screens/android/build/intermediates/packaged_res/debug/anim/rns_default_enter_in.xml
+@@ -0,0 +1,18 @@
++<?xml version="1.0" encoding="utf-8"?>
++<set xmlns:android="http://schemas.android.com/apk/res/android">
++    <alpha
++        android:interpolator="@android:interpolator/accelerate_decelerate"
++        android:fromAlpha="0"
++        android:toAlpha="1.0"
++        android:startOffset="100"
++        android:duration="100"/>
++    <scale
++        android:interpolator="@android:interpolator/accelerate_decelerate"
++        android:fromXScale="0.85"
++        android:toXScale="1"
++        android:fromYScale="0.85"
++        android:toYScale="1"
++        android:pivotX="50%"
++        android:pivotY="50%"
++        android:duration="200"/>
++</set>
+diff --git a/node_modules/react-native-screens/android/build/intermediates/packaged_res/debug/anim/rns_default_enter_out.xml b/node_modules/react-native-screens/android/build/intermediates/packaged_res/debug/anim/rns_default_enter_out.xml
+new file mode 100644
+index 0000000..84c9175
+--- /dev/null
++++ b/node_modules/react-native-screens/android/build/intermediates/packaged_res/debug/anim/rns_default_enter_out.xml
+@@ -0,0 +1,19 @@
++<?xml version="1.0" encoding="utf-8"?>
++<set xmlns:android="http://schemas.android.com/apk/res/android">
++    <alpha
++        android:fromAlpha="1"
++        android:toAlpha="0.4"
++        android:startOffset="100"
++        android:duration="100"
++        android:interpolator="@android:interpolator/accelerate_decelerate" />
++
++    <scale
++        android:interpolator="@android:interpolator/accelerate_decelerate"
++        android:fromXScale="1"
++        android:toXScale="1.15"
++        android:fromYScale="1"
++        android:toYScale="1.15"
++        android:pivotX="50%"
++        android:pivotY="50%"
++        android:duration="200"/>
++</set>
+diff --git a/node_modules/react-native-screens/android/build/intermediates/packaged_res/debug/anim/rns_default_exit_in.xml b/node_modules/react-native-screens/android/build/intermediates/packaged_res/debug/anim/rns_default_exit_in.xml
+new file mode 100644
+index 0000000..6d6fa02
+--- /dev/null
++++ b/node_modules/react-native-screens/android/build/intermediates/packaged_res/debug/anim/rns_default_exit_in.xml
+@@ -0,0 +1,17 @@
++<?xml version="1.0" encoding="utf-8"?>
++<set xmlns:android="http://schemas.android.com/apk/res/android"
++    android:shareInterpolator="false">
++    <alpha
++        android:fromAlpha="0.0"
++        android:toAlpha="1"
++        android:startOffset="50"
++        android:duration="100"/>
++    <scale
++        android:fromXScale="1.15"
++        android:toXScale="1"
++        android:fromYScale="1.15"
++        android:toYScale="1"
++        android:pivotX="50%"
++        android:pivotY="50%"
++        android:duration="200"/>
++</set>
+diff --git a/node_modules/react-native-screens/android/build/intermediates/packaged_res/debug/anim/rns_default_exit_out.xml b/node_modules/react-native-screens/android/build/intermediates/packaged_res/debug/anim/rns_default_exit_out.xml
+new file mode 100644
+index 0000000..b20a184
+--- /dev/null
++++ b/node_modules/react-native-screens/android/build/intermediates/packaged_res/debug/anim/rns_default_exit_out.xml
+@@ -0,0 +1,18 @@
++<?xml version="1.0" encoding="utf-8"?>
++<set xmlns:android="http://schemas.android.com/apk/res/android"
++    android:shareInterpolator="false"
++    android:zAdjustment="top">
++    <alpha
++        android:fromAlpha="1"
++        android:toAlpha="0.0"
++        android:startOffset="50"
++        android:duration="100"/>
++    <scale
++        android:fromXScale="1"
++        android:toXScale="0.85"
++        android:fromYScale="1"
++        android:toYScale="0.85"
++        android:pivotX="50%"
++        android:pivotY="50%"
++        android:duration="200"/>
++</set>
+diff --git a/node_modules/react-native-screens/android/build/intermediates/packaged_res/debug/anim/rns_fade_from_bottom.xml b/node_modules/react-native-screens/android/build/intermediates/packaged_res/debug/anim/rns_fade_from_bottom.xml
+new file mode 100644
+index 0000000..c7a8abc
+--- /dev/null
++++ b/node_modules/react-native-screens/android/build/intermediates/packaged_res/debug/anim/rns_fade_from_bottom.xml
+@@ -0,0 +1,14 @@
++<?xml version="1.0" encoding="utf-8"?>
++<!--Android Nougat open animation-->
++<!--http://aosp.opersys.com/xref/android-7.1.2_r37/xref/frameworks/base/core/res/res/anim/activity_open_enter.xml-->
++<set xmlns:android="http://schemas.android.com/apk/res/android"
++    android:shareInterpolator="false">
++    <alpha android:fromAlpha="0.0" android:toAlpha="1.0"
++        android:interpolator="@android:interpolator/decelerate_quint"
++        android:duration="210"/>
++    <translate android:fromYDelta="8%" android:toYDelta="0"
++        android:interpolator="@android:interpolator/decelerate_quint"
++        android:duration="350"/> <!--we use rns_no_animation_350.xml as the other animation for
++        this transition since we want both of them to end at the same time. Remember to change
++        duration in both files when modifying it-->
++</set>
+diff --git a/node_modules/react-native-screens/android/build/intermediates/packaged_res/debug/anim/rns_fade_in.xml b/node_modules/react-native-screens/android/build/intermediates/packaged_res/debug/anim/rns_fade_in.xml
+new file mode 100644
+index 0000000..c78ea61
+--- /dev/null
++++ b/node_modules/react-native-screens/android/build/intermediates/packaged_res/debug/anim/rns_fade_in.xml
+@@ -0,0 +1,7 @@
++<?xml version="1.0" encoding="utf-8"?>
++<!--Duration taken from debugging source code-->
++<alpha xmlns:android="http://schemas.android.com/apk/res/android"
++    android:fromAlpha="0.0"
++    android:toAlpha="1.0"
++    android:duration="150"
++    />  <!--Remember to change duration in the corresponding xml when modifying it-->
+diff --git a/node_modules/react-native-screens/android/build/intermediates/packaged_res/debug/anim/rns_fade_out.xml b/node_modules/react-native-screens/android/build/intermediates/packaged_res/debug/anim/rns_fade_out.xml
+new file mode 100644
+index 0000000..334e63f
+--- /dev/null
++++ b/node_modules/react-native-screens/android/build/intermediates/packaged_res/debug/anim/rns_fade_out.xml
+@@ -0,0 +1,7 @@
++<?xml version="1.0" encoding="utf-8"?>
++<!--Duration taken from debugging source code-->
++<alpha xmlns:android="http://schemas.android.com/apk/res/android"
++    android:fromAlpha="1.0"
++    android:toAlpha="0.0"
++    android:duration="150"
++    />  <!--Remember to change duration in the corresponding xml when modifying it-->
+diff --git a/node_modules/react-native-screens/android/build/intermediates/packaged_res/debug/anim/rns_fade_to_bottom.xml b/node_modules/react-native-screens/android/build/intermediates/packaged_res/debug/anim/rns_fade_to_bottom.xml
+new file mode 100644
+index 0000000..2334521
+--- /dev/null
++++ b/node_modules/react-native-screens/android/build/intermediates/packaged_res/debug/anim/rns_fade_to_bottom.xml
+@@ -0,0 +1,15 @@
++<?xml version="1.0" encoding="utf-8"?>
++<!--Android Nougat exit animation-->
++<!--http://aosp.opersys.com/xref/android-7.1.2_r37/xref/frameworks/base/core/res/res/anim/activity_close_exit.xml-->
++<set xmlns:android="http://schemas.android.com/apk/res/android"
++    android:shareInterpolator="false">
++    <alpha android:fromAlpha="1.0" android:toAlpha="0.0"
++        android:interpolator="@android:interpolator/linear"
++        android:startOffset="100"
++        android:duration="150"/>
++    <translate android:fromYDelta="0%" android:toYDelta="8%"
++        android:interpolator="@android:interpolator/accelerate_quint"
++        android:duration="250"/>  <!--we use rns_no_animation_250.xml as the other animation for
++        this transition since we want both of them to end at the same time. Remember to change
++        duration in both files when modifying it-->
++</set>
+diff --git a/node_modules/react-native-screens/android/build/intermediates/packaged_res/debug/anim/rns_no_animation_20.xml b/node_modules/react-native-screens/android/build/intermediates/packaged_res/debug/anim/rns_no_animation_20.xml
+new file mode 100644
+index 0000000..5cc0d23
+--- /dev/null
++++ b/node_modules/react-native-screens/android/build/intermediates/packaged_res/debug/anim/rns_no_animation_20.xml
+@@ -0,0 +1,6 @@
++<?xml version="1.0" encoding="utf-8"?>
++<alpha xmlns:android="http://schemas.android.com/apk/res/android"
++    android:fromAlpha="1.0"
++    android:toAlpha="1.0"
++    android:duration="20"
++    />  <!-- non-zero duration ensures transition events are triggered correctly -->
+diff --git a/node_modules/react-native-screens/android/build/intermediates/packaged_res/debug/anim/rns_no_animation_250.xml b/node_modules/react-native-screens/android/build/intermediates/packaged_res/debug/anim/rns_no_animation_250.xml
+new file mode 100644
+index 0000000..bd082a3
+--- /dev/null
++++ b/node_modules/react-native-screens/android/build/intermediates/packaged_res/debug/anim/rns_no_animation_250.xml
+@@ -0,0 +1,7 @@
++<?xml version="1.0" encoding="utf-8"?>
++<alpha xmlns:android="http://schemas.android.com/apk/res/android"
++    android:fromAlpha="1.0"
++    android:toAlpha="1.0"
++    android:duration="250"
++    />  <!--Remember to change duration in the corresponding xml when modifying it-->
++
+diff --git a/node_modules/react-native-screens/android/build/intermediates/packaged_res/debug/anim/rns_no_animation_350.xml b/node_modules/react-native-screens/android/build/intermediates/packaged_res/debug/anim/rns_no_animation_350.xml
+new file mode 100644
+index 0000000..003dcd1
+--- /dev/null
++++ b/node_modules/react-native-screens/android/build/intermediates/packaged_res/debug/anim/rns_no_animation_350.xml
+@@ -0,0 +1,6 @@
++<?xml version="1.0" encoding="utf-8"?>
++<alpha xmlns:android="http://schemas.android.com/apk/res/android"
++    android:fromAlpha="1.0"
++    android:toAlpha="1.0"
++    android:duration="350"
++    />  <!--Remember to change duration in the corresponding xml when modifying it-->
+diff --git a/node_modules/react-native-screens/android/build/intermediates/packaged_res/debug/anim/rns_no_animation_medium.xml b/node_modules/react-native-screens/android/build/intermediates/packaged_res/debug/anim/rns_no_animation_medium.xml
+new file mode 100644
+index 0000000..560eda6
+--- /dev/null
++++ b/node_modules/react-native-screens/android/build/intermediates/packaged_res/debug/anim/rns_no_animation_medium.xml
+@@ -0,0 +1,7 @@
++<?xml version="1.0" encoding="utf-8"?>
++<alpha xmlns:android="http://schemas.android.com/apk/res/android"
++    android:fromAlpha="1.0"
++    android:toAlpha="1.0"
++    android:duration="@android:integer/config_mediumAnimTime"
++    />  <!--Remember to change duration in the corresponding xml when modifying it-->
++
+diff --git a/node_modules/react-native-screens/android/build/intermediates/packaged_res/debug/anim/rns_slide_in_from_bottom.xml b/node_modules/react-native-screens/android/build/intermediates/packaged_res/debug/anim/rns_slide_in_from_bottom.xml
+new file mode 100644
+index 0000000..052fe15
+--- /dev/null
++++ b/node_modules/react-native-screens/android/build/intermediates/packaged_res/debug/anim/rns_slide_in_from_bottom.xml
+@@ -0,0 +1,7 @@
++<?xml version="1.0" encoding="utf-8"?>
++<translate xmlns:android="http://schemas.android.com/apk/res/android"
++    android:fromYDelta="100%"
++    android:toYDelta="0%"
++    android:duration="@android:integer/config_mediumAnimTime" />  <!--we use
++        rns_no_animation_medium.xml as the other animation for this transition since we want both of
++        them to end at the same time. Remember to change duration in both files when modifying it-->
+diff --git a/node_modules/react-native-screens/android/build/intermediates/packaged_res/debug/anim/rns_slide_in_from_left.xml b/node_modules/react-native-screens/android/build/intermediates/packaged_res/debug/anim/rns_slide_in_from_left.xml
+new file mode 100644
+index 0000000..939110f
+--- /dev/null
++++ b/node_modules/react-native-screens/android/build/intermediates/packaged_res/debug/anim/rns_slide_in_from_left.xml
+@@ -0,0 +1,5 @@
++<?xml version="1.0" encoding="utf-8"?>
++<translate xmlns:android="http://schemas.android.com/apk/res/android"
++    android:duration="@android:integer/config_mediumAnimTime"
++    android:fromXDelta="-100%"
++    android:toXDelta="0%" />
+diff --git a/node_modules/react-native-screens/android/build/intermediates/packaged_res/debug/anim/rns_slide_in_from_right.xml b/node_modules/react-native-screens/android/build/intermediates/packaged_res/debug/anim/rns_slide_in_from_right.xml
+new file mode 100644
+index 0000000..428eb9b
+--- /dev/null
++++ b/node_modules/react-native-screens/android/build/intermediates/packaged_res/debug/anim/rns_slide_in_from_right.xml
+@@ -0,0 +1,5 @@
++<?xml version="1.0" encoding="utf-8"?>
++<translate xmlns:android="http://schemas.android.com/apk/res/android"
++    android:duration="@android:integer/config_mediumAnimTime"
++    android:fromXDelta="100%"
++    android:toXDelta="0%" />
+diff --git a/node_modules/react-native-screens/android/build/intermediates/packaged_res/debug/anim/rns_slide_out_to_bottom.xml b/node_modules/react-native-screens/android/build/intermediates/packaged_res/debug/anim/rns_slide_out_to_bottom.xml
+new file mode 100644
+index 0000000..6b75d25
+--- /dev/null
++++ b/node_modules/react-native-screens/android/build/intermediates/packaged_res/debug/anim/rns_slide_out_to_bottom.xml
+@@ -0,0 +1,7 @@
++<?xml version="1.0" encoding="utf-8"?>
++<translate xmlns:android="http://schemas.android.com/apk/res/android"
++    android:fromYDelta="0%"
++    android:toYDelta="100%"
++    android:duration="@android:integer/config_mediumAnimTime" />  <!--we use
++        rns_no_animation_medium.xml as the other animation for this transition since we want both of
++        them to end at the same time. Remember to change duration in both files when modifying it-->
+diff --git a/node_modules/react-native-screens/android/build/intermediates/packaged_res/debug/anim/rns_slide_out_to_left.xml b/node_modules/react-native-screens/android/build/intermediates/packaged_res/debug/anim/rns_slide_out_to_left.xml
+new file mode 100644
+index 0000000..400a202
+--- /dev/null
++++ b/node_modules/react-native-screens/android/build/intermediates/packaged_res/debug/anim/rns_slide_out_to_left.xml
+@@ -0,0 +1,5 @@
++<?xml version="1.0" encoding="utf-8"?>
++<translate xmlns:android="http://schemas.android.com/apk/res/android"
++    android:duration="@android:integer/config_mediumAnimTime"
++    android:fromXDelta="0%"
++    android:toXDelta="-100%"/>
+diff --git a/node_modules/react-native-screens/android/build/intermediates/packaged_res/debug/anim/rns_slide_out_to_right.xml b/node_modules/react-native-screens/android/build/intermediates/packaged_res/debug/anim/rns_slide_out_to_right.xml
+new file mode 100644
+index 0000000..a00332b
+--- /dev/null
++++ b/node_modules/react-native-screens/android/build/intermediates/packaged_res/debug/anim/rns_slide_out_to_right.xml
+@@ -0,0 +1,5 @@
++<?xml version="1.0" encoding="utf-8"?>
++<translate xmlns:android="http://schemas.android.com/apk/res/android"
++    android:duration="@android:integer/config_mediumAnimTime"
++    android:fromXDelta="0%"
++    android:toXDelta="100%"/>
+diff --git a/node_modules/react-native-screens/android/build/outputs/logs/manifest-merger-debug-report.txt b/node_modules/react-native-screens/android/build/outputs/logs/manifest-merger-debug-report.txt
+new file mode 100644
+index 0000000..f49aa5e
+--- /dev/null
++++ b/node_modules/react-native-screens/android/build/outputs/logs/manifest-merger-debug-report.txt
+@@ -0,0 +1,25 @@
++-- Merging decision tree log ---
++manifest
++ADDED from /Users/palaniarunagiri/Documents/Develop/react-native-projects/One31-React-Native-Wrapper/example/node_modules/react-native-screens/android/src/main/AndroidManifest.xml:2:1-5:12
++INJECTED from /Users/palaniarunagiri/Documents/Develop/react-native-projects/One31-React-Native-Wrapper/example/node_modules/react-native-screens/android/src/main/AndroidManifest.xml:2:1-5:12
++INJECTED from /Users/palaniarunagiri/Documents/Develop/react-native-projects/One31-React-Native-Wrapper/example/node_modules/react-native-screens/android/src/main/AndroidManifest.xml:2:1-5:12
++	package
++		ADDED from /Users/palaniarunagiri/Documents/Develop/react-native-projects/One31-React-Native-Wrapper/example/node_modules/react-native-screens/android/src/main/AndroidManifest.xml:3:11-44
++		INJECTED from /Users/palaniarunagiri/Documents/Develop/react-native-projects/One31-React-Native-Wrapper/example/node_modules/react-native-screens/android/src/main/AndroidManifest.xml
++		INJECTED from /Users/palaniarunagiri/Documents/Develop/react-native-projects/One31-React-Native-Wrapper/example/node_modules/react-native-screens/android/src/main/AndroidManifest.xml
++	xmlns:android
++		ADDED from /Users/palaniarunagiri/Documents/Develop/react-native-projects/One31-React-Native-Wrapper/example/node_modules/react-native-screens/android/src/main/AndroidManifest.xml:2:11-69
++uses-sdk
++INJECTED from /Users/palaniarunagiri/Documents/Develop/react-native-projects/One31-React-Native-Wrapper/example/node_modules/react-native-screens/android/src/main/AndroidManifest.xml reason: use-sdk injection requested
++INJECTED from /Users/palaniarunagiri/Documents/Develop/react-native-projects/One31-React-Native-Wrapper/example/node_modules/react-native-screens/android/src/main/AndroidManifest.xml
++INJECTED from /Users/palaniarunagiri/Documents/Develop/react-native-projects/One31-React-Native-Wrapper/example/node_modules/react-native-screens/android/src/main/AndroidManifest.xml
++INJECTED from /Users/palaniarunagiri/Documents/Develop/react-native-projects/One31-React-Native-Wrapper/example/node_modules/react-native-screens/android/src/main/AndroidManifest.xml
++INJECTED from /Users/palaniarunagiri/Documents/Develop/react-native-projects/One31-React-Native-Wrapper/example/node_modules/react-native-screens/android/src/main/AndroidManifest.xml
++	android:targetSdkVersion
++		INJECTED from /Users/palaniarunagiri/Documents/Develop/react-native-projects/One31-React-Native-Wrapper/example/node_modules/react-native-screens/android/src/main/AndroidManifest.xml
++		ADDED from /Users/palaniarunagiri/Documents/Develop/react-native-projects/One31-React-Native-Wrapper/example/node_modules/react-native-screens/android/src/main/AndroidManifest.xml
++		INJECTED from /Users/palaniarunagiri/Documents/Develop/react-native-projects/One31-React-Native-Wrapper/example/node_modules/react-native-screens/android/src/main/AndroidManifest.xml
++	android:minSdkVersion
++		INJECTED from /Users/palaniarunagiri/Documents/Develop/react-native-projects/One31-React-Native-Wrapper/example/node_modules/react-native-screens/android/src/main/AndroidManifest.xml
++		ADDED from /Users/palaniarunagiri/Documents/Develop/react-native-projects/One31-React-Native-Wrapper/example/node_modules/react-native-screens/android/src/main/AndroidManifest.xml
++		INJECTED from /Users/palaniarunagiri/Documents/Develop/react-native-projects/One31-React-Native-Wrapper/example/node_modules/react-native-screens/android/src/main/AndroidManifest.xml

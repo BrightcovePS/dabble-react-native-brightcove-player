@@ -1,6 +1,7 @@
 import PropTypes from 'prop-types';
 import React, { Component } from 'react';
-import { requireNativeComponent, View, ViewPropTypes } from 'react-native';
+import { requireNativeComponent, View } from 'react-native';
+import { ViewPropTypes } from "deprecated-react-native-prop-types";
 
 class BrightcovePlayerPoster extends Component {
   setNativeProps = nativeProps => {
