@@ -151,6 +151,12 @@ android {
             keyAlias 'androiddebugkey'
             keyPassword 'android'
         }
+        release {
+            storeFile file('release-keystore')
+            storePassword 'BrightC0ve'
+            keyAlias 'key0'
+            keyPassword 'BrightC0ve'
+        }
     }
     buildTypes {
         debug {
