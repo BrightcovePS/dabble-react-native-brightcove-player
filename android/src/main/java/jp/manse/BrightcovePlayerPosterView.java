@@ -106,11 +106,14 @@ public class BrightcovePlayerPosterView extends RelativeLayout implements Lifecy
     }
 
     private void loadImage(Video video) {
+        String url = null;
         if (video == null) {
             this.imageView.setImageResource(android.R.color.transparent);
             return;
         }
-        String url = video.getPosterImage().toString();
+        if (video.getPosterImage() != null) {
+            url = video.getPosterImage().toString();
+        }
         if (url == null) {
             this.imageView.setImageResource(android.R.color.transparent);
             return;

@@ -156,7 +156,7 @@ export default class App extends Component {
       <View style={styles.container}>
         <StatusBar barStyle="light-content" />
         <BrightcovePlayer
-          autoPlay = {false}
+          autoPlay = {true}
           style={styles.video}
           accountId={ACCOUNT_ID}
           policyKey={POLICY_KEY}
@@ -228,7 +228,7 @@ export default class App extends Component {
                   }}>
                   <Text>
                     {!downloadStatus
-                      ? '💾'
+                      ? item.canBeDownloaded ? '💾':''
                       : downloadStatus.downloadProgress === 1
                       ? '🗑'
                       : '⏳'}

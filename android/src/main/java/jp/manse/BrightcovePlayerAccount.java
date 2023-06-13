@@ -40,6 +40,9 @@ public class BrightcovePlayerAccount implements OfflineVideoDownloadSession.OnOf
     final private static String CALLBACK_KEY_DESCRIPTION = "description";
     final private static String CALLBACK_KEY_DURATION = "duration";
 
+    final private static String CALLBACK_CAN_BE_DOWNLOADED = "canBeDownloaded";
+
+
     private ReactApplicationContext context;
     public String accountId;
     public String policyKey;
@@ -253,6 +256,7 @@ public class BrightcovePlayerAccount implements OfflineVideoDownloadSession.OnOf
             map.putString(CALLBACK_KEY_NAME, video.getName());
             map.putString(CALLBACK_KEY_DESCRIPTION, video.getDescription());
             map.putInt(CALLBACK_KEY_DURATION, video.getDuration());
+            map.putBoolean(CALLBACK_CAN_BE_DOWNLOADED, offlineCatalog.isVideoDownloadable(video));
             result.pushMap(map);
         }
         return result;
