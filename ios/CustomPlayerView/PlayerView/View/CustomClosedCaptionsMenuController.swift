@@ -18,6 +18,7 @@ class CustomClosedCaptionsMenuController: UITableViewController {
             sessionWasSet()
         }
     }
+   var characteristic:AVMediaCharacteristic?
    var shouldPlayOnClose: Bool = false
     // a description of the sections of the media selection table view.
     private var mediaOptionsTableViewSectionList: [AVMediaCharacteristic]?
@@ -35,7 +36,7 @@ class CustomClosedCaptionsMenuController: UITableViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        title = "Audio & Subtitles"
+//        title = "Audio & Subtitles"
         
         tableView.register(UITableViewCell.classForCoder(), forCellReuseIdentifier: ClosedCaptionMenuConfig.CellReuseId)
         
@@ -242,21 +243,28 @@ class CustomClosedCaptionsMenuController: UITableViewController {
     
     private func sessionWasSet() {
         
-        guard let audibleMediaOptions = audibleMediaOptions(), let legibileMediaOptions = legibleMediaOptions() else {
+          let legibileMediaOptions = legibleMediaOptions()
+        
+        if legibileMediaOptions == nil {
             controlsView?.closedCaptionEnabled = false
-            return
         }
+        
+        let audibleMediaOptions = audibleMediaOptions()
+        if audibleMediaOptions == nil {
+            controlsView?.closedCaptionEnabled = false
+        }
+        
         
         DispatchQueue.global(qos: .background).async {
             
             // new session. (re)build a list of the sections of the media option table view.
             var mediaOptionTypes = [AVMediaCharacteristic]()
             
-            if audibleMediaOptions.count > 1 {
+            if let audibleMediaOptions = audibleMediaOptions, audibleMediaOptions.count > 1 &&  self.characteristic == .audible{
                 mediaOptionTypes.append(AVMediaCharacteristic.audible)
             }
             
-            if legibileMediaOptions.count > 0 {
+            if let legibileMediaOptions = legibileMediaOptions, legibileMediaOptions.count > 0  && self.characteristic == .legible{
                 mediaOptionTypes.append(AVMediaCharacteristic.legible)
             }
 
@@ -267,8 +275,10 @@ class CustomClosedCaptionsMenuController: UITableViewController {
                 
                 // Enable closed caption button if there are closed captions OR more than 1 soundtrack.
                 // Do this on main thread because closedCaptionEnabled changes the UI.
-                let closedCaptionEnabled = legibileMediaOptions.count > 0 || audibleMediaOptions.count > 1
+                let closedCaptionEnabled = legibileMediaOptions?.count ?? 0  > 0
+                let audioEnabled = audibleMediaOptions?.count ?? 0 > 1
                 self.controlsView?.closedCaptionEnabled = closedCaptionEnabled
+                self.controlsView?.audioEnabled = audioEnabled
             }
             
         }
@@ -281,30 +291,19 @@ class CustomClosedCaptionsMenuController: UITableViewController {
 extension CustomClosedCaptionsMenuController {
     
     override func numberOfSections(in tableView: UITableView) -> Int {
-        return mediaOptionsTableViewSectionList?.count ?? 0
+        return 1
     }
     
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        if tableViewSectionIsAudibleSection(section) {
-            return audibleMediaOptions()?.count ?? 0
-        } else if tableViewSectionIsLegibleSection(section) {
-            guard let legibleMediaOptions = legibleMediaOptions() else {
-                return 0
-            }
-            return legibleMediaOptions.count + ClosedCaptionMenuConfig.LegibleOptionsOffsetFromOffItem
-        }
-        return 0
+      
+        return self.characteristic == .audible ? audibleMediaOptions()?.count ?? 0:(legibleMediaOptions()?.count ?? 0) + ClosedCaptionMenuConfig.LegibleOptionsOffsetFromOffItem
     }
     
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         
-        if tableViewSectionIsAudibleSection(indexPath.section) {
-            return audibleCell(forRowAtIndexPath: indexPath, tableView: tableView)
-        } else if tableViewSectionIsLegibleSection(indexPath.section) {
-            return legibleCell(forRowAtIndexPath: indexPath, tableView: tableView)
-        }
+       
         
-        return UITableViewCell()
+        return self.characteristic == .audible ? audibleCell(forRowAtIndexPath: indexPath, tableView: tableView):legibleCell(forRowAtIndexPath: indexPath, tableView: tableView)
     }
     
     private func audibleCell(forRowAtIndexPath indexPath: IndexPath, tableView theTableView: UITableView) -> UITableViewCell {
@@ -341,8 +340,8 @@ extension CustomClosedCaptionsMenuController {
         let sectionTitle = tableView(theTableView, titleForHeaderInSection: indexPath.section) ?? ""
         cell.accessibilityLabel = "\(sectionTitle), \(displayName)"
         
-        cell.backgroundColor = UIColor.blue
-        cell.textLabel?.textColor = UIColor.white
+//        cell.backgroundColor = UIColor.blue
+        cell.textLabel?.textColor = UIColor.black
         
         return cell
     }
@@ -413,13 +412,9 @@ extension CustomClosedCaptionsMenuController {
     }
     
     override func tableView(_ tableView: UITableView, titleForHeaderInSection section: Int) -> String? {
-        if tableViewSectionIsAudibleSection(section) {
-            return "AUDIO"
-        } else if tableViewSectionIsLegibleSection(section) {
-            return "SUBTITLES"
-        }
         
-        return nil
+        
+        return self.characteristic == .audible ? "AUDIO":"SUBTITLES & CC"
     }
     
     override func tableView(_ theTableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
@@ -438,11 +433,15 @@ extension CustomClosedCaptionsMenuController {
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         
         tableView.deselectRow(at: indexPath, animated: true)
-        
-        if tableViewSectionIsAudibleSection(indexPath.section) {
-            didSelectAudibleRowAtIndexPath(tableView, indexPath: indexPath)
-        } else if tableViewSectionIsLegibleSection(indexPath.section) {
+        switch self.characteristic {
+        case AVMediaCharacteristic.legible:
             didSelectLegibleRowAtIndexPath(tableView, indexPath: indexPath)
+
+        case AVMediaCharacteristic.audible:
+            didSelectAudibleRowAtIndexPath(tableView, indexPath: indexPath)
+            
+         default:
+            break
         }
         
     }
@@ -454,13 +453,10 @@ extension CustomClosedCaptionsMenuController {
         
         for cell in tableView.visibleCells {
             
-            guard let indexPath = tableView.indexPath(for: cell) else {
-                continue
-            }
             
-            if tableViewSectionIsAudibleSection(indexPath.section) {
-                cell.accessoryType = selectedCell == cell ? .checkmark : .none
-            }
+            
+            cell.accessoryType = selectedCell == cell ? .checkmark : .none
+            
             
         }
         
@@ -481,13 +477,9 @@ extension CustomClosedCaptionsMenuController {
         
         for cell in tableView.visibleCells {
             
-            guard let indexPath = tableView.indexPath(for: cell) else {
-                continue
-            }
             
-            if tableViewSectionIsLegibleSection(indexPath.section) {
                 cell.accessoryType = selectedCell == cell ? .checkmark : .none
-            }
+            
             
         }
         
@@ -504,10 +496,10 @@ extension CustomClosedCaptionsMenuController {
         default: // other options
             let selectIdx = indexPath.row - ClosedCaptionMenuConfig.LegibleOptionsOffsetFromOffItem
             let option = legibleMediaOptions[selectIdx]
-            currentSession?.selectedLegibleMediaOption = option
+            if let currentSession = currentSession {
+                currentSession.selectedLegibleMediaOption = option
+            }
         }
-        
     }
-    
 }
 

@@ -58,9 +58,17 @@ struct TimerControlConstants {
   var closedCaptionEnabled: Bool = false {
     didSet {
       customControlsView?.closedCaptionEnabled = closedCaptionEnabled
+        customControlLayout.closedCaptions?.isHidden = !closedCaptionEnabled
     }
   }
-  var defaultFullScreen: Bool = true
+    var audioEnabled: Bool = false {
+      didSet {
+        customControlsView?.audioEnabled = audioEnabled
+          customControlLayout.audioCaptions?.isHidden = !audioEnabled
+      }
+    }
+    
+  var defaultFullScreen: Bool = false
   @objc public var screenMode: NSString? {
     didSet {
       switch screenMode {
@@ -152,15 +160,30 @@ struct TimerControlConstants {
   var playlistRepo = PlayerRepository()
   @objc public var session: BCOVPlaybackSession? = nil {
     didSet {
-      customControlsView?.session = session
-      customControlLayout.session = session
-      overlayDecorator.session = session
-      mpCommandCenterDecorator.session = session
+      
       DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
         self.checkIfPictureInPictureEnabled()
       }
+        if let video = session?.video {
+            print(video.properties)
+            if let videoDuration = video.properties["duration"] as? Int, videoDuration <= 0 {
+                if (!customControlLayout.currentLayoutLive) {
+                    self.controlsView.layout = customControlLayout.setLayout(isLive: true).0
+                }
+            } else {
+                if (customControlLayout.currentLayoutLive) {
+                    self.controlsView.layout = customControlLayout.setLayout(isLive: false).0
+                }
+            }
+        }
+        
+        customControlsView?.session = session
+        customControlLayout.session = session
+        overlayDecorator.session = session
+        mpCommandCenterDecorator.session = session
     }
   }
+  
   @objc public var lifecycleEvent: BCOVPlaybackSessionLifecycleEvent? {
     didSet {
       self.processLifeCycleEvents()
@@ -212,9 +235,10 @@ struct TimerControlConstants {
   }
   // MARK: - Configuring UI
   fileprivate func configurePlayerView() {
-    setupControlsLayout()
     // self.controlsView.pictureInPictureButton.isHidden = true
     configureCustomControls()
+    setupControlsLayout()
+
     configureRedux()
     addOrientationObserver()
     screenTapDecorator.addTapGesture()
@@ -223,15 +247,25 @@ struct TimerControlConstants {
   }
   private func setupControlsLayout() {
     customControlLayout.playerView = self
-    self.controlsView.layout = customControlLayout.setLayout().0
+    self.controlsView.layout = customControlLayout.setLayout(isLive: false).0
     controlsView.setFontSizeForLabels(16)
     self.customControlLayout.playbackController = self.playbackController
+      guard let controls = customControlsView else { return }
+
+      if let overlay = controls as? CustomOverlayControl, let audio = customControlLayout.audioCaptions, let captios = customControlLayout.closedCaptions{
+          captios.addTarget(controls, action: #selector(CustomOverlayControl.handleClosedCaptionTapped), for: .touchUpInside)
+          audio.addTarget(controls, action: #selector(CustomOverlayControl.handleAudioTapped), for: .touchUpInside)
+//          overlay.closedCaptions = captios
+//          overlay.audio = audio
+          
+      }
   }
   private func configureCustomControls() {
     addControlsView()
   }
   private func addControlsView() {
     customControlsView = CustomOverlayControl(self)
+      
     guard let controls = customControlsView else { return }
     /*Not to delete. Commenting for RB alone*/
     /*controlsView.backgroundColor = UIColor.black
@@ -243,8 +277,10 @@ struct TimerControlConstants {
     controls.playbackController = self.playbackController
     controls.controlsViewHeight = RBPlayerControl.Metrics.smallWidth
     controlsFadingView.insertSubview(controls, belowSubview: controlsView)
+    
     controls.centerInParentView(view: controlsFadingView)
     addClosedCaptionsObserver()
+    addAudioObserver()
     addPictureInPictureObserver()
     addPlayPauseObserver()
     addForwardSeekObserver()
@@ -256,6 +292,8 @@ struct TimerControlConstants {
     DispatchQueue.main.asyncAfter(deadline: .now() + 0.2) {
       self.setDefaultOrientation()
     }
+      
+   
   }
   // MARK: - Orientations
   fileprivate func addOrientationObserver() {

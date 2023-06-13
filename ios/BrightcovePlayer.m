@@ -55,8 +55,10 @@
                                                                                                         upstreamSessionProvider:basicSessionProvider];
 
   // Create the playback controller
-  id<BCOVPlaybackController> playbackController = [sdkManager createPlaybackControllerWithSessionProvider:fairPlaySessionProvider
-                                                                                             viewStrategy:nil];
+    
+    
+    id<BCOVPlaybackController> playbackController = [sdkManager createPlaybackControllerWithSessionProvider:fairPlaySessionProvider
+                                                                                                  viewStrategy:nil];
 
   // Start playing right away (the default value for autoAdvance is NO)
   playbackController.autoAdvance = YES;
@@ -90,6 +92,7 @@
     if ([self.videoId isEqual: self.playerView.videoId]) {
       return;
     }
+
     [_playbackService findVideoWithVideoID:_videoId parameters:nil completion:^(BCOVVideo *video, NSDictionary *jsonResponse, NSError *error) {
       if (error) {
         if (self.onError) {
@@ -143,6 +146,7 @@
 - (void)setVideoId:(NSString *)videoId {
   _videoId = videoId;
   _referenceId = NULL;
+  _videoToken = NULL;
   [self setupService];
   [self loadMovie];
 }
@@ -244,6 +248,7 @@
 }
 
 - (void)playbackController:(id<BCOVPlaybackController>)controller playbackSession:(id<BCOVPlaybackSession>)session didReceiveLifecycleEvent:(BCOVPlaybackSessionLifecycleEvent *)lifecycleEvent {
+    
   if ((lifecycleEvent.eventType == kBCOVPlaybackSessionLifecycleEventFail) ||
       (lifecycleEvent.eventType == kBCOVPlaybackSessionLifecycleEventFailedToPlayToEndTime) ||
       (lifecycleEvent.eventType == kBCOVPlaybackSessionLifecycleEventResumeFail) ||
@@ -359,6 +364,12 @@
 - (void)progressSliderDidTouchUp:(UISlider *)slider {
   _playerView.slider = slider;
 }
+-(void)closeTapped {
+    if (self.onCloseTapped) {
+        [_playbackController pause];
+      self.onCloseTapped(@{});
+    }
+}
 - (void)nextVideoPlayer:(NSDictionary *)video {
   _referenceId =  [video valueForKey:@"referenceId"];
   _videoId =  [video valueForKey:@"videoId"];
@@ -367,6 +378,8 @@
   [nextVideo setObject: _videoId  forKey: @"videoId"];
   if (self.onPlayNextVideo) {
     self.onPlayNextVideo(nextVideo);
+//      [self setPlay:YES];
+      
   }
 }
 

@@ -36,6 +36,7 @@
 @property (nonatomic, copy) NSString *policyKey;
 @property (nonatomic, copy) NSString *playlistReferenceId;
 @property (nonatomic, copy) NSString *playlistId;
+
 @property (nonatomic, copy) RCTDirectEventBlock onReady;
 @property (nonatomic, copy) RCTDirectEventBlock onPlay;
 @property (nonatomic, copy) RCTDirectEventBlock onPause;
@@ -48,9 +49,10 @@
 @property (nonatomic, copy) RCTDirectEventBlock onPlayNextVideo;
 @property (nonatomic, copy) RCTDirectEventBlock onVideoSize;
 @property (nonatomic, copy) RCTDirectEventBlock onError;
+@property (nonatomic, copy) RCTDirectEventBlock onCloseTapped;
 
 -(void) seekTo:(NSNumber *)time;
 -(void)dispose;
 -(void)nextVideoPlayer:(NSDictionary *)video;
-
+- (void)closeTapped;
 @end

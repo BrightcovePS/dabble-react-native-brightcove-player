@@ -2,9 +2,12 @@ import Foundation
 import BrightcovePlayerSDK
 extension PlayerView: BCOVPlaybackSessionConsumer {
   public func playbackSession(_ session: BCOVPlaybackSession!, didReceive lifecycleEvent: BCOVPlaybackSessionLifecycleEvent!) {
-    session.selectedLegibleMediaOption = .none //Disabling captions in video
-    self.session = session
-    self.currentPlayer = session.player
+//    session.selectedLegibleMediaOption = .none //Disabling captions in video
+      if (lifecycleEvent.eventType == kBCOVPlaybackSessionLifecycleEventReady) {
+          self.session = session
+          self.currentPlayer = session.player
+          closedCaptionsDecorator.session = session
+      }
     self.lifecycleEvent = lifecycleEvent
   }
   public func playbackSession(_ session: BCOVPlaybackSession!, didProgressTo progress: TimeInterval) {
@@ -72,7 +75,7 @@ extension PlayerView: BCOVPlaybackSessionConsumer {
         self.customControlsView?.isPaused = true
         cancelTimer()
       }
-      closedCaptionsDecorator.session = session
+//      closedCaptionsDecorator.session = session
     case kBCOVPlaybackSessionLifecycleEventEnd:
       print("Playback end")
       /*displayNextVideo()*/

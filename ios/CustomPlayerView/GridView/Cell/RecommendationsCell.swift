@@ -1,7 +1,7 @@
 import UIKit
 struct TimerConstants {
-  static let nextVideoThumbnailDuration: Double = 5
-  static let thumbnailVideoEndOffset: Double = 5
+  static let nextVideoThumbnailDuration: Double = 10
+  static let thumbnailVideoEndOffset: Double = 10
   static let apiCallVideoEndOffset: Double = 20
 }
 fileprivate struct RecommendationsCellConstants {
