@@ -3,11 +3,13 @@ import BrightcovePlayerSDK
 protocol CustomControlsProtocol: AnyObject {
   var pictureInPictureEnabled: Bool { get set }
   var closedCaptionEnabled: Bool { get set }
+  var audioEnabled: Bool { get set }
   var isPaused: Bool { get set }
   var isMuted: Bool { get set }
 }
 protocol CustomControlsActionable: AnyObject {
   var closedCaptionsTapped: ((UIButton) -> Void)? { get set }
+  var audioTapped: ((UIButton) -> Void)? { get set }
   var pictureInPictureTapped: ((UIButton) -> Void)? { get set }
   var playPauseAction: ((UIButton) -> Void)? { get set }
   var rewindAction: ((UIButton) -> Void)? { get set }

@@ -32,6 +32,18 @@ const requestDownloadVideoWithVideoId = function(
   );
 };
 
+const requestPauseDownloadVideoWithTokenId = function(videoToken) {
+  return NativeModules.BrightcovePlayerUtil.requestPauseDownloadVideoWithTokenId(
+    videoToken
+  );
+};
+
+const requestResumeDownloadVideoWithTokenId = function(videoToken) {
+  return NativeModules.BrightcovePlayerUtil.requestResumeDownloadVideoWithTokenId(
+    videoToken
+  );
+};
+
 const getOfflineVideoStatuses = function(accountId, policyKey) {
   return NativeModules.BrightcovePlayerUtil.getOfflineVideoStatuses(
     accountId,
@@ -71,6 +83,8 @@ const addOfflineNotificationListener = function(callback) {
 };
 
 module.exports = {
+  requestPauseDownloadVideoWithTokenId,
+  requestResumeDownloadVideoWithTokenId,
   requestDownloadVideoWithReferenceId,
   requestDownloadVideoWithVideoId,
   getOfflineVideoStatuses,

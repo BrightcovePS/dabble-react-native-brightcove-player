@@ -15,11 +15,13 @@ class PlayerRepository {
       CurrentPlayerItem.shared.playlistId = playlistId ?? StringConstants.kEmptyString
     }
   }
-  var referenceId: String? {
-    didSet {
-      CurrentPlayerItem.shared.referenceId = referenceId ?? StringConstants.kEmptyString
+    
+    var referenceId: String? {
+      didSet {
+        CurrentPlayerItem.shared.referenceId = referenceId ?? StringConstants.kEmptyString
+      }
     }
-  }
+    
   var videoId: String? {
     didSet {
       CurrentPlayerItem.shared.videoId = videoId ?? StringConstants.kEmptyString
@@ -40,6 +42,7 @@ class PlayerRepository {
     self.accountId = accountId
     self.policyKey = policyKey
     self.videoId = videoId
+      
   }
   func getPlaylistFromRefId() {
     guard let playlistReferenceId = self.playlistReferenceId  else { return }

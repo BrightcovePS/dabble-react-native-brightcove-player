@@ -3,9 +3,15 @@ extension PlayerView: ClosedCaptionable {
   func addClosedCaptionsObserver() {
     closedCaptionsDecorator.addClosedCaptionsObserver()
   }
+    func addAudioObserver() {
+      closedCaptionsDecorator.addAudioObserver()
+    }
   func presentClosedCaptions() {
     closedCaptionsDecorator.presentClosedCaptions()
   }
+    func presentAudio() {
+      closedCaptionsDecorator.presentAudio()
+    }
 }
 extension UIView {
     var parentViewController: UIViewController? {

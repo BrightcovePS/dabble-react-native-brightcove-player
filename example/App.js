@@ -28,6 +28,7 @@ export default class App extends Component {
       videoToken: null,
       videoId: null,
     },
+    closed:false
   };
 
   componentDidMount() {
@@ -39,7 +40,9 @@ export default class App extends Component {
       .then(videos => {
         this.setState({
           videos,
+          closed:true
         });
+
       })
       .catch(console.warn);
     BrightcovePlayerUtil.getOfflineVideoStatuses(ACCOUNT_ID, POLICY_KEY)
@@ -66,21 +69,34 @@ export default class App extends Component {
     ).catch(() => {});
   }
 
+  pauseDownload(videoToken) {
+    BrightcovePlayerUtil.requestPauseDownloadVideoWithTokenId(videoToken)
+  }
+
+  resumeDownload(videoToken) {
+    BrightcovePlayerUtil.requestResumeDownloadVideoWithTokenId(videoToken)
+  }
+
   play(item) {
     const downloadStatus = this.state.offlineVideos.find(
       video => video.videoId === item.videoId,
     );
+
+
     this.setState({
       playback:
         downloadStatus && downloadStatus.downloadProgress === 1
           ? {
               ...this.state.playback,
-              videoToken: downloadStatus.videoToken
+              videoToken: downloadStatus.videoToken,
+              videoIdL: null
             }
           : {
               ...this.state.playback,
-              videoId: item.videoId
+              videoId: item.videoId,
+              videoToken: null
             },
+            closed:false
     });
   }
 
@@ -121,6 +137,13 @@ export default class App extends Component {
     });
   };
 
+  onCloseTapped = Event => {
+    console.log("close called")
+    this.setState({
+          closed : true,
+        });
+
+  }
   onError = event => {
     // Alert.alert(
     //   'onError',
@@ -137,6 +160,9 @@ export default class App extends Component {
   };
   onPlay = event => {
     console.log("Play called")
+     this.setState({
+          closed : false,
+        });
   };
 
   onVideoSize = event => {
@@ -156,7 +182,7 @@ export default class App extends Component {
       <View style={styles.container}>
         <StatusBar barStyle="light-content" />
         <BrightcovePlayer
-          autoPlay = {false}
+          autoPlay = {true}
           style={styles.video}
           accountId={ACCOUNT_ID}
           policyKey={POLICY_KEY}
@@ -168,6 +194,9 @@ export default class App extends Component {
           onVideoSize={this.onVideoSize}
           onPause={this.onPause}
           onPlay={this.onPlay}
+          onCloseTapped = {this.onCloseTapped}
+
+          style={{ height: this.state.closed ? 0:300, backgroundColor: 'blue' }}
         />
         <TouchableOpacity
           style={styles.playPauseButton}
@@ -205,8 +234,11 @@ export default class App extends Component {
                     {downloadStatus ? (
                       <Text style={styles.offlineBanner}>
                         {downloadStatus.downloadProgress === 1
-                          ? 'OFFLINE PLAYBACK'
-                          : `DOWNLOADING: ${Math.floor(
+                          ? 'OFFLINE PLAYBACK' :
+                           downloadStatus.videoStatus === 2 ? `PAUSED: ${Math.floor(
+                              downloadStatus.downloadProgress * 100,
+                            )}% ` 
+                          : downloadStatus.videoStatus === 5 ? 'Error' :  `DOWNLOADING: ${Math.floor(
                               downloadStatus.downloadProgress * 100,
                             )}%`}
                       </Text>
@@ -223,17 +255,43 @@ export default class App extends Component {
                     if (!downloadStatus) {
                       this.requestDownload(item.videoId);
                     } else {
-                      this.delete(downloadStatus.videoToken);
+                      if (downloadStatus.downloadProgress === 1) {
+                          this.delete(downloadStatus.videoToken);
+                      } else {
+                        if(downloadStatus.videoStatus === 2) {
+                              this.resumeDownload(downloadStatus.videoToken)
+                        } else {
+                          if(downloadStatus.videoStatus === 5) {
+                             this.delete(downloadStatus.videoToken);
+                          } else {
+                             this.pauseDownload(downloadStatus.videoToken);
+
+                          }
+                        }
+                      }
+                     
                     }
                   }}>
                   <Text>
                     {!downloadStatus
-                      ? '💾'
+                      ? item.canBeDownloaded ? '💾':''
                       : downloadStatus.downloadProgress === 1
                       ? '🗑'
                       : '⏳'}
                   </Text>
                 </TouchableOpacity>
+                 <TouchableOpacity
+                  style={styles.downloadButton}
+                  onPress={() => {
+                    if (downloadStatus) {
+                             this.delete(downloadStatus.videoToken);
+                    } 
+                  }}>
+                  <Text>
+                    {downloadStatus &&  downloadStatus.downloadProgress != 1? '❌':''}
+                  </Text>
+                </TouchableOpacity>
+
               </View>
             );
           }}

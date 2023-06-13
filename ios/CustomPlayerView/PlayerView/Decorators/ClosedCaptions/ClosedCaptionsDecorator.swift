@@ -22,11 +22,34 @@ class ClosedCaptionsDecorator: PlayerDecoratorProtocol, ClosedCaptionable, Sessi
       self.presentClosedCaptions()
     }
   }
-  func presentClosedCaptions() {
-    let navController = UINavigationController(rootViewController: self.ccMenuController)
-    if self.playerView?.session?.player.timeControlStatus == .playing {
-      ccMenuController.shouldPlayOnClose = true
+    
+    func addAudioObserver() {
+      self.playerView?.customControlsView?.audioTapped = {
+        [weak self] _ in
+        guard let self = self else { return }
+        self.presentAudio()
+      }
     }
-    self.playerView?.parentViewController?.present(navController, animated: true, completion: nil)
-  }
+    
+    func presentClosedCaptions() {
+        let navController = UINavigationController(rootViewController: self.ccMenuController)
+        if self.playerView?.session?.player.timeControlStatus == .playing {
+            ccMenuController.shouldPlayOnClose = true
+        }
+        ccMenuController.title = "Subtitles & CC"
+        ccMenuController.characteristic = .legible
+        ccMenuController.currentSession = session
+        self.playerView?.parentViewController?.present(navController, animated: true, completion: nil)
+    }
+    
+    func presentAudio() {
+        let navController = UINavigationController(rootViewController: self.ccMenuController)
+        if self.playerView?.session?.player.timeControlStatus == .playing {
+            ccMenuController.shouldPlayOnClose = true
+        }
+        ccMenuController.title = "Audio"
+        ccMenuController.characteristic = .audible
+        ccMenuController.currentSession = session
+        self.playerView?.parentViewController?.present(navController, animated: true, completion: nil)
+    }
 }

@@ -28,7 +28,11 @@ extension PlayerView: CustomControlsObserverable {
       guard let self = self else {
         return
       }
-      print("Close tapped")
+        if let superview = self.superview as? BrightcovePlayer {
+            superview.closeTapped()
+            
+        }
+      self.performScreenTransition(with: .normal)
       self.restablishTapTimer()
     }
   }
@@ -54,6 +58,7 @@ extension PlayerView: CustomControlsObserverable {
         return
       }
       self.restablishTapTimer()
+        
       self.controlsView.playbackButton.sendActions(for: .touchUpInside)
     }
   }

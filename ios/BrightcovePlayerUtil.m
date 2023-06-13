@@ -11,6 +11,8 @@ static NSString *const kUserDefaultKeyOfflineVideoId = @"videoId";
 static NSString *const kOfflineStatusAccountId = @"accountId";
 static NSString *const kOfflineStatusVideoId = @"videoId";
 static NSString *const kOfflineStatusVideoToken = @"videoToken";
+static NSString *const kOfflineStatus = @"videoStatus";
+static NSString *const kVideoCanBeDownloaded = @"canBeDownloaded";
 static NSString *const kOfflineStatusDownloadProgress = @"downloadProgress";
 static NSString *const kPlaylistAccountId = @"accountId";
 static NSString *const kPlaylistVideoId = @"videoId";
@@ -45,6 +47,8 @@ RCT_EXPORT_METHOD(requestDownloadVideoWithReferenceId:(NSString *)referenceId ac
             reject(kErrorCode, error.description, error);
             return;
         }
+        
+    
       [[BrightcovePlayerOfflineVideoManager sharedManager] requestVideoDownload:video mediaSelections: nil parameters:[self generateDownloadParameterWithBitRate:bitRate] completion:^(BCOVOfflineVideoToken offlineVideoToken, NSError *error) {
             if (error) {
                 reject(kErrorCode, error.description, error);
@@ -60,6 +64,21 @@ RCT_EXPORT_METHOD(requestDownloadVideoWithReferenceId:(NSString *)referenceId ac
         }];
     }];
 }
+
+RCT_EXPORT_METHOD(requestPauseDownloadVideoWithTokenId:(NSString *)tokenId  resolver:(RCTPromiseResolveBlock)resolve rejecter:(RCTPromiseRejectBlock)reject) {
+ 
+    [[BrightcovePlayerOfflineVideoManager sharedManager] pauseVideoDownload:tokenId];
+    [self sendOfflineNotification];
+
+}
+
+RCT_EXPORT_METHOD(requestResumeDownloadVideoWithTokenId:(NSString *)tokenId  resolver:(RCTPromiseResolveBlock)resolve rejecter:(RCTPromiseRejectBlock)reject) {
+    [BrightcovePlayerOfflineVideoManager sharedManager].delegate = self;
+
+    [[BrightcovePlayerOfflineVideoManager sharedManager] resumeVideoDownload:tokenId];
+    [self sendOfflineNotification];
+}
+
 
 RCT_EXPORT_METHOD(requestDownloadVideoWithVideoId:(NSString *)videoId accountId:(NSString *)accountId policyKey:(NSString *)policyKey bitRate:(nonnull NSNumber *)bitRate resolver:(RCTPromiseResolveBlock)resolve rejecter:(RCTPromiseRejectBlock)reject) {
     BCOVPlaybackService* playbackService = [[BCOVPlaybackService alloc] initWithAccountId:accountId policyKey:policyKey];
@@ -131,12 +150,14 @@ RCT_EXPORT_METHOD(getPlaylistWithReferenceId:(NSString *)referenceId accountId:(
     for (BCOVOfflineVideoStatus *status in statuses) {
         NSDictionary *dictionary = [NSUserDefaults.standardUserDefaults dictionaryForKey:[kUserDefaultKeyOfflinePrefix stringByAppendingString:status.offlineVideoToken]];
         if (!dictionary) continue;
+        
         [results addObject:
          @{
            kOfflineStatusAccountId: [dictionary objectForKey:kUserDefaultKeyOfflineAccountId],
            kOfflineStatusVideoId: [dictionary objectForKey:kUserDefaultKeyOfflineVideoId],
            kOfflineStatusDownloadProgress: @(status.downloadPercent / 100.0),
-           kOfflineStatusVideoToken: status.offlineVideoToken
+           kOfflineStatusVideoToken: status.offlineVideoToken,
+           kOfflineStatus: @(status.downloadState)
            }];
     }
     return results;
@@ -164,6 +185,7 @@ RCT_EXPORT_METHOD(getPlaylistWithReferenceId:(NSString *)referenceId accountId:(
            kPlaylistReferenceId: referenceId,
            kPlaylistName: name,
            kPlaylistDescription: description,
+           kVideoCanBeDownloaded: @(video.canBeDownloaded),
            kPlaylistDuration: video.properties[kBCOVVideoPropertyKeyDuration]
            }];
     }
@@ -173,7 +195,8 @@ RCT_EXPORT_METHOD(getPlaylistWithReferenceId:(NSString *)referenceId accountId:(
 - (NSDictionary *)generateDownloadParameterWithBitRate:(NSNumber*)bitRate {
     return
     @{
-      kBCOVOfflineVideoManagerRequestedBitrateKey: bitRate
+      kBCOVOfflineVideoManagerRequestedBitrateKey: bitRate,
+      kBCOVFairPlayLicensePurchaseKey: @YES
       };
 }
 
@@ -181,10 +204,18 @@ RCT_EXPORT_METHOD(getPlaylistWithReferenceId:(NSString *)referenceId accountId:(
     [self sendOfflineNotification];
 }
 
+-(void)offlineVideoToken:(BCOVOfflineVideoToken)offlineVideoToken aggregateDownloadTask:(AVAggregateAssetDownloadTask *)aggregateDownloadTask didProgressTo:(NSTimeInterval)progressPercent forMediaSelection:(AVMediaSelection *)mediaSelection {
+    
+    [self sendOfflineNotification];
+}
+
 - (void)offlineVideoToken:(BCOVOfflineVideoToken)offlineVideoToken didFinishDownloadWithError:(NSError *)error {
     [self sendOfflineNotification];
 }
 
+- (void)offlineVideoToken:(BCOVOfflineVideoToken)offlineVideoToken didFinishMediaSelectionDownload:(AVMediaSelection *)mediaSelection {
+    
+}
 - (void)sendOfflineNotification {
     if (hasListeners) {
         [self sendEventWithName:kEventOfflineNotification body:[self collectOfflineVideoStatuses]];
