@@ -6,6 +6,7 @@ import android.os.Handler;
 import android.util.Log;
 import android.widget.ImageButton;
 import android.widget.RelativeLayout;
+import android.widget.TextView;
 
 import com.brightcove.player.display.ExoPlayerVideoDisplayComponent;
 import com.brightcove.player.edge.Catalog;
@@ -466,6 +467,9 @@ public class BrightcovePlayerView extends RelativeLayout implements LifecycleEve
         upNextViewOverlay.setVideoReferenceId(referenceId);
         BrightcovePlayerView.this.playerVideoView.clear();
         BrightcovePlayerView.this.playerVideoView.add(video);
+        TextView titleTV = mediaController.getBrightcoveControlBar().findViewById(R.id.title);
+        titleTV.setText(video.getName());
+        titleTV.setBackgroundColor(getResources().getColor(R.color.transparent));
         BrightcovePlayerView.this.playerVideoView.setOnPreparedListener(mp -> {
             if (!playerVideoView.isPlaying() && BrightcovePlayerView.this.autoPlay) {
                 BrightcovePlayerView.this.playerVideoView.start();
@@ -559,6 +563,7 @@ public class BrightcovePlayerView extends RelativeLayout implements LifecycleEve
         ImageButton forwardBtn = playerVideoView.findViewById(R.id.fast_forward_btn);
         rewindBtn.setOnClickListener(forwardRewindClickListener);
         forwardBtn.setOnClickListener(forwardRewindClickListener);
+
     }
 
     private void fastForward() {

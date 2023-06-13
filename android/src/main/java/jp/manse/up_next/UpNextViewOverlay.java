@@ -34,7 +34,7 @@ import jp.manse.webservice.ReactCatalog;
 public class UpNextViewOverlay {
     private final static double WIDTH_PORT_PERCENT = 0.7;
     private final static double HEIGHT_PERCENT = 0.6;
-    private final static int UP_NEXT_COUNT_DOWN_TIME = 5000;
+    private final static int UP_NEXT_COUNT_DOWN_TIME = 10000;
     private final static int GET_ALL_VIDEOS_PRE_FETCH_OFFSET = 30000;
     private final static int ONE_SEC = 1000;
     private final static int POSTER_RATIO_WIDTH = 16;
@@ -61,7 +61,7 @@ public class UpNextViewOverlay {
     private Catalog catalog;
     private CountDownTimer upNextTimer;
     private boolean upNextOverlayCancelled = false;
-    private int downSecondCounter = 5;
+    private int downSecondCounter = 10;
 
     /**
      * [nextVideoNotAvailableFromPlaylist] will be true if there is no next video from playlist or
@@ -162,7 +162,7 @@ public class UpNextViewOverlay {
     }
 
     public void resetUpNextCancel() {
-        downSecondCounter = 5;
+        downSecondCounter = 10;
         upNextOverlayCancelled = false;
     }
 
