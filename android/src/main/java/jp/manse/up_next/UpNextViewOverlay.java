@@ -162,7 +162,7 @@ public class UpNextViewOverlay {
     }
 
     public void resetUpNextCancel() {
-        downSecondCounter = 5;
+        downSecondCounter = 10;
         upNextOverlayCancelled = false;
     }
 
