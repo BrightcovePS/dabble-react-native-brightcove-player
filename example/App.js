@@ -6,6 +6,7 @@ import {
   Text,
   TouchableOpacity,
   View,
+  Platform,
   Alert
 } from 'react-native';
 import {
@@ -70,17 +71,25 @@ export default class App extends Component {
   }
 
   pauseDownload(videoToken) {
-    BrightcovePlayerUtil.requestPauseDownloadVideoWithTokenId(ACCOUNT_ID,
-      POLICY_KEY,
-      videoId,
-    ).catch(() => {});
+    if (Platform.OS === 'ios') {
+      BrightcovePlayerUtil.requestPauseDownloadVideoWithTokenId(videoToken);
+    } else {
+      BrightcovePlayerUtil.requestPauseDownloadVideoWithTokenId(ACCOUNT_ID,
+        POLICY_KEY,
+        videoId,
+      ).catch(() => {});
+    }
   }
 
   resumeDownload(videoToken) {
-    BrightcovePlayerUtil.requestResumeDownloadVideoWithTokenId(ACCOUNT_ID,
-      POLICY_KEY,
-      videoId,
-    ).catch(() => {});
+    if (Platform.OS === 'ios') {
+      BrightcovePlayerUtil.requestResumeDownloadVideoWithTokenId(videoToken);
+    } else {
+      BrightcovePlayerUtil.requestResumeDownloadVideoWithTokenId(ACCOUNT_ID,
+        POLICY_KEY,
+        videoId,
+      ).catch(() => {});
+    }
   }
 
   play(item) {
