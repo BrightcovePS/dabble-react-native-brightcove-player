@@ -70,17 +70,25 @@ export default class App extends Component {
   }
 
   pauseDownload(videoToken) {
-    BrightcovePlayerUtil.requestPauseDownloadVideoWithTokenId(ACCOUNT_ID,
-      POLICY_KEY,
-      videoId,
-    ).catch(() => {});
+    if(navigator.userAgent.match(/Android/i)){
+      BrightcovePlayerUtil.requestPauseDownloadVideoWithTokenId(ACCOUNT_ID,
+        POLICY_KEY,
+        videoId,
+      ).catch(() => {});
+    } else {
+      BrightcovePlayerUtil.requestPauseDownloadVideoWithTokenId(videoToken)
+    }
   }
 
   resumeDownload(videoToken) {
+    if(navigator.userAgent.match(/Android/i)){
     BrightcovePlayerUtil.requestResumeDownloadVideoWithTokenId(ACCOUNT_ID,
       POLICY_KEY,
       videoId,
     ).catch(() => {});
+    }else{
+      BrightcovePlayerUtil.requestResumeDownloadVideoWithTokenId(videoToken)
+    }
   }
 
   play(item) {
