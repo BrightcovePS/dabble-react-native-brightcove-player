@@ -71,25 +71,21 @@ export default class App extends Component {
   }
 
   pauseDownload(videoToken, videoId) {
-    if (Platform.OS === 'ios') {
-      BrightcovePlayerUtil.requestPauseDownloadVideoWithTokenId(videoToken);
-    } else {
-      BrightcovePlayerUtil.requestPauseDownloadVideoWithTokenId(ACCOUNT_ID,
+      BrightcovePlayerUtil.requestPauseDownloadVideoWithTokenId(
+        ACCOUNT_ID,
         POLICY_KEY,
         videoId,
+        videoToken
       ).catch(() => {});
-    }
   }
 
   resumeDownload(videoToken, videoId) {
-    if (Platform.OS === 'ios') {
-      BrightcovePlayerUtil.requestResumeDownloadVideoWithTokenId(videoToken);
-    } else {
-      BrightcovePlayerUtil.requestResumeDownloadVideoWithTokenId(ACCOUNT_ID,
+      BrightcovePlayerUtil.requestResumeDownloadVideoWithTokenId(
+        ACCOUNT_ID,
         POLICY_KEY,
         videoId,
+        videoToken
       ).catch(() => {});
-    }
   }
 
   play(item) {
