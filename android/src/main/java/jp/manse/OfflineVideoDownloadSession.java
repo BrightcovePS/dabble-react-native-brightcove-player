@@ -67,6 +67,10 @@ public class OfflineVideoDownloadSession extends VideoListener implements MediaD
         this.onVideo(video);
     }
 
+    public void pauseDownload(Video video) {
+        this.onVideo(video);
+    }
+
     @Override
     public void onVideo(final Video video) {
         this.videoId = video.getId();
@@ -78,8 +82,9 @@ public class OfflineVideoDownloadSession extends VideoListener implements MediaD
                 this.resolve(video);
                 break;
             case DownloadStatus.STATUS_DOWNLOADING:
+                this.offlineCatalog.pauseVideoDownload(video);
             case DownloadStatus.STATUS_PENDING:
-                this.rejectWithCallback(ERROR_MESSAGE_ALREADY_DOWNLOADING);
+                this.offlineCatalog.resumeVideoDownload(video);
                 break;
             case DownloadStatus.STATUS_COMPLETE:
                 this.rejectWithCallback(ERROR_MESSAGE_ALREADY_EXISTS);

@@ -116,6 +116,23 @@ public class BrightcovePlayerAccount implements OfflineVideoDownloadSession.OnOf
         this.listener.onOfflineStorageStateChanged(collectNativeOfflineVideoStatuses());
     }
 
+    public void requestPauseDownloadWithVideoId(String videoId, Promise promise){
+        if (this.hasOfflineVideoDownloadSessionWithVideoId(videoId)) {
+            promise.reject(ERROR_CODE, ERROR_MESSAGE_DUPLICATE_SESSION);
+            return;
+        }
+        OfflineVideoDownloadSession session = new OfflineVideoDownloadSession(this.context, this.accountId, this.policyKey, this);
+        session.pauseDownload(offlineCatalog.findOfflineVideoById(videoId));
+    }
+
+    public void requestResumeDownloadWithVideoId(String videoId, Promise promise){
+        if (this.hasOfflineVideoDownloadSessionWithVideoId(videoId)) {
+            promise.reject(ERROR_CODE, ERROR_MESSAGE_DUPLICATE_SESSION);
+            return;
+        }
+        OfflineVideoDownloadSession session = new OfflineVideoDownloadSession(this.context, this.accountId, this.policyKey, this);
+        session.resumeDownload(offlineCatalog.findOfflineVideoById(videoId));
+    }
     public void getOfflineVideoStatuses(Promise promise) {
         if (this.getOfflineVideoStatusesRunning) {
             this.getOfflineVideoStatusesPendingPromises.add(promise);

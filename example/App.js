@@ -70,11 +70,17 @@ export default class App extends Component {
   }
 
   pauseDownload(videoToken) {
-    BrightcovePlayerUtil.requestPauseDownloadVideoWithTokenId(videoToken)
+    BrightcovePlayerUtil.requestPauseDownloadVideoWithTokenId(ACCOUNT_ID,
+      POLICY_KEY,
+      videoId,
+    ).catch(() => {});
   }
 
   resumeDownload(videoToken) {
-    BrightcovePlayerUtil.requestResumeDownloadVideoWithTokenId(videoToken)
+    BrightcovePlayerUtil.requestResumeDownloadVideoWithTokenId(ACCOUNT_ID,
+      POLICY_KEY,
+      videoId,
+    ).catch(() => {});
   }
 
   play(item) {
@@ -263,10 +269,7 @@ export default class App extends Component {
                         } else {
                           if(downloadStatus.videoStatus === 5) {
                              this.delete(downloadStatus.videoToken);
-                          } else {
-                             this.pauseDownload(downloadStatus.videoToken);
-
-                          }
+                          } 
                         }
                       }
                      

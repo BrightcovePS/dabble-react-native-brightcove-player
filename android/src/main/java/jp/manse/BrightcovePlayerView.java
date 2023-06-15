@@ -1,13 +1,19 @@
 package jp.manse;
 
+import android.annotation.TargetApi;
 import android.content.res.Configuration;
 import android.graphics.Color;
+import android.net.Uri;
 import android.os.Handler;
 import android.util.Log;
+import android.util.Pair;
 import android.widget.ImageButton;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import com.brightcove.player.captioning.BrightcoveCaptionFormat;
+import com.brightcove.player.captioning.BrightcoveClosedCaption;
+import com.brightcove.player.captioning.LoadCaptionsService;
 import com.brightcove.player.display.ExoPlayerVideoDisplayComponent;
 import com.brightcove.player.edge.Catalog;
 import com.brightcove.player.edge.OfflineCatalog;
@@ -38,6 +44,8 @@ import com.google.android.exoplayer2.trackselection.DefaultTrackSelector;
 import com.google.android.exoplayer2.trackselection.MappingTrackSelector;
 
 import java.util.HashMap;
+import java.util.Iterator;
+import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 
@@ -478,6 +486,8 @@ public class BrightcovePlayerView extends RelativeLayout implements LifecycleEve
         upNextViewOverlay.resetUpNextCancel();
         upNextViewOverlay.prepareNextVideo();
     }
+
+
 
     /**
      * Refresh video player size as per surface render size to avoid below issue
