@@ -70,7 +70,7 @@ export default class App extends Component {
     ).catch(() => {});
   }
 
-  pauseDownload(videoToken) {
+  pauseDownload(videoToken, videoId) {
     if (Platform.OS === 'ios') {
       BrightcovePlayerUtil.requestPauseDownloadVideoWithTokenId(videoToken);
     } else {
@@ -81,7 +81,7 @@ export default class App extends Component {
     }
   }
 
-  resumeDownload(videoToken) {
+  resumeDownload(videoToken, videoId) {
     if (Platform.OS === 'ios') {
       BrightcovePlayerUtil.requestResumeDownloadVideoWithTokenId(videoToken);
     } else {
@@ -269,20 +269,19 @@ export default class App extends Component {
                   onPress={() => {
                     if (!downloadStatus) {
                       this.requestDownload(item.videoId);
-                    } else {
-                      if (downloadStatus.downloadProgress === 1) {
-                          this.delete(downloadStatus.videoToken);
-                      } else {
-                        if(downloadStatus.videoStatus === 2) {
-                              this.resumeDownload(downloadStatus.videoToken)
-                        } else {
-                          if(downloadStatus.videoStatus === 5) {
-                             this.delete(downloadStatus.videoToken);
-                          } 
-                        }
-                      }
-                     
+                    } 
+                    else if (downloadStatus.downloadProgress === 1) {
+                      this.delete(downloadStatus.videoToken);
+                    } 
+                    else if(downloadStatus.videoStatus === 2) {
+                      this.resumeDownload(downloadStatus.videoToken, item.videoId);
+                    } 
+                    else if(downloadStatus.videoStatus === 5) {
+                      this.delete(downloadStatus.videoToken);
                     }
+                    else {
+                      this.pauseDownload(downloadStatus.videoToken, item.videoId);
+                    } 
                   }}>
                   <Text>
                     {!downloadStatus
