@@ -1,4 +1,4 @@
-import { NativeEventEmitter, NativeModules } from 'react-native';
+import { NativeEventEmitter, NativeModules, Platform } from 'react-native';
 
 const offlineNotificationEmitter = new NativeEventEmitter(
   NativeModules.BrightcovePlayerUtil
@@ -32,16 +32,42 @@ const requestDownloadVideoWithVideoId = function(
   );
 };
 
-const requestPauseDownloadVideoWithTokenId = function(videoToken) {
-  return NativeModules.BrightcovePlayerUtil.requestPauseDownloadVideoWithTokenId(
-    videoToken
-  );
+const requestPauseDownloadVideoWithTokenId = function(
+  accountId,
+  policyKey,
+  videoId,
+  videoToken
+  ) {
+    if (Platform.OS === 'ios') {
+      return NativeModules.BrightcovePlayerUtil.requestPauseDownloadVideoWithTokenId(
+        videoToken
+      );
+    } else {
+      return NativeModules.BrightcovePlayerUtil.requestPauseDownloadVideoWithTokenId(
+        accountId,
+        policyKey,
+        videoId
+      );
+    }
 };
 
-const requestResumeDownloadVideoWithTokenId = function(videoToken) {
-  return NativeModules.BrightcovePlayerUtil.requestResumeDownloadVideoWithTokenId(
-    videoToken
-  );
+const requestResumeDownloadVideoWithTokenId = function(
+  accountId,
+  policyKey,
+  videoId,
+  videoToken
+  ) {
+    if (Platform.OS === 'ios') {
+      return NativeModules.BrightcovePlayerUtil.requestResumeDownloadVideoWithTokenId(
+        videoToken
+      );
+    } else {
+      return NativeModules.BrightcovePlayerUtil.requestResumeDownloadVideoWithTokenId(
+        accountId,
+        policyKey,
+        videoId
+      )
+    }
 };
 
 const getOfflineVideoStatuses = function(accountId, policyKey) {
