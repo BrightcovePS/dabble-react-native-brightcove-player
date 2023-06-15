@@ -6,6 +6,7 @@ import {
   Text,
   TouchableOpacity,
   View,
+  Platform,
   Alert
 } from 'react-native';
 import {
@@ -69,25 +70,25 @@ export default class App extends Component {
     ).catch(() => {});
   }
 
-  pauseDownload(videoToken) {
-    if(navigator.userAgent.match(/Android/i)){
+  pauseDownload(videoToken, videoId) {
+    if (Platform.OS === 'ios') {
+      BrightcovePlayerUtil.requestPauseDownloadVideoWithTokenId(videoToken);
+    } else {
       BrightcovePlayerUtil.requestPauseDownloadVideoWithTokenId(ACCOUNT_ID,
         POLICY_KEY,
         videoId,
       ).catch(() => {});
-    } else {
-      BrightcovePlayerUtil.requestPauseDownloadVideoWithTokenId(videoToken)
     }
   }
 
-  resumeDownload(videoToken) {
-    if(navigator.userAgent.match(/Android/i)){
-    BrightcovePlayerUtil.requestResumeDownloadVideoWithTokenId(ACCOUNT_ID,
-      POLICY_KEY,
-      videoId,
-    ).catch(() => {});
-    }else{
-      BrightcovePlayerUtil.requestResumeDownloadVideoWithTokenId(videoToken)
+  resumeDownload(videoToken, videoId) {
+    if (Platform.OS === 'ios') {
+      BrightcovePlayerUtil.requestResumeDownloadVideoWithTokenId(videoToken);
+    } else {
+      BrightcovePlayerUtil.requestResumeDownloadVideoWithTokenId(ACCOUNT_ID,
+        POLICY_KEY,
+        videoId,
+      ).catch(() => {});
     }
   }
 
@@ -268,20 +269,19 @@ export default class App extends Component {
                   onPress={() => {
                     if (!downloadStatus) {
                       this.requestDownload(item.videoId);
-                    } else {
-                      if (downloadStatus.downloadProgress === 1) {
-                          this.delete(downloadStatus.videoToken);
-                      } else {
-                        if(downloadStatus.videoStatus === 2) {
-                              this.resumeDownload(downloadStatus.videoToken)
-                        } else {
-                          if(downloadStatus.videoStatus === 5) {
-                             this.delete(downloadStatus.videoToken);
-                          } 
-                        }
-                      }
-                     
+                    } 
+                    else if (downloadStatus.downloadProgress === 1) {
+                      this.delete(downloadStatus.videoToken);
+                    } 
+                    else if(downloadStatus.videoStatus === 2) {
+                      this.resumeDownload(downloadStatus.videoToken, item.videoId);
+                    } 
+                    else if(downloadStatus.videoStatus === 5) {
+                      this.delete(downloadStatus.videoToken);
                     }
+                    else {
+                      this.pauseDownload(downloadStatus.videoToken, item.videoId);
+                    } 
                   }}>
                   <Text>
                     {!downloadStatus
