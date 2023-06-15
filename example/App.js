@@ -196,7 +196,7 @@ export default class App extends Component {
           onPlay={this.onPlay}
           onCloseTapped = {this.onCloseTapped}
 
-          style={{ height: this.state.closed ? 0:300, backgroundColor: 'blue' }}
+          // style={{ height: this.state.closed ? 0:300, backgroundColor: 'blue' }}
         />
         <TouchableOpacity
           style={styles.playPauseButton}
