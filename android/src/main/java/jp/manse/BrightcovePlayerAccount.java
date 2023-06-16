@@ -322,4 +322,9 @@ public class BrightcovePlayerAccount implements OfflineVideoDownloadSession.OnOf
     public void onProgress() {
         this.listener.onOfflineStorageStateChanged(collectNativeOfflineVideoStatuses());
     }
+
+    @Override
+    public void onPaused() {
+        this.listener.onOfflineStorageStateChanged(collectNativeOfflineVideoStatuses());
+    }
 }
