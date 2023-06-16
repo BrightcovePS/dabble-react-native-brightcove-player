@@ -64,11 +64,11 @@ public class OfflineVideoDownloadSession extends VideoListener implements MediaD
     }
 
     public void resumeDownload(Video video) {
-        this.onVideo(video);
+        this.offlineCatalog.resumeVideoDownload(video);
     }
 
     public void pauseDownload(Video video) {
-        this.onVideo(video);
+        this.offlineCatalog.pauseVideoDownload(video);
     }
 
     @Override
