@@ -41,7 +41,7 @@ export default class App extends Component {
       .then(videos => {
         this.setState({
           videos,
-          closed:true
+          closed:false
         });
 
       })
@@ -194,7 +194,7 @@ export default class App extends Component {
         <StatusBar barStyle="light-content" />
         <BrightcovePlayer
           autoPlay = {true}
-          style={styles.video}
+          style={{ width: '100%', height: this.state.closed ? 0:300 }}
           accountId={ACCOUNT_ID}
           policyKey={POLICY_KEY}
           seekDuration={15000}
@@ -206,8 +206,6 @@ export default class App extends Component {
           onPause={this.onPause}
           onPlay={this.onPlay}
           onCloseTapped = {this.onCloseTapped}
-
-          // style={{ height: this.state.closed ? 0:300, backgroundColor: 'blue' }}
         />
         <TouchableOpacity
           style={styles.playPauseButton}
@@ -312,10 +310,6 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     flexDirection: 'column',
-  },
-  video: {
-    width: '100%',
-    height: 260
   },
   list: {
     flex: 1,
