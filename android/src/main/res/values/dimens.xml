@@ -13,4 +13,5 @@
     <dimen name="padding_small">8dp</dimen>
     <dimen name="padding_xsmall">6dp</dimen>
     <dimen name="line_width">3dp</dimen>
+    <dimen name="close_button_margin_start">16dp</dimen>
 </resources>

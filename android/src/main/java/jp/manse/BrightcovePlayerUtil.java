@@ -47,6 +47,26 @@ public class BrightcovePlayerUtil extends ReactContextBaseJavaModule implements 
     }
 
     @ReactMethod
+    public void requestPauseDownloadVideoWithTokenId(String accountId, String policyKey, String videoId, Promise promise) {
+        BrightcovePlayerAccount account = this.getBrightcovePlayerAccount(accountId, policyKey);
+        if (account == null) {
+            promise.reject(ERROR_CODE, ERROR_MESSAGE_MISSING_ARGUMENTS);
+            return;
+        }
+        account.requestPauseDownloadWithVideoId(videoId, promise);
+    }
+
+    @ReactMethod
+    public void requestResumeDownloadVideoWithTokenId(String accountId, String policyKey, String videoId, Promise promise) {
+        BrightcovePlayerAccount account = this.getBrightcovePlayerAccount(accountId, policyKey);
+        if (account == null) {
+            promise.reject(ERROR_CODE, ERROR_MESSAGE_MISSING_ARGUMENTS);
+            return;
+        }
+        account.requestResumeDownloadWithVideoId(videoId, promise);
+    }
+
+    @ReactMethod
     public void getOfflineVideoStatuses(String accountId, String policyKey, Promise promise) {
         BrightcovePlayerAccount account = this.getBrightcovePlayerAccount(accountId, policyKey);
         if (account == null) {

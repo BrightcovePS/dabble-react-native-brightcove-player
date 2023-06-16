@@ -96,6 +96,20 @@ export namespace BrightcovePlayerUtil {
     bitRate?: number
   ): Promise<VideoToken>;
 
+  export function requestPauseDownloadVideoWithTokenId(
+    accountId: string,
+    policyKey: string,
+    videoId: string,
+    videoToken: VideoToken
+  ): Promise<VideoToken>;
+
+  export function requestResumeDownloadVideoWithTokenId(
+    accountId: string,
+    policyKey: string,
+    videoId: string,
+    videoToken: VideoToken
+  ): Promise<VideoToken>;
+
   export function getOfflineVideoStatuses(
     accountId: string,
     policyKey: string

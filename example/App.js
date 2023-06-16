@@ -6,6 +6,7 @@ import {
   Text,
   TouchableOpacity,
   View,
+  Platform,
   Alert
 } from 'react-native';
 import {
@@ -40,7 +41,7 @@ export default class App extends Component {
       .then(videos => {
         this.setState({
           videos,
-          closed:true
+          closed:false
         });
 
       })
@@ -66,15 +67,25 @@ export default class App extends Component {
       ACCOUNT_ID,
       POLICY_KEY,
       videoId,
-    ).catch(() => {});
+    ).catch((error) => {console.error(error)});
   }
 
-  pauseDownload(videoToken) {
-    BrightcovePlayerUtil.requestPauseDownloadVideoWithTokenId(videoToken)
+  pauseDownload(videoToken, videoId) {
+      BrightcovePlayerUtil.requestPauseDownloadVideoWithTokenId(
+        ACCOUNT_ID,
+        POLICY_KEY,
+        videoId,
+        videoToken
+      ).catch((error) => {console.error(error)});
   }
 
-  resumeDownload(videoToken) {
-    BrightcovePlayerUtil.requestResumeDownloadVideoWithTokenId(videoToken)
+  resumeDownload(videoToken, videoId) {
+      BrightcovePlayerUtil.requestResumeDownloadVideoWithTokenId(
+        ACCOUNT_ID,
+        POLICY_KEY,
+        videoId,
+        videoToken
+      ).catch((error) => {console.error(error)});
   }
 
   play(item) {
@@ -89,7 +100,7 @@ export default class App extends Component {
           ? {
               ...this.state.playback,
               videoToken: downloadStatus.videoToken,
-              videoIdL: null
+              videoId: item.videoId
             }
           : {
               ...this.state.playback,
@@ -183,7 +194,7 @@ export default class App extends Component {
         <StatusBar barStyle="light-content" />
         <BrightcovePlayer
           autoPlay = {true}
-          style={styles.video}
+          style={{ width: '100%', height: this.state.closed ? 0:300 }}
           accountId={ACCOUNT_ID}
           policyKey={POLICY_KEY}
           seekDuration={15000}
@@ -195,8 +206,6 @@ export default class App extends Component {
           onPause={this.onPause}
           onPlay={this.onPlay}
           onCloseTapped = {this.onCloseTapped}
-
-          style={{ height: this.state.closed ? 0:300, backgroundColor: 'blue' }}
         />
         <TouchableOpacity
           style={styles.playPauseButton}
@@ -254,23 +263,19 @@ export default class App extends Component {
                   onPress={() => {
                     if (!downloadStatus) {
                       this.requestDownload(item.videoId);
-                    } else {
-                      if (downloadStatus.downloadProgress === 1) {
-                          this.delete(downloadStatus.videoToken);
-                      } else {
-                        if(downloadStatus.videoStatus === 2) {
-                              this.resumeDownload(downloadStatus.videoToken)
-                        } else {
-                          if(downloadStatus.videoStatus === 5) {
-                             this.delete(downloadStatus.videoToken);
-                          } else {
-                             this.pauseDownload(downloadStatus.videoToken);
-
-                          }
-                        }
-                      }
-                     
+                    } 
+                    else if (downloadStatus.downloadProgress === 1) {
+                      this.delete(downloadStatus.videoToken);
+                    } 
+                    else if(downloadStatus.videoStatus === 2) {
+                      this.resumeDownload(downloadStatus.videoToken, item.videoId);
+                    } 
+                    else if(downloadStatus.videoStatus === 5) {
+                      this.delete(downloadStatus.videoToken);
                     }
+                    else {
+                      this.pauseDownload(downloadStatus.videoToken, item.videoId);
+                    } 
                   }}>
                   <Text>
                     {!downloadStatus
@@ -305,10 +310,6 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     flexDirection: 'column',
-  },
-  video: {
-    width: '100%',
-    height: 260
   },
   list: {
     flex: 1,

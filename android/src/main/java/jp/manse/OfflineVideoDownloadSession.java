@@ -1,7 +1,5 @@
 package jp.manse;
 
-import androidx.annotation.NonNull;
-
 import com.brightcove.player.edge.Catalog;
 import com.brightcove.player.edge.OfflineCallback;
 import com.brightcove.player.edge.OfflineCatalog;
@@ -15,6 +13,7 @@ import com.facebook.react.bridge.ReactApplicationContext;
 import java.io.Serializable;
 import java.util.Map;
 
+import androidx.annotation.NonNull;
 import jp.manse.util.DefaultEventEmitter;
 
 public class OfflineVideoDownloadSession extends VideoListener implements MediaDownloadable.DownloadEventListener {
@@ -37,6 +36,8 @@ public class OfflineVideoDownloadSession extends VideoListener implements MediaD
         void onCompleted(OfflineVideoDownloadSession session);
 
         void onProgress();
+
+        void onPaused();
     }
 
     public OfflineVideoDownloadSession(ReactApplicationContext context, String accountId, String policyKey, OnOfflineVideoDownloadSessionListener listener) {
@@ -67,6 +68,10 @@ public class OfflineVideoDownloadSession extends VideoListener implements MediaD
         this.onVideo(video);
     }
 
+    public void pauseDownload(Video video) {
+        this.onVideo(video);
+    }
+
     @Override
     public void onVideo(final Video video) {
         this.videoId = video.getId();
@@ -78,8 +83,10 @@ public class OfflineVideoDownloadSession extends VideoListener implements MediaD
                 this.resolve(video);
                 break;
             case DownloadStatus.STATUS_DOWNLOADING:
+                this.offlineCatalog.pauseVideoDownload(video);
+            case DownloadStatus.STATUS_PAUSED:
             case DownloadStatus.STATUS_PENDING:
-                this.rejectWithCallback(ERROR_MESSAGE_ALREADY_DOWNLOADING);
+                this.offlineCatalog.resumeVideoDownload(video);
                 break;
             case DownloadStatus.STATUS_COMPLETE:
                 this.rejectWithCallback(ERROR_MESSAGE_ALREADY_EXISTS);
@@ -123,7 +130,7 @@ public class OfflineVideoDownloadSession extends VideoListener implements MediaD
 
     @Override
     public void onDownloadPaused(@NonNull Video video, @NonNull DownloadStatus downloadStatus) {
-        this.listener.onCompleted(this);
+        this.listener.onPaused();
     }
 
     @Override
