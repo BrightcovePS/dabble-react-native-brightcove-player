@@ -67,7 +67,7 @@ export default class App extends Component {
       ACCOUNT_ID,
       POLICY_KEY,
       videoId,
-    ).catch(() => {console.warn('error requesting download')});
+    ).catch((error) => {console.error(error)});
   }
 
   pauseDownload(videoToken, videoId) {
@@ -76,7 +76,7 @@ export default class App extends Component {
         POLICY_KEY,
         videoId,
         videoToken
-      ).catch(() => {console.warn('error pausing download')});
+      ).catch((error) => {console.error(error)});
   }
 
   resumeDownload(videoToken, videoId) {
@@ -85,7 +85,7 @@ export default class App extends Component {
         POLICY_KEY,
         videoId,
         videoToken
-      ).catch(() => {console.warn('error resuming download')});
+      ).catch((error) => {console.error(error)});
   }
 
   play(item) {
