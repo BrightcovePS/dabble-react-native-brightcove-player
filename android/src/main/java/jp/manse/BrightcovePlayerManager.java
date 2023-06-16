@@ -50,6 +50,8 @@ public class BrightcovePlayerManager extends ViewGroupManager<BrightcovePlayerVi
     public static final String ACCOUNT_ID = "accountId";
     public static final String PLAYLIST_ID = "playlistId";
     public static final String PLAYLIST_REFERENCE_ID = "playlistReferenceId";
+
+    public static final String EVENT_ON_CLOSE_TAPPED = "onCloseTapped";
     public static final String AUTO_PLAY = "autoPlay";
     public static final String PLAY = "play";
     public static final String DISABLE_DEFAULT_CONTROL = "disableDefaultControl";
@@ -198,6 +200,7 @@ public class BrightcovePlayerManager extends ViewGroupManager<BrightcovePlayerVi
         map.put(EVENT_ON_PLAY_NEXT_VIDEO, (Object) MapBuilder.of(REGISTRATION_NAME, EVENT_ON_PLAY_NEXT_VIDEO_REGISTER_NAME));
         map.put(EVENT_ON_VIDEO_SIZE, MapBuilder.of(REGISTRATION_NAME, EVENT_ON_VIDEO_SIZE_REGISTER_NAME));
         map.put(EVENT_ON_ERROR, MapBuilder.of(REGISTRATION_NAME, EVENT_ON_ERROR_VIDEO_REGISTER_NAME));
+        map.put(EVENT_ON_CLOSE_TAPPED, MapBuilder.of(REGISTRATION_NAME, EVENT_ON_CLOSE_TAPPED));
         return map;
     }
 }

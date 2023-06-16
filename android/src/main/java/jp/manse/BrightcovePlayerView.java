@@ -4,6 +4,8 @@ import android.content.res.Configuration;
 import android.graphics.Color;
 import android.os.Handler;
 import android.util.Log;
+import android.view.View;
+import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
@@ -93,6 +95,8 @@ public class BrightcovePlayerView extends RelativeLayout implements LifecycleEve
             fastForward();
         } else if (v.getId() == R.id.rewind_btn) {
             rewind();
+        } else if (v.getId() == R.id.close){
+            closePlayer();
         }
     };
     private final UpNextViewOverlay.OnPlayUpNextListener onPlayUpNextListener = video -> {
@@ -561,11 +565,12 @@ public class BrightcovePlayerView extends RelativeLayout implements LifecycleEve
     }
 
     private void initButtons() {
+        Button closeBtn = playerVideoView.findViewById(R.id.close);
         ImageButton rewindBtn = playerVideoView.findViewById(R.id.rewind_btn);
         ImageButton forwardBtn = playerVideoView.findViewById(R.id.fast_forward_btn);
         rewindBtn.setOnClickListener(forwardRewindClickListener);
         forwardBtn.setOnClickListener(forwardRewindClickListener);
-
+        closeBtn.setOnClickListener(forwardRewindClickListener);
     }
 
     private void fastForward() {
@@ -583,6 +588,10 @@ public class BrightcovePlayerView extends RelativeLayout implements LifecycleEve
             upNextViewOverlay.resetUpNextCancel();
             playerVideoView.seekTo(seekPos);
         }
+    }
+
+    private void closePlayer(){
+        sendJSEvent(BrightcovePlayerManager.EVENT_ON_CLOSE_TAPPED, Arguments.createMap());
     }
 
     private void updateVideoSizeAfterADelay() {
