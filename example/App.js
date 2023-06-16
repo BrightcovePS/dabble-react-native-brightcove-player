@@ -263,23 +263,19 @@ export default class App extends Component {
                   onPress={() => {
                     if (!downloadStatus) {
                       this.requestDownload(item.videoId);
-                    } else {
-                      if (downloadStatus.downloadProgress === 1) {
-                          this.delete(downloadStatus.videoToken);
-                      } else {
-                        if(downloadStatus.videoStatus === 2) {
-                              this.resumeDownload(downloadStatus.videoToken, downloadStatus.videoId)
-                        } else {
-                          if(downloadStatus.videoStatus === 5) {
-                             this.delete(downloadStatus.videoToken);
-                          } else {
-                             this.pauseDownload(downloadStatus.videoToken, downloadStatus.videoId);
-
-                          }
-                        }
-                      }
-
+                    } 
+                    else if (downloadStatus.downloadProgress === 1) {
+                      this.delete(downloadStatus.videoToken);
+                    } 
+                    else if(downloadStatus.videoStatus === 2) {
+                      this.resumeDownload(downloadStatus.videoToken, item.videoId);
+                    } 
+                    else if(downloadStatus.videoStatus === 5) {
+                      this.delete(downloadStatus.videoToken);
                     }
+                    else {
+                      this.pauseDownload(downloadStatus.videoToken, item.videoId);
+                    } 
                   }}>
                   <Text>
                     {!downloadStatus
