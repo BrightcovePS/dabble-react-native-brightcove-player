@@ -83,6 +83,7 @@ public class OfflineVideoDownloadSession extends VideoListener implements MediaD
                 break;
             case DownloadStatus.STATUS_DOWNLOADING:
                 this.offlineCatalog.pauseVideoDownload(video);
+            case DownloadStatus.STATUS_PAUSED:
             case DownloadStatus.STATUS_PENDING:
                 this.offlineCatalog.resumeVideoDownload(video);
                 break;

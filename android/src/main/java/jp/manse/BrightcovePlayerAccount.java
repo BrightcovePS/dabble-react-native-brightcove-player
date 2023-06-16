@@ -118,20 +118,34 @@ public class BrightcovePlayerAccount implements OfflineVideoDownloadSession.OnOf
 
     public void requestPauseDownloadWithVideoId(String videoId, Promise promise){
         if (this.hasOfflineVideoDownloadSessionWithVideoId(videoId)) {
-            promise.reject(ERROR_CODE, ERROR_MESSAGE_DUPLICATE_SESSION);
-            return;
+            // find the session for the provided video id and pause it
+            for (OfflineVideoDownloadSession session : this.offlineVideoDownloadSessions) {
+                if (videoId.equals(session.videoId)) {
+                    session.pauseDownload(offlineCatalog.findOfflineVideoById(videoId));
+                    return;
+                }
+            }
+        } else {
+            // if session doesn't exist, create a new one
+            OfflineVideoDownloadSession session = new OfflineVideoDownloadSession(this.context, this.accountId, this.policyKey, this);
+            session.pauseDownload(offlineCatalog.findOfflineVideoById(videoId));
         }
-        OfflineVideoDownloadSession session = new OfflineVideoDownloadSession(this.context, this.accountId, this.policyKey, this);
-        session.pauseDownload(offlineCatalog.findOfflineVideoById(videoId));
     }
 
     public void requestResumeDownloadWithVideoId(String videoId, Promise promise){
         if (this.hasOfflineVideoDownloadSessionWithVideoId(videoId)) {
-            promise.reject(ERROR_CODE, ERROR_MESSAGE_DUPLICATE_SESSION);
-            return;
+            // find the session for the provided video id and resume it
+            for (OfflineVideoDownloadSession session : this.offlineVideoDownloadSessions) {
+                if (videoId.equals(session.videoId)) {
+                    session.resumeDownload(offlineCatalog.findOfflineVideoById(videoId));
+                    return;
+                }
+            }
+        } else {
+            // if session doesn't exist, create a new one
+            OfflineVideoDownloadSession session = new OfflineVideoDownloadSession(this.context, this.accountId, this.policyKey, this);
+            session.resumeDownload(offlineCatalog.findOfflineVideoById(videoId));
         }
-        OfflineVideoDownloadSession session = new OfflineVideoDownloadSession(this.context, this.accountId, this.policyKey, this);
-        session.resumeDownload(offlineCatalog.findOfflineVideoById(videoId));
     }
     public void getOfflineVideoStatuses(Promise promise) {
         if (this.getOfflineVideoStatusesRunning) {
