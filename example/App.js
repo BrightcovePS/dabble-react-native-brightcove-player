@@ -149,11 +149,8 @@ export default class App extends Component {
   };
 
   onCloseTapped = Event => {
-    console.log("close called")
-    this.setState({
-          closed : true,
-        });
-
+    console.log("close called");
+    alert("Close Event Received");
   }
   onError = event => {
     // Alert.alert(
