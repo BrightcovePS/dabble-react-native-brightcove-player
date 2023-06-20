@@ -59,7 +59,7 @@ repositories {
 }
 
 ext {
-    brightcoveSdkVersion = "7.0.1"
+    brightcoveSdkVersion = "8.0.1"
     retrofitVersion = "2.9.0"
 }
 
