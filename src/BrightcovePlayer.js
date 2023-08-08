@@ -44,9 +44,7 @@ class BrightcovePlayer extends Component {
     this.dimensionsSubscription?.remove();
     var dispose = Platform.select({
       ios: function () {
-        NativeModules.BrightcovePlayerManager.dispose(
-          ReactNative.findNodeHandle(this)
-        );
+
       },
       android: function () {
         UIManager.dispatchViewManagerCommand(
