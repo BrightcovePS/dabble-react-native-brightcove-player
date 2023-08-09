@@ -6,9 +6,11 @@ import ReactNative, {
   requireNativeComponent,
   UIManager,
   View,
+  findNodeHandle,
   Dimensions,
 } from "react-native";
 import { ViewPropTypes } from "deprecated-react-native-prop-types";
+import { useRef} from 'react';
 
 const window = Dimensions.get("window");
 
@@ -41,16 +43,17 @@ class BrightcovePlayer extends Component {
   }
 
   componentWillUnmount() {
+    const tag = findNodeHandle(this._root);
+
     this.dimensionsSubscription?.remove();
     var dispose = Platform.select({
       ios: function () {
-        NativeModules.BrightcovePlayerManager.dispose(
-          ReactNative.findNodeHandle(this)
-        );
+        NativeModules.BrightcovePlayerManager.dispose(tag);
       },
+
       android: function () {
         UIManager.dispatchViewManagerCommand(
-          ReactNative.findNodeHandle(this._root),
+          tag,
           UIManager.BrightcovePlayer.Commands.dispose,
           []
         );

@@ -1,15 +1,15 @@
 PODS:
   - boost (1.76.0)
-  - Brightcove-Player-Core (6.12.1):
-    - Brightcove-Player-Core/Framework (= 6.12.1)
-  - Brightcove-Player-Core/Framework (6.12.1)
-  - Brightcove-Player-GoogleCast (6.12.1):
-    - Brightcove-Player-GoogleCast/Bluetooth (= 6.12.1)
-  - Brightcove-Player-GoogleCast/Bluetooth (6.12.1):
-    - Brightcove-Player-GoogleCast/Bluetooth/Framework (= 6.12.1)
+  - Brightcove-Player-Core (6.12.2):
+    - Brightcove-Player-Core/Framework (= 6.12.2)
+  - Brightcove-Player-Core/Framework (6.12.2)
+  - Brightcove-Player-GoogleCast (6.12.2):
+    - Brightcove-Player-GoogleCast/Bluetooth (= 6.12.2)
+  - Brightcove-Player-GoogleCast/Bluetooth (6.12.2):
+    - Brightcove-Player-GoogleCast/Bluetooth/Framework (= 6.12.2)
     - google-cast-sdk (= 4.6.1)
-  - Brightcove-Player-GoogleCast/Bluetooth/Framework (6.12.1):
-    - Brightcove-Player-Core (= 6.12.1)
+  - Brightcove-Player-GoogleCast/Bluetooth/Framework (6.12.2):
+    - Brightcove-Player-Core (= 6.12.2)
     - google-cast-sdk (= 4.6.1)
   - DoubleConversion (1.1.6)
   - FBLazyVector (0.70.5)
@@ -29,7 +29,7 @@ PODS:
     - Protobuf (~> 3.13)
   - hermes-engine (0.70.5)
   - libevent (2.1.12)
-  - Protobuf (3.23.2)
+  - Protobuf (3.23.4)
   - RCT-Folly (2021.07.22.00):
     - boost
     - DoubleConversion
@@ -256,7 +256,7 @@ PODS:
   - React-jsinspector (0.70.5)
   - React-logger (0.70.5):
     - glog
-  - react-native-brightcove-player (1.0.0):
+  - react-native-brightcove-player (1.0.16):
     - Brightcove-Player-GoogleCast
     - React
   - react-native-orientation (3.1.3):
@@ -470,8 +470,8 @@ EXTERNAL SOURCES:
 
 SPEC CHECKSUMS:
   boost: a7c83b31436843459a1961bfd74b96033dc77234
-  Brightcove-Player-Core: 2011bec2b597fb9eb377f3bb56ffeb1bfe8dea9e
-  Brightcove-Player-GoogleCast: ae4321bf3111a704b3ebdfbe1bad76b64fb733c6
+  Brightcove-Player-Core: 813c049278eb030da0cdd31624f80fc7687d905d
+  Brightcove-Player-GoogleCast: ee9c57849db297f3a8e02bb9984d5d4ed8b38e5e
   DoubleConversion: 5189b271737e1565bdce30deb4a08d647e3f5f54
   FBLazyVector: affa4ba1bfdaac110a789192f4d452b053a86624
   FBReactNativeSpec: fe8b5f1429cfe83a8d72dc8ed61dc7704cac8745
@@ -480,7 +480,7 @@ SPEC CHECKSUMS:
   google-cast-sdk: 9fc76175641bc24ef2515e0263344bd2c5c4e75c
   hermes-engine: 7fe5fc6ef707b7fdcb161b63898ec500e285653d
   libevent: 4049cae6c81cdb3654a443be001fb9bdceff7913
-  Protobuf: 5df4e9d2abd535fb675c68d171f6bc87983d27a6
+  Protobuf: c6bc59bbab3d38a71c67f62d7cb7ca8f8ea4eca1
   RCT-Folly: 0080d0a6ebf2577475bda044aa59e2ca1f909cda
   RCTRequired: 21229f84411088e5d8538f21212de49e46cc83e2
   RCTTypeSafety: 62eed57a32924b09edaaf170a548d1fc96223086
@@ -496,7 +496,7 @@ SPEC CHECKSUMS:
   React-jsiexecutor: 31564fa6912459921568e8b0e49024285a4d584b
   React-jsinspector: badd81696361249893a80477983e697aab3c1a34
   React-logger: fdda34dd285bdb0232e059b19d9606fa0ec3bb9c
-  react-native-brightcove-player: 776b4a0622d35fa66722df5603fb7ae43eae033a
+  react-native-brightcove-player: 5b192e78a972b4b8e50e579f32b1c7f27a131f82
   react-native-orientation: f1caf84d65f1a4fd4511a18f2b924e634ad7a628
   react-native-safe-area-context: b8979f5eda6ed5903d4dbc885be3846ea3daa753
   React-perflogger: e68d3795cf5d247a0379735cbac7309adf2fb931
