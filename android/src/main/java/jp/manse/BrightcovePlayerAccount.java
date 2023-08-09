@@ -33,6 +33,7 @@ public class BrightcovePlayerAccount implements OfflineVideoDownloadSession.OnOf
     final private static String ERROR_MESSAGE_PLAYLIST = "Failed to load playlist";
     final private static String CALLBACK_KEY_VIDEO_TOKEN = "videoToken";
     final private static String CALLBACK_KEY_DOWNLOAD_PROGRESS = "downloadProgress";
+    final private static String CALLBACK_KEY_VIDEO_STATUS = "videoStatus";
     final private static String CALLBACK_KEY_ACCOUNT_ID = "accountId";
     final private static String CALLBACK_KEY_VIDEO_ID = "videoId";
     final private static String CALLBACK_KEY_REFERENCE_ID = "referenceId";
@@ -272,6 +273,7 @@ public class BrightcovePlayerAccount implements OfflineVideoDownloadSession.OnOf
             map.putString(CALLBACK_KEY_VIDEO_ID, session.videoId);
             map.putString(CALLBACK_KEY_VIDEO_TOKEN, session.videoId);
             map.putDouble(CALLBACK_KEY_DOWNLOAD_PROGRESS, session.downloadProgress);
+            map.putInt(CALLBACK_KEY_VIDEO_STATUS, session.videoStatus);
             statuses.pushMap(map);
         }
         return statuses;
@@ -326,5 +328,6 @@ public class BrightcovePlayerAccount implements OfflineVideoDownloadSession.OnOf
     @Override
     public void onPaused() {
         this.listener.onOfflineStorageStateChanged(collectNativeOfflineVideoStatuses());
+        Log.d(DEBUG_TAG, "download paused");
     }
 }
