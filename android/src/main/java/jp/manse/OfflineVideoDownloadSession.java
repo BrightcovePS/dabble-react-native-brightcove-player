@@ -22,9 +22,12 @@ public class OfflineVideoDownloadSession extends VideoListener implements MediaD
     final private static String ERROR_MESSAGE_ALREADY_DOWNLOADING = "Offline video is already downloading";
     final private static String ERROR_MESSAGE_VIDEO_NOT_FOUND = "Could not find the video";
     final private static String ERROR_MESSAGE_DOWNLOAD_CANCEL = "Failed to download video";
+    final private static int DOWNLOAD_STATUS_IN_PROGRESS = 1;
+    final private static int DOWNLOAD_STATUS_PAUSED = 2;
     public String videoId;
     public String referenceId;
     public double downloadProgress = 0;
+    public int videoStatus = DOWNLOAD_STATUS_IN_PROGRESS;
 
     public Promise promise;
 
@@ -40,7 +43,8 @@ public class OfflineVideoDownloadSession extends VideoListener implements MediaD
         void onPaused();
     }
 
-    public OfflineVideoDownloadSession(ReactApplicationContext context, String accountId, String policyKey, OnOfflineVideoDownloadSessionListener listener) {
+    public OfflineVideoDownloadSession(ReactApplicationContext context, String accountId, String policyKey,
+                                       OnOfflineVideoDownloadSessionListener listener) {
         this.catalog = new Catalog(DefaultEventEmitter.sharedEventEmitter, accountId, policyKey);
         this.offlineCatalog = new OfflineCatalog(context, DefaultEventEmitter.sharedEventEmitter, accountId, policyKey);
         this.offlineCatalog.setMeteredDownloadAllowed(true);
@@ -116,20 +120,24 @@ public class OfflineVideoDownloadSession extends VideoListener implements MediaD
 
     @Override
     public void onDownloadRequested(@NonNull Video video) {
+        this.videoStatus = DOWNLOAD_STATUS_IN_PROGRESS;
     }
 
     @Override
     public void onDownloadStarted(@NonNull Video video, long l, @NonNull Map<String, Serializable> map) {
+        this.videoStatus = DOWNLOAD_STATUS_IN_PROGRESS;
     }
 
     @Override
     public void onDownloadProgress(@NonNull Video video, @NonNull DownloadStatus downloadStatus) {
-        this.listener.onProgress();
         this.downloadProgress = downloadStatus.getProgress() * 0.01d;
+        this.videoStatus = DOWNLOAD_STATUS_IN_PROGRESS;
+        this.listener.onProgress();
     }
 
     @Override
     public void onDownloadPaused(@NonNull Video video, @NonNull DownloadStatus downloadStatus) {
+        this.videoStatus = DOWNLOAD_STATUS_PAUSED;
         this.listener.onPaused();
     }
 
