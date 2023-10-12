@@ -4,4 +4,6 @@
     <string name="up_next_poster">Up next poster</string>
     <string name="zero">0</string>
     <string name="cancel">Cancel</string>
+     <string name="tag_mute">mute</string>
+    <string name="tag_unmute">unmute</string>
 </resources>
