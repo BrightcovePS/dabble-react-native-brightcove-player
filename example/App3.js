@@ -194,7 +194,7 @@ export default class App3 extends Component {
           style={{ width: '100%', height: this.state.closed ? 0:300 }}
           accountId={ACCOUNT_ID}
           policyKey={POLICY_KEY}
-          seekDuration={15000}
+          seekDuration={10000}
           playlistReferenceId={PLAYLIST_REF_ID}
           {...this.state.playback}
           onPlayNextVideo={this.onPlayNext}

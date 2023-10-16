@@ -56,6 +56,7 @@ public class BrightcovePlayerView extends RelativeLayout implements LifecycleEve
     private final AudioFocusManager audioFocusManager;
     private final EventEmitter eventEmitter;
     private final BrightcoveExoPlayerVideoView playerVideoView;
+    private float volume = 100F;
     private final Runnable measureAndLayout = () -> {
         measure(MeasureSpec.makeMeasureSpec(getWidth(), MeasureSpec.EXACTLY),
             MeasureSpec.makeMeasureSpec(getHeight(), MeasureSpec.EXACTLY));
@@ -572,9 +573,22 @@ public class BrightcovePlayerView extends RelativeLayout implements LifecycleEve
         ImageButton closeBtn = playerVideoView.findViewById(R.id.close_btn);
         ImageButton rewindBtn = playerVideoView.findViewById(R.id.rewind_btn);
         ImageButton forwardBtn = playerVideoView.findViewById(R.id.fast_forward_btn);
+        ImageButton muteBtn = playerVideoView.findViewById(R.id.mute_btn);
         rewindBtn.setOnClickListener(forwardRewindClickListener);
         forwardBtn.setOnClickListener(forwardRewindClickListener);
         closeBtn.setOnClickListener(closeButtonClickListener);
+        muteBtn.setTag(playerVideoView.getContext().getString(R.string.tag_unmute));
+        muteBtn.setOnClickListener(view -> {
+            if (muteBtn.getTag().equals(playerVideoView.getContext().getString(R.string.tag_unmute))) {
+                setMute(true, playerVideoView);
+                muteBtn.setImageResource(R.drawable.player_volume_off);
+                muteBtn.setTag(playerVideoView.getContext().getString(R.string.tag_mute));
+            } else {
+                setMute(false, playerVideoView);
+                muteBtn.setImageResource(R.drawable.player_volume_on);
+                muteBtn.setTag(playerVideoView.getContext().getString(R.string.tag_unmute));
+            }
+        });
     }
 
     private void fastForward() {
@@ -598,6 +612,12 @@ public class BrightcovePlayerView extends RelativeLayout implements LifecycleEve
         sendJSEvent(BrightcovePlayerManager.EVENT_ON_CLOSE_TAPPED, Arguments.createMap());
     }
 
+    private void setMute(boolean mute, BaseVideoView brightcoveExoPlayerVideoView) {
+        volume = mute ? 0F : 100F;
+        Map<String, Object> properties = new HashMap<>();
+        properties.put(Event.VOLUME, volume);
+        brightcoveExoPlayerVideoView.getEventEmitter().emit(EventType.SET_VOLUME, properties);
+    }
     private void updateVideoSizeAfterADelay() {
         new Handler().postDelayed(this::refreshVideoLayoutSize, 500);
     }
