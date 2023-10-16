@@ -18,6 +18,7 @@ import com.brightcove.player.event.EventListener;
 import com.brightcove.player.event.EventType;
 import com.brightcove.player.mediacontroller.BrightcoveMediaController;
 import com.brightcove.player.model.Video;
+import com.brightcove.player.pictureinpicture.PictureInPictureManager;
 import com.brightcove.player.view.BaseVideoView;
 import com.brightcove.player.view.BrightcoveExoPlayerVideoView;
 import com.facebook.react.bridge.Arguments;
@@ -230,6 +231,10 @@ public class BrightcovePlayerView extends RelativeLayout implements LifecycleEve
         eventEmitter.on(EventType.SOURCE_NOT_FOUND, eventListener);
         eventEmitter.on(EventType.SOURCE_NOT_PLAYABLE, eventListener);
         setSeekControlConfig();
+         if (applicationContext.getCurrentActivity() != null) {
+            PictureInPictureManager.getInstance().registerActivity(applicationContext.getCurrentActivity(),
+                    playerVideoView);
+        }
     }
 
     private void onToggleFullScreen() {
@@ -574,10 +579,11 @@ public class BrightcovePlayerView extends RelativeLayout implements LifecycleEve
         ImageButton rewindBtn = playerVideoView.findViewById(R.id.rewind_btn);
         ImageButton forwardBtn = playerVideoView.findViewById(R.id.fast_forward_btn);
         ImageButton muteBtn = playerVideoView.findViewById(R.id.mute_btn);
+        ImageButton pipBtn = playerVideoView.findViewById(R.id.pip_btn);
         rewindBtn.setOnClickListener(forwardRewindClickListener);
         forwardBtn.setOnClickListener(forwardRewindClickListener);
         closeBtn.setOnClickListener(closeButtonClickListener);
-        muteBtn.setTag(playerVideoView.getContext().getString(R.string.tag_unmute))
+        muteBtn.setTag(playerVideoView.getContext().getString(R.string.tag_unmute));
         muteBtn.setOnClickListener(view -> {
             if (muteBtn.getTag().equals(playerVideoView.getContext().getString(R.string.tag_unmute))) {
                 setMute(true, playerVideoView);
@@ -587,6 +593,15 @@ public class BrightcovePlayerView extends RelativeLayout implements LifecycleEve
                 setMute(false, playerVideoView);
                 muteBtn.setImageResource(R.drawable.player_volume_on);
                 muteBtn.setTag(playerVideoView.getContext().getString(R.string.tag_unmute));
+            }
+        });
+        pipBtn.setOnClickListener(view -> {
+            if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O) {
+                try {
+                    PictureInPictureManager.getInstance().enterPictureInPictureMode();
+                } catch (Exception e) {
+                    Log.e("PIP", "Error entering Picture in Picture: " + e.getLocalizedMessage());
+                }
             }
         });
     }

@@ -1,8 +1,8 @@
 package com.example;
 
-import com.facebook.react.ReactActivity;
+import jp.manse.BrightcoveReactActivity;
 
-public class MainActivity extends ReactActivity {
+public class MainActivity extends BrightcoveReactActivity {
 
   /**
    * Returns the name of the main component registered from JavaScript. This is used to schedule
