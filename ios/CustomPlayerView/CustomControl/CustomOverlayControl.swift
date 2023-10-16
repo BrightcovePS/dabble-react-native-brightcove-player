@@ -254,7 +254,7 @@ class CustomOverlayControl: UIView, CustomControlViewType {
         fatalError("init(coder:) has not been implemented")
     }
     fileprivate func addTopControls() {
-//        addTopHStackView()
+        addTopHStackView()
         addTopLeftStackView()
         addCloseButton()
         configureControlsBasedOnOrientation()
@@ -301,8 +301,8 @@ class CustomOverlayControl: UIView, CustomControlViewType {
 //        addInfoButton()
 //        addGoogleCast()
         addClosedCaptions()
-        addAudio()
-//        addMuteButton()
+        //addAudio()
+        addMuteButton()
     }
     /* To be configured based on project requirements*/
     func configurePortrait() {
@@ -314,8 +314,8 @@ class CustomOverlayControl: UIView, CustomControlViewType {
 //        addPictureInPicture()
 //        addAirplay()
         addClosedCaptions()
-        addAudio()
-//        addMuteButton()
+        //addAudio()
+        addMuteButton()
     }
     private func addTopLeftStackView() {
         self.addSubview(topLeftStackView)
