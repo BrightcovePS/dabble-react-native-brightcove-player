@@ -37,10 +37,7 @@
 - (void)setUpAudioSession
 {
     NSError *categoryError = nil;
-    // If the player is muted, then allow mixing.
-    // Ensure other apps can have their background audio
-    // active when this app is in foreground
-   
+
     BOOL success = [[AVAudioSession sharedInstance] setCategory:AVAudioSessionCategoryPlayback withOptions:0 error:&categoryError];
     
     if (!success)
