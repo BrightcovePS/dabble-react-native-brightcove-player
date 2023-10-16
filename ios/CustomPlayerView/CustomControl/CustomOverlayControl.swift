@@ -3,7 +3,7 @@ import BrightcovePlayerSDK
 import AVKit
 import GoogleCast
 struct SeekDuration {
-    static var timeInterval: Double = 15
+    static var timeInterval: Double = 10
 }
 fileprivate struct TitleConstants {
     static var height: Double = 24
@@ -268,9 +268,9 @@ class CustomOverlayControl: UIView, CustomControlViewType {
         /*Top controls are for other features such as PIP, Airplay etc*/
         addTopControls()
         addHStackView()
-//        addRewind()
+        addRewind()
         addPlayPause()
-//        addForward()
+        addForward()
     }
     private func addTopHStackView() {
         self.addSubview(topControlsStackView)

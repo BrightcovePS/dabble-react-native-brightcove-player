@@ -390,9 +390,10 @@ struct TimerControlConstants {
     OverlayReducer.shared.store?.subscribe(self)
   }
   func addVideoSizeObserver() {
+    //Crash fix when Screen Rotates
     (overlayDecorator as? OverlayDecorator)?.videoSizeCallback = { [weak self] (width, height) in
-      guard let self = self else { return }
-      self.player.videoSize(width, height: height)
+      guard let self = self ,let player = self.player else { return }
+      player.videoSize(width, height: height)
     }
   }
   @objc public func checkVideoSize() {
