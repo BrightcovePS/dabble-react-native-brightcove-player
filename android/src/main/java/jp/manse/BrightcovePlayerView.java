@@ -579,7 +579,6 @@ public class BrightcovePlayerView extends RelativeLayout implements LifecycleEve
         ImageButton rewindBtn = playerVideoView.findViewById(R.id.rewind_btn);
         ImageButton forwardBtn = playerVideoView.findViewById(R.id.fast_forward_btn);
         ImageButton muteBtn = playerVideoView.findViewById(R.id.mute_btn);
-        ImageButton pipBtn = playerVideoView.findViewById(R.id.pip_btn);
         rewindBtn.setOnClickListener(forwardRewindClickListener);
         forwardBtn.setOnClickListener(forwardRewindClickListener);
         closeBtn.setOnClickListener(closeButtonClickListener);
@@ -593,15 +592,6 @@ public class BrightcovePlayerView extends RelativeLayout implements LifecycleEve
                 setMute(false, playerVideoView);
                 muteBtn.setImageResource(R.drawable.player_volume_on);
                 muteBtn.setTag(playerVideoView.getContext().getString(R.string.tag_unmute));
-            }
-        });
-        pipBtn.setOnClickListener(view -> {
-            if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O) {
-                try {
-                    PictureInPictureManager.getInstance().enterPictureInPictureMode();
-                } catch (Exception e) {
-                    Log.e("PIP", "Error entering Picture in Picture: " + e.getLocalizedMessage());
-                }
             }
         });
     }
