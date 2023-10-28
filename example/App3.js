@@ -7,7 +7,8 @@ import {
   TouchableOpacity,
   View,
   Platform,
-  Alert
+  Alert,
+  BackHandler
 } from 'react-native';
 import {
   BrightcovePlayer,
@@ -150,17 +151,18 @@ export default class App3 extends Component {
 
   onCloseTapped = Event => {
     console.log("close called");
-    alert("Close Event Received");
+    alert("Close Event Received");  
+    BackHandler.exitApp();
   }
   onError = event => {
-    // Alert.alert(
-    //   'onError',
-    //   '', // <- this part is optional, you can pass an empty string
-    //   [
-    //     {text: 'OK', onPress: () => console.log('OK Pressed')},
-    //   ],
-    //   {cancelable: false},
-    // );
+    Alert.alert(
+      'onError',
+      event.error,
+      [
+        {text: 'OK', onPress: () => console.log('OK Pressed')},
+      ],
+      {cancelable: false},
+    );
     console.log("Error", event)
   };
   onPause = event => {
