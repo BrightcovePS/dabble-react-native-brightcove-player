@@ -202,6 +202,9 @@ public class BrightcovePlayerView extends RelativeLayout implements LifecycleEve
                 case EventType.ODRM_PLAYBACK_NOT_ALLOWED:
                 case EventType.ODRM_SOURCE_NOT_FOUND:
                 case EventType.SOURCE_NOT_FOUND:
+                case EventType.DID_ENTER_PICTURE_IN_PICTURE_MODE:
+                case EventType.DID_EXIT_PICTURE_IN_PICTURE_MODE:
+                   initButtons();
                 case EventType.SOURCE_NOT_PLAYABLE:
                     onError(event.getType());
                     break;
@@ -230,6 +233,9 @@ public class BrightcovePlayerView extends RelativeLayout implements LifecycleEve
         eventEmitter.on(EventType.ODRM_SOURCE_NOT_FOUND, eventListener);
         eventEmitter.on(EventType.SOURCE_NOT_FOUND, eventListener);
         eventEmitter.on(EventType.SOURCE_NOT_PLAYABLE, eventListener);
+        eventEmitter.on(EventType.DID_EXIT_PICTURE_IN_PICTURE_MODE,eventListener);
+        eventEmitter.on(EventType.DID_ENTER_PICTURE_IN_PICTURE_MODE,eventListener);
+
         setSeekControlConfig();
          if (applicationContext.getCurrentActivity() != null) {
             PictureInPictureManager.getInstance().registerActivity(applicationContext.getCurrentActivity(),

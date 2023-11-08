@@ -335,10 +335,6 @@ public class UpNextViewOverlay {
                     break;
                 case EventType.COMPLETED:
                     if (upNextContainer.getVisibility() != View.VISIBLE && !upNextOverlayCancelled) {
-                        if (nextVideoNotAvailableFromPlaylist && allVideos != null) {
-                            // Pick random video from video cloud
-                            nextVideo = getNextRandomVideo();
-                        }
                         showUpNext();
                     }
                     break;
@@ -351,10 +347,6 @@ public class UpNextViewOverlay {
                             prefetchAllVideos();
                         }
                         if (difference <= UP_NEXT_COUNT_DOWN_TIME && upNextContainer.getVisibility() != View.VISIBLE && !upNextOverlayCancelled) {
-                            if (nextVideoNotAvailableFromPlaylist) {
-                                // Pick random video from video cloud
-                                nextVideo = getNextRandomVideo();
-                            }
                             showUpNext();
                         }
                     }
