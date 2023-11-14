@@ -107,7 +107,7 @@ struct TimerControlConstants {
       self.overlayDecorator.showOverlay = showVideoEndOverlay
     }
   }
-  @objc public var progressTintColor: String = "#ff0000" {
+  @objc public var progressTintColor: String = "#FCFF40" {
     didSet {
     }
   }
