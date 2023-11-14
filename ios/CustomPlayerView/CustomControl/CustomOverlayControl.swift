@@ -23,6 +23,8 @@ struct ControlConstants {
     static var seekDuration: Double {
         return SeekDuration.timeInterval
     }
+    static let landscapeConstraint: Double = 900
+    static let portrainConstraint: Double = 650
 }
 class CustomOverlayControl: UIView, CustomControlViewType {
     var ifRWhidden: Bool = false {
@@ -403,9 +405,9 @@ class CustomOverlayControl: UIView, CustomControlViewType {
     private func getLeadingAnchorConstant() -> CGFloat{
         if UIDevice.isPad {
             if UIDevice.current.orientation == .landscapeLeft || UIDevice.current.orientation == .landscapeRight  {
-                return 900
+                return ControlConstants.landscapeConstraint
             } else {
-                return 650
+                return ControlConstants.portrainConstraint
             }
         }else {
             if UIDevice.current.orientation == .landscapeLeft || UIDevice.current.orientation == .landscapeRight  {
