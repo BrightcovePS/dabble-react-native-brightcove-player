@@ -25,6 +25,13 @@ struct ControlConstants {
     }
 }
 class CustomOverlayControl: UIView, CustomControlViewType {
+    var ifRWhidden: Bool = false {
+        didSet {
+            hStackView.subviews[0].isHidden = ifRWhidden
+            hStackView.subviews[2].isHidden = ifRWhidden
+        }
+    }
+    
     var pictureInPictureEnabled: Bool = false {
         didSet {
             self.pictureInPicture.isEnabled = pictureInPictureEnabled

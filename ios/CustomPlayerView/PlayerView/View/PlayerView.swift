@@ -61,6 +61,12 @@ struct TimerControlConstants {
         customControlLayout.closedCaptions?.isHidden = !closedCaptionEnabled
     }
   }
+    var ifRWhidden: Bool = false {
+        didSet {
+            self.customControlsView?.ifRWhidden = ifRWhidden
+        }
+    }
+    
     var audioEnabled: Bool = false {
       didSet {
         customControlsView?.audioEnabled = audioEnabled
@@ -111,6 +117,10 @@ struct TimerControlConstants {
     didSet {
     }
   }
+    @objc public var liveLabelColor: String = "#FF8080" {
+      didSet {
+      }
+    }
   @objc public var accountId: String? {
     didSet {
       AccountConfig.accountId = accountId ?? StringConstants.kEmptyString
@@ -172,10 +182,12 @@ struct TimerControlConstants {
             print(video.properties)
             if let videoDuration = video.properties["duration"] as? Int, videoDuration <= 0 {
                 if (!customControlLayout.currentLayoutLive) {
+                    ifRWhidden = true
                     self.controlsView.layout = customControlLayout.setLayout(isLive: true).0
                 }
             } else {
                 if (customControlLayout.currentLayoutLive) {
+                    ifRWhidden = false
                     self.controlsView.layout = customControlLayout.setLayout(isLive: false).0
                 }
             }
