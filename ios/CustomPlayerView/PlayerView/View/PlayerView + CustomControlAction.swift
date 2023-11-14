@@ -28,7 +28,7 @@ extension PlayerView: CustomControlsObserverable {
         let currentPlayer = self.currentPlayer else {
           return
         }
-        print("Replay tapped")
+       
         self.playbackController?.play()
         DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
           let seekTime: CMTime = CMTimeMake(value: Int64(0), timescale: 1000)

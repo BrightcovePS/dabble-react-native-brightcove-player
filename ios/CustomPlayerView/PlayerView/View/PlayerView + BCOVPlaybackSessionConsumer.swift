@@ -80,8 +80,6 @@ extension PlayerView: BCOVPlaybackSessionConsumer {
         if self.customControlsView?.playerState == .finished {
           return
         }
-        
-        print("Playback end")
           /*displayNextVideo()*/
           if self.playbackType == .nonEpisodic {
               DispatchQueue.main.asyncAfter(deadline: .now() + 1) {
