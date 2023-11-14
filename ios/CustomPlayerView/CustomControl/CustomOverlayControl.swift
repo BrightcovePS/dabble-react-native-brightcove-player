@@ -41,7 +41,12 @@ class CustomOverlayControl: UIView, CustomControlViewType {
             self.audio.isEnabled = audioEnabled
         }
     }
-    
+    var playerState: PlayerState = .unknown {
+      didSet {
+        self.addReplayView()
+      }
+    }
+    var replayTapped: ((UIButton) -> Void)?
     var isMuted: Bool = false {
         didSet {
             if isMuted {
@@ -103,6 +108,10 @@ class CustomOverlayControl: UIView, CustomControlViewType {
         stackView.distribution = .fill
         // stackView.spacing = RBPlayerControl.Metrics.smallSpacing
         return stackView
+    }()
+    private lazy var replayView: ReplayView = {
+      let view = ReplayView()
+      return view
     }()
     lazy var titleLabel: UILabel = {
         let label = UILabel()
@@ -303,6 +312,7 @@ class CustomOverlayControl: UIView, CustomControlViewType {
         addClosedCaptions()
         //addAudio()
         addMuteButton()
+        addReplayView()
     }
     /* To be configured based on project requirements*/
     func configurePortrait() {
@@ -316,7 +326,43 @@ class CustomOverlayControl: UIView, CustomControlViewType {
         addClosedCaptions()
         //addAudio()
         addMuteButton()
+        addReplayView()
     }
+    
+    func addReplayView() {
+      guard self.playerState == .finished else {
+      replayView.isHidden = true
+      return
+      }
+      hStackView.isHidden = true
+      replayView.isHidden = false
+      if UIApplication.shared.statusBarOrientation == .landscapeLeft || UIApplication.shared.statusBarOrientation == .landscapeRight  {
+        addReplayViewLandscape()
+      } else {
+        addReplayViewPortrait()
+      }
+      replayView.replayTapped = { [weak self] sender in
+        guard let self = self else { return }
+        self.replayTapped?(sender)
+        self.replayView.isHidden = true
+      }
+    }
+    func addReplayViewPortrait() {
+      let videoRect = self.frame
+      let frame = CGRect(x: videoRect.size.width/2 - ReplayViewContansts.kVWidth/2 , y: videoRect.size.height/2 - ReplayViewContansts.kVHeight/2, width: ReplayViewContansts.kVWidth, height: ReplayViewContansts.kVHeight)
+      replayView.orientation = .portrait
+      replayView.frame = frame
+      self.addSubview(replayView)
+    }
+    
+    func addReplayViewLandscape() {
+      let videoRect = self.frame
+      let frame = CGRect(x: videoRect.size.width/2 - ReplayViewContansts.kHWidth/2 , y: videoRect.size.height/2 - ReplayViewContansts.kHHeight/2, width: ReplayViewContansts.kHWidth, height: ReplayViewContansts.kHHeight)
+      replayView.orientation = .landscape
+      replayView.frame = frame
+      self.addSubview(replayView)
+    }
+    
     private func addTopLeftStackView() {
         self.addSubview(topLeftStackView)
 //        topControlsStackView.leadingAnchor.constraint(equalTo: self.leadingAnchor).isActive = true

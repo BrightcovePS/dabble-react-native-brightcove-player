@@ -18,6 +18,8 @@ protocol CustomControlsActionable: AnyObject {
   var closeTapped: ((UIButton) -> Void)? { get set }
   var muteTapped: ((UIButton) -> Void)? { get set }
   var infoTapped: ((UIButton) -> Void)? { get set }
+  var replayTapped: ((UIButton) -> Void)? { get set }
+  var playerState: PlayerState { get set }
 }
 protocol CustomControlsObserverable: AnyObject {
   func addPlayPauseObserver()

@@ -78,7 +78,20 @@ extension PlayerView: BCOVPlaybackSessionConsumer {
 //      closedCaptionsDecorator.session = session
     case kBCOVPlaybackSessionLifecycleEventEnd:
       print("Playback end")
-      /*displayNextVideo()*/
+        /*displayNextVideo()*/
+        if self.playbackType == .nonEpisodic {
+            DispatchQueue.main.asyncAfter(deadline: .now() + 1) {
+              let seekTime: CMTime = CMTimeMake(value: Int64((self.totalDuration)*1000), timescale: 10)
+              self.playbackController?.seek(to: seekTime, toleranceBefore: .zero, toleranceAfter: .zero, completionHandler: { (finished: Bool) in
+                self.slider?.setValue(1, animated: false)
+                self.customControlsView?.playerState = .finished
+                self.controlsFadingViewVisible = true
+                self.customControlsView?.isPaused = true
+                self.playbackController?.pause()
+              })
+            }
+        }
+       
     case kBCOVPlaybackSessionLifecycleEventPlayRequest:
       self.customControlsView?.isPaused = false
     case kBCOVPlaybackSessionLifecycleEventPlaybackLikelyToKeepUp:
