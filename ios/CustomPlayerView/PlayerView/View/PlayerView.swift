@@ -67,7 +67,11 @@ struct TimerControlConstants {
           customControlLayout.audioCaptions?.isHidden = !audioEnabled
       }
     }
-    
+    var playbackType: PlaybackType = .nonEpisodic {
+      didSet {
+        customControlsView?.playbackType = playbackType
+      }
+    }
   var defaultFullScreen: Bool = false
   @objc public var screenMode: NSString? {
     didSet {
@@ -253,8 +257,8 @@ struct TimerControlConstants {
       guard let controls = customControlsView else { return }
 
       if let overlay = controls as? CustomOverlayControl, let audio = customControlLayout.audioCaptions, let captios = customControlLayout.closedCaptions{
-          captios.addTarget(controls, action: #selector(CustomOverlayControl.handleClosedCaptionTapped), for: .touchUpInside)
-          audio.addTarget(controls, action: #selector(CustomOverlayControl.handleAudioTapped), for: .touchUpInside)
+          //captios.addTarget(controls, action: #selector(CustomOverlayControl.handleClosedCaptionTapped), for: .touchUpInside)
+          //audio.addTarget(controls, action: #selector(CustomOverlayControl.handleAudioTapped), for: .touchUpInside)
 //          overlay.closedCaptions = captios
 //          overlay.audio = audio
           
@@ -289,6 +293,7 @@ struct TimerControlConstants {
     addClosedObserver()
     addMuteObserver()
     addInfoObserver()
+    addReplayObserver()
     DispatchQueue.main.asyncAfter(deadline: .now() + 0.2) {
       self.setDefaultOrientation()
     }
@@ -322,7 +327,8 @@ struct TimerControlConstants {
     if let video = playlistRepo.getNextVideo() {
       setNextPlaylistVideo(video)
     } else {
-      connectToRemote()
+      //connectToRemote()
+      self.playbackType = .nonEpisodic
     }
   }
   func setNextPlaylistVideo(_ nextVideo: BCOVVideo) {

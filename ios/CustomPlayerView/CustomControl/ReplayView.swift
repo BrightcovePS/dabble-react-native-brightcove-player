@@ -108,12 +108,12 @@ class ReplayView: UIView {
   }
   private func addSubviewForVStack() {
     vStack.addArrangedSubview(replayButton)
-    //vStack.addArrangedSubview(label)
-    //label.contentHorizontalAlignment = .center
+    vStack.addArrangedSubview(label)
+    label.contentHorizontalAlignment = .center
   }
   private func addSubviewForHStack() {
-    //hStack.addArrangedSubview(label)
-    //label.contentHorizontalAlignment = .right
+    hStack.addArrangedSubview(label)
+    label.contentHorizontalAlignment = .right
     hStack.addArrangedSubview(replayButton)
   }
   private func removeStackViews() {
