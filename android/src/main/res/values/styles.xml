@@ -8,7 +8,7 @@
         <item name="android:textSize">14sp</item>
         <item name="android:gravity">center</item>
     </style>
-    <style name="BrightcoveControlBar" parent="BrightcoveControlBarDefault">
-        <item name="brightcove_picture_in_picture">true</item>
+    <style name="BrightcoveSeekBar.CustomSeekbar" parent="BrightcoveSeekBarDefault">
+         <item name="android:progressTint">#FCFF40</item>
     </style>
 </resources>

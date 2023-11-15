@@ -101,10 +101,11 @@
 
             <include layout="@layout/brightcove_end_time_button" />
 
-            <include
+          <include
+                style="@style/BrightcoveSeekBar.CustomSeekbar"
                 layout="@layout/brightcove_seek_bar"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
+                android:layout_width="271dp"
+                android:layout_height="match_parent"
                 android:layout_weight="1" />
 
             <include layout="@layout/brightcove_full_screen_button" />
