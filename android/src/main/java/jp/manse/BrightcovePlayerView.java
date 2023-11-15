@@ -149,6 +149,7 @@ public class BrightcovePlayerView extends RelativeLayout implements LifecycleEve
                     audioFocusManager.requestFocus();
                     BrightcovePlayerView.this.playing = true;
                     sendJSEvent(BrightcovePlayerManager.EVENT_PLAY, Arguments.createMap());
+                    changeLiveIndicatorColor();
                     break;
                 case EventType.DID_PAUSE:
                     audioFocusManager.abandonFocus();
@@ -724,5 +725,9 @@ public class BrightcovePlayerView extends RelativeLayout implements LifecycleEve
         public int hashCode() {
             return Objects.hash(height, width);
         }
+    }
+    public void changeLiveIndicatorColor() {
+        Button liveResource = (Button) mediaController.getBrightcoveControlBar().findViewById(R.id.live);
+        liveResource.setTextColor(getResources().getColor(R.color.live_bmc_button));
     }
 }
