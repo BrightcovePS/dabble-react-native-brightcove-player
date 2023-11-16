@@ -4,6 +4,7 @@ import android.content.res.Configuration;
 import android.graphics.Color;
 import android.os.Handler;
 import android.util.Log;
+import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
@@ -728,6 +729,6 @@ public class BrightcovePlayerView extends RelativeLayout implements LifecycleEve
     }
     public void changeLiveIndicatorColor() {
         Button liveResource = (Button) mediaController.getBrightcoveControlBar().findViewById(R.id.live);
-        liveResource.setTextColor(getResources().getColor(R.color.live_bmc_button));
+        liveResource.setTextColor(getResources().getColor(R.color.bmc_live_indicator));
     }
 }

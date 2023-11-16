@@ -101,14 +101,15 @@
 
             <include layout="@layout/brightcove_end_time_button" />
 
-          <include
-                style="@style/BrightcoveSeekBar.CustomSeekbar"
+            <include
+                style="@style/BrightcoveSeekBar"
                 layout="@layout/brightcove_seek_bar"
-                android:layout_width="271dp"
-                android:layout_height="match_parent"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
                 android:layout_weight="1" />
 
             <include layout="@layout/brightcove_full_screen_button" />
+
             <ImageButton
                 android:id="@+id/pip_btn"
                 android:layout_width="@dimen/action_icon_size"
@@ -147,7 +148,6 @@
                 tools:ignore="InconsistentLayout"
                 tools:visibility="visible" />
 
-    
 
             <include layout="@layout/brightcove_vr_button" />
 
