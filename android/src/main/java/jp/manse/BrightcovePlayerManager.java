@@ -62,6 +62,7 @@ public class BrightcovePlayerManager extends ViewGroupManager<BrightcovePlayerVi
     public static final String SEEK_DURATION = "seekDuration";
     public static final String HEIGHT = "height";
     public static final String WIDTH = "width";
+    public static final String ERROR_TYPE = "errorType";
     public static final String ERROR = "error";
     public static final String DISPOSE = "dispose";
     public static final int COMMAND_DISPOSE = 2;

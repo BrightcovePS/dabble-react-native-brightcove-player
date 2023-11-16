@@ -18,6 +18,7 @@ import com.brightcove.player.event.EventListener;
 import com.brightcove.player.event.EventType;
 import com.brightcove.player.mediacontroller.BrightcoveMediaController;
 import com.brightcove.player.model.Video;
+import com.brightcove.player.pictureinpicture.PictureInPictureManager;
 import com.brightcove.player.view.BaseVideoView;
 import com.brightcove.player.view.BrightcoveExoPlayerVideoView;
 import com.facebook.react.bridge.Arguments;
@@ -56,6 +57,7 @@ public class BrightcovePlayerView extends RelativeLayout implements LifecycleEve
     private final AudioFocusManager audioFocusManager;
     private final EventEmitter eventEmitter;
     private final BrightcoveExoPlayerVideoView playerVideoView;
+    private float volume = 100F;
     private final Runnable measureAndLayout = () -> {
         measure(MeasureSpec.makeMeasureSpec(getWidth(), MeasureSpec.EXACTLY),
             MeasureSpec.makeMeasureSpec(getHeight(), MeasureSpec.EXACTLY));
@@ -200,6 +202,9 @@ public class BrightcovePlayerView extends RelativeLayout implements LifecycleEve
                 case EventType.ODRM_PLAYBACK_NOT_ALLOWED:
                 case EventType.ODRM_SOURCE_NOT_FOUND:
                 case EventType.SOURCE_NOT_FOUND:
+                case EventType.DID_ENTER_PICTURE_IN_PICTURE_MODE:
+                case EventType.DID_EXIT_PICTURE_IN_PICTURE_MODE:
+                    initButtons();
                 case EventType.SOURCE_NOT_PLAYABLE:
                     onError(event.getType());
                     break;
@@ -228,7 +233,14 @@ public class BrightcovePlayerView extends RelativeLayout implements LifecycleEve
         eventEmitter.on(EventType.ODRM_SOURCE_NOT_FOUND, eventListener);
         eventEmitter.on(EventType.SOURCE_NOT_FOUND, eventListener);
         eventEmitter.on(EventType.SOURCE_NOT_PLAYABLE, eventListener);
+        eventEmitter.on(EventType.DID_EXIT_PICTURE_IN_PICTURE_MODE, eventListener);
+        eventEmitter.on(EventType.DID_ENTER_PICTURE_IN_PICTURE_MODE, eventListener);
+
         setSeekControlConfig();
+         if (applicationContext.getCurrentActivity() != null) {
+            PictureInPictureManager.getInstance().registerActivity(applicationContext.getCurrentActivity(),
+                    playerVideoView);
+        }
     }
 
     private void onToggleFullScreen() {
@@ -572,9 +584,32 @@ public class BrightcovePlayerView extends RelativeLayout implements LifecycleEve
         ImageButton closeBtn = playerVideoView.findViewById(R.id.close_btn);
         ImageButton rewindBtn = playerVideoView.findViewById(R.id.rewind_btn);
         ImageButton forwardBtn = playerVideoView.findViewById(R.id.fast_forward_btn);
+        ImageButton muteBtn = playerVideoView.findViewById(R.id.mute_btn);
+        ImageButton pipBtn = playerVideoView.findViewById(R.id.pip_btn);
         rewindBtn.setOnClickListener(forwardRewindClickListener);
         forwardBtn.setOnClickListener(forwardRewindClickListener);
         closeBtn.setOnClickListener(closeButtonClickListener);
+        muteBtn.setTag(playerVideoView.getContext().getString(R.string.tag_unmute));
+        muteBtn.setOnClickListener(view -> {
+            if (muteBtn.getTag().equals(playerVideoView.getContext().getString(R.string.tag_unmute))) {
+                setMute(true, playerVideoView);
+                muteBtn.setImageResource(R.drawable.player_volume_off);
+                muteBtn.setTag(playerVideoView.getContext().getString(R.string.tag_mute));
+            } else {
+                setMute(false, playerVideoView);
+                muteBtn.setImageResource(R.drawable.player_volume_on);
+                muteBtn.setTag(playerVideoView.getContext().getString(R.string.tag_unmute));
+            }
+        });
+        pipBtn.setOnClickListener(view -> {
+            if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O) {
+                try {
+                    PictureInPictureManager.getInstance().enterPictureInPictureMode();
+                } catch (Exception e) {
+                    Log.e("PIP", "Error entering Picture in Picture: " + e.getLocalizedMessage());
+                }
+            }
+        });
     }
 
     private void fastForward() {
@@ -597,7 +632,12 @@ public class BrightcovePlayerView extends RelativeLayout implements LifecycleEve
     private void closePlayer() {
         sendJSEvent(BrightcovePlayerManager.EVENT_ON_CLOSE_TAPPED, Arguments.createMap());
     }
-
+    private void setMute(boolean mute, BaseVideoView brightcoveExoPlayerVideoView) {
+        volume = mute ? 0F : 100F;
+        Map<String, Object> properties = new HashMap<>();
+        properties.put(Event.VOLUME, volume);
+        brightcoveExoPlayerVideoView.getEventEmitter().emit(EventType.SET_VOLUME, properties);
+    }
     private void updateVideoSizeAfterADelay() {
         new Handler().postDelayed(this::refreshVideoLayoutSize, 500);
     }

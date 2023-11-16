@@ -22,7 +22,7 @@
             android:layout_height="@dimen/action_icon_size"
             android:layout_toEndOf="@id/play"
             android:src="@drawable/ic_rewind"
-            android:visibility="gone"
+            android:visibility="visible"
             app:layout_constraintBottom_toBottomOf="@id/center_bottom_guideline"
             app:layout_constraintStart_toEndOf="@+id/rewind_guideline"
             app:layout_constraintTop_toTopOf="parent" />
@@ -49,9 +49,9 @@
             android:textSize="16sp"
             android:textStyle="bold"
             app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.0"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
-
 
         <include
             layout="@layout/brightcove_play_button"
@@ -69,7 +69,7 @@
             android:layout_height="@dimen/action_icon_size"
             android:layout_toStartOf="@id/play"
             android:src="@drawable/ic_fast_forward"
-            android:visibility="gone"
+            android:visibility="visible"
             app:layout_constraintBottom_toBottomOf="@id/center_bottom_guideline"
             app:layout_constraintEnd_toStartOf="@id/forward_guideline"
             app:layout_constraintTop_toTopOf="parent" />
@@ -108,6 +108,20 @@
                 android:layout_weight="1" />
 
             <include layout="@layout/brightcove_full_screen_button" />
+            <ImageButton
+                android:id="@+id/pip_btn"
+                android:layout_width="@dimen/action_icon_size"
+                android:layout_height="@dimen/action_icon_size"
+                android:layout_marginEnd="@dimen/close_button_margin_start"
+                android:background="@android:color/transparent"
+                android:src="@drawable/ic_pip" />
+
+            <ImageButton
+                android:id="@+id/mute_btn"
+                android:layout_width="@dimen/action_icon_size"
+                android:layout_height="@dimen/action_icon_size"
+                android:background="@android:color/transparent"
+                android:src="@drawable/player_volume_on" />
 
         </LinearLayout>
 
@@ -132,7 +146,7 @@
                 tools:ignore="InconsistentLayout"
                 tools:visibility="visible" />
 
-            <include layout="@layout/brightcove_picture_in_picture_button" />
+    
 
             <include layout="@layout/brightcove_vr_button" />
 
