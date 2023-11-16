@@ -3,4 +3,6 @@
     <color name="bmc_time_text">@color/white</color>
     <color name="bmc_button">@color/white</color>
     <color name="transparent">#00000000</color>
+    <color name="bmc_seekbar">#FCFF40</color>
+    <color name="bmc_live_indicator">#FF8080</color>
 </resources>
