@@ -61,13 +61,23 @@ struct TimerControlConstants {
         customControlLayout.closedCaptions?.isHidden = !closedCaptionEnabled
     }
   }
+    var ifRWhidden: Bool = false {
+        didSet {
+            self.customControlsView?.ifRWhidden = ifRWhidden
+        }
+    }
+    
     var audioEnabled: Bool = false {
       didSet {
         customControlsView?.audioEnabled = audioEnabled
           customControlLayout.audioCaptions?.isHidden = !audioEnabled
       }
     }
-    
+    var playbackType: PlaybackType = .nonEpisodic {
+      didSet {
+        customControlsView?.playbackType = playbackType
+      }
+    }
   var defaultFullScreen: Bool = false
   @objc public var screenMode: NSString? {
     didSet {
@@ -103,10 +113,14 @@ struct TimerControlConstants {
       self.overlayDecorator.showOverlay = showVideoEndOverlay
     }
   }
-  @objc public var progressTintColor: String = "#ff0000" {
+  @objc public var progressTintColor: String = "#FCFF40" {
     didSet {
     }
   }
+    @objc public var liveLabelColor: String = "#FF8080" {
+      didSet {
+      }
+    }
   @objc public var accountId: String? {
     didSet {
       AccountConfig.accountId = accountId ?? StringConstants.kEmptyString
@@ -168,10 +182,12 @@ struct TimerControlConstants {
             print(video.properties)
             if let videoDuration = video.properties["duration"] as? Int, videoDuration <= 0 {
                 if (!customControlLayout.currentLayoutLive) {
+                    ifRWhidden = true
                     self.controlsView.layout = customControlLayout.setLayout(isLive: true).0
                 }
             } else {
                 if (customControlLayout.currentLayoutLive) {
+                    ifRWhidden = false
                     self.controlsView.layout = customControlLayout.setLayout(isLive: false).0
                 }
             }
@@ -253,8 +269,8 @@ struct TimerControlConstants {
       guard let controls = customControlsView else { return }
 
       if let overlay = controls as? CustomOverlayControl, let audio = customControlLayout.audioCaptions, let captios = customControlLayout.closedCaptions{
-          captios.addTarget(controls, action: #selector(CustomOverlayControl.handleClosedCaptionTapped), for: .touchUpInside)
-          audio.addTarget(controls, action: #selector(CustomOverlayControl.handleAudioTapped), for: .touchUpInside)
+          //captios.addTarget(controls, action: #selector(CustomOverlayControl.handleClosedCaptionTapped), for: .touchUpInside)
+          //audio.addTarget(controls, action: #selector(CustomOverlayControl.handleAudioTapped), for: .touchUpInside)
 //          overlay.closedCaptions = captios
 //          overlay.audio = audio
           
@@ -289,6 +305,7 @@ struct TimerControlConstants {
     addClosedObserver()
     addMuteObserver()
     addInfoObserver()
+    addReplayObserver()
     DispatchQueue.main.asyncAfter(deadline: .now() + 0.2) {
       self.setDefaultOrientation()
     }
@@ -322,7 +339,8 @@ struct TimerControlConstants {
     if let video = playlistRepo.getNextVideo() {
       setNextPlaylistVideo(video)
     } else {
-      connectToRemote()
+      //connectToRemote()
+      self.playbackType = .nonEpisodic
     }
   }
   func setNextPlaylistVideo(_ nextVideo: BCOVVideo) {
@@ -390,9 +408,10 @@ struct TimerControlConstants {
     OverlayReducer.shared.store?.subscribe(self)
   }
   func addVideoSizeObserver() {
+    //Crash fix when Screen Rotates
     (overlayDecorator as? OverlayDecorator)?.videoSizeCallback = { [weak self] (width, height) in
-      guard let self = self else { return }
-      self.player.videoSize(width, height: height)
+      guard let self = self ,let player = self.player else { return }
+      player.videoSize(width, height: height)
     }
   }
   @objc public func checkVideoSize() {

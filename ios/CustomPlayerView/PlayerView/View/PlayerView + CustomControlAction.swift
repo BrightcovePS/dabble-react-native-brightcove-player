@@ -22,7 +22,24 @@ extension PlayerView: CustomControlsObserverable {
       self.restablishTapTimer()
     }
   }
-  
+    func addReplayObserver() {
+      customControlsView?.replayTapped = {[weak self] _ in
+        guard let self = self,
+        let currentPlayer = self.currentPlayer else {
+          return
+        }
+       
+        self.playbackController?.play()
+        DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
+          let seekTime: CMTime = CMTimeMake(value: Int64(0), timescale: 1000)
+          self.playbackController?.seek(to: seekTime, completionHandler: { (finished: Bool) in
+            self.customControlsView?.playerState = .unknown
+            self.playbackController?.play()
+          })
+        }
+        self.restablishTapTimer()
+      }
+    }
   func addClosedObserver() {
     customControlsView?.closeTapped = {[weak self] _ in
       guard let self = self else {

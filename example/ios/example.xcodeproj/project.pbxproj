@@ -291,13 +291,13 @@
 				TargetAttributes = {
 					00E356ED1AD99517003FC87E = {
 						CreatedOnToolsVersion = 6.2;
-						DevelopmentTeam = RP7C3H2395;
-						ProvisioningStyle = Manual;
+						DevelopmentTeam = L6H63T2Y64;
+						ProvisioningStyle = Automatic;
 						TestTargetID = 13B07F861A680F5B00A75B9A;
 					};
 					13B07F861A680F5B00A75B9A = {
-						DevelopmentTeam = RP7C3H2395;
-						ProvisioningStyle = Manual;
+						DevelopmentTeam = L6H63T2Y64;
+						ProvisioningStyle = Automatic;
 					};
 					2D02E47A1E0B4A5D006451C7 = {
 						CreatedOnToolsVersion = 8.2.1;
@@ -458,8 +458,8 @@
 				"${PODS_ROOT}/../../node_modules/react-native-brightcove-player/ios/CustomPlayerView/Images.xcassets/closedcaptions.imageset/closed_caption.png",
 				"${PODS_ROOT}/../../node_modules/react-native-brightcove-player/ios/CustomPlayerView/Images.xcassets/closedcaptions.imageset/Contents.json",
 				"${PODS_ROOT}/../../node_modules/react-native-brightcove-player/ios/CustomPlayerView/Images.xcassets/Contents.json",
+				"${PODS_ROOT}/../../node_modules/react-native-brightcove-player/ios/CustomPlayerView/Images.xcassets/forward.imageset/3.png",
 				"${PODS_ROOT}/../../node_modules/react-native-brightcove-player/ios/CustomPlayerView/Images.xcassets/forward.imageset/Contents.json",
-				"${PODS_ROOT}/../../node_modules/react-native-brightcove-player/ios/CustomPlayerView/Images.xcassets/forward.imageset/goforward_15.png",
 				"${PODS_ROOT}/../../node_modules/react-native-brightcove-player/ios/CustomPlayerView/Images.xcassets/fullscreen.imageset/Contents.json",
 				"${PODS_ROOT}/../../node_modules/react-native-brightcove-player/ios/CustomPlayerView/Images.xcassets/fullscreen.imageset/fullscreen.png",
 				"${PODS_ROOT}/../../node_modules/react-native-brightcove-player/ios/CustomPlayerView/Images.xcassets/fullscreenexit.imageset/Contents.json",
@@ -476,8 +476,8 @@
 				"${PODS_ROOT}/../../node_modules/react-native-brightcove-player/ios/CustomPlayerView/Images.xcassets/play.imageset/Play Fill.png",
 				"${PODS_ROOT}/../../node_modules/react-native-brightcove-player/ios/CustomPlayerView/Images.xcassets/replay.imageset/Contents.json",
 				"${PODS_ROOT}/../../node_modules/react-native-brightcove-player/ios/CustomPlayerView/Images.xcassets/replay.imageset/replay.png",
+				"${PODS_ROOT}/../../node_modules/react-native-brightcove-player/ios/CustomPlayerView/Images.xcassets/rewind.imageset/4.png",
 				"${PODS_ROOT}/../../node_modules/react-native-brightcove-player/ios/CustomPlayerView/Images.xcassets/rewind.imageset/Contents.json",
-				"${PODS_ROOT}/../../node_modules/react-native-brightcove-player/ios/CustomPlayerView/Images.xcassets/rewind.imageset/gobackward_15.png",
 				"${PODS_ROOT}/../../node_modules/react-native-brightcove-player/ios/CustomPlayerView/Images.xcassets/slider.imageset/Contents.json",
 				"${PODS_ROOT}/../../node_modules/react-native-brightcove-player/ios/CustomPlayerView/Images.xcassets/slider.imageset/slider.png",
 				"${PODS_ROOT}/../../node_modules/react-native-brightcove-player/ios/CustomPlayerView/Images.xcassets/unmute.imageset/Contents.json",
@@ -495,7 +495,7 @@
 				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/audio.png",
 				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/close 2.png",
 				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/closed_caption.png",
-				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/goforward_15.png",
+				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/3.png",
 				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/fullscreen.png",
 				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/fullscreen_exit.png",
 				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/info_circle.png",
@@ -504,7 +504,7 @@
 				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/picture_in_picture_alt.png",
 				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/Play Fill.png",
 				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/replay.png",
-				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/gobackward_15.png",
+				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/4.png",
 				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/slider.png",
 				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/volume_up.png",
 				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/Assets.car",
@@ -535,8 +535,8 @@
 				"${PODS_ROOT}/../../node_modules/react-native-brightcove-player/ios/CustomPlayerView/Images.xcassets/closedcaptions.imageset/closed_caption.png",
 				"${PODS_ROOT}/../../node_modules/react-native-brightcove-player/ios/CustomPlayerView/Images.xcassets/closedcaptions.imageset/Contents.json",
 				"${PODS_ROOT}/../../node_modules/react-native-brightcove-player/ios/CustomPlayerView/Images.xcassets/Contents.json",
+				"${PODS_ROOT}/../../node_modules/react-native-brightcove-player/ios/CustomPlayerView/Images.xcassets/forward.imageset/3.png",
 				"${PODS_ROOT}/../../node_modules/react-native-brightcove-player/ios/CustomPlayerView/Images.xcassets/forward.imageset/Contents.json",
-				"${PODS_ROOT}/../../node_modules/react-native-brightcove-player/ios/CustomPlayerView/Images.xcassets/forward.imageset/goforward_15.png",
 				"${PODS_ROOT}/../../node_modules/react-native-brightcove-player/ios/CustomPlayerView/Images.xcassets/fullscreen.imageset/Contents.json",
 				"${PODS_ROOT}/../../node_modules/react-native-brightcove-player/ios/CustomPlayerView/Images.xcassets/fullscreen.imageset/fullscreen.png",
 				"${PODS_ROOT}/../../node_modules/react-native-brightcove-player/ios/CustomPlayerView/Images.xcassets/fullscreenexit.imageset/Contents.json",
@@ -553,8 +553,8 @@
 				"${PODS_ROOT}/../../node_modules/react-native-brightcove-player/ios/CustomPlayerView/Images.xcassets/play.imageset/Play Fill.png",
 				"${PODS_ROOT}/../../node_modules/react-native-brightcove-player/ios/CustomPlayerView/Images.xcassets/replay.imageset/Contents.json",
 				"${PODS_ROOT}/../../node_modules/react-native-brightcove-player/ios/CustomPlayerView/Images.xcassets/replay.imageset/replay.png",
+				"${PODS_ROOT}/../../node_modules/react-native-brightcove-player/ios/CustomPlayerView/Images.xcassets/rewind.imageset/4.png",
 				"${PODS_ROOT}/../../node_modules/react-native-brightcove-player/ios/CustomPlayerView/Images.xcassets/rewind.imageset/Contents.json",
-				"${PODS_ROOT}/../../node_modules/react-native-brightcove-player/ios/CustomPlayerView/Images.xcassets/rewind.imageset/gobackward_15.png",
 				"${PODS_ROOT}/../../node_modules/react-native-brightcove-player/ios/CustomPlayerView/Images.xcassets/slider.imageset/Contents.json",
 				"${PODS_ROOT}/../../node_modules/react-native-brightcove-player/ios/CustomPlayerView/Images.xcassets/slider.imageset/slider.png",
 				"${PODS_ROOT}/../../node_modules/react-native-brightcove-player/ios/CustomPlayerView/Images.xcassets/unmute.imageset/Contents.json",
@@ -572,7 +572,7 @@
 				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/audio.png",
 				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/close 2.png",
 				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/closed_caption.png",
-				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/goforward_15.png",
+				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/3.png",
 				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/fullscreen.png",
 				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/fullscreen_exit.png",
 				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/info_circle.png",
@@ -581,7 +581,7 @@
 				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/picture_in_picture_alt.png",
 				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/Play Fill.png",
 				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/replay.png",
-				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/gobackward_15.png",
+				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/4.png",
 				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/slider.png",
 				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/volume_up.png",
 				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/Assets.car",
@@ -784,10 +784,8 @@
 			buildSettings = {
 				BUNDLE_LOADER = "$(TEST_HOST)";
 				CODE_SIGN_IDENTITY = "Apple Development";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Distribution";
-				CODE_SIGN_STYLE = Manual;
-				DEVELOPMENT_TEAM = "";
-				"DEVELOPMENT_TEAM[sdk=iphoneos*]" = RP7C3H2395;
+				CODE_SIGN_STYLE = Automatic;
+				DEVELOPMENT_TEAM = L6H63T2Y64;
 				GCC_PREPROCESSOR_DEFINITIONS = (
 					"DEBUG=1",
 					"$(inherited)",
@@ -803,7 +801,6 @@
 				PRODUCT_BUNDLE_IDENTIFIER = "org.reactjs.native.example.$(PRODUCT_NAME:rfc1034identifier)";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = "";
-				"PROVISIONING_PROFILE_SPECIFIER[sdk=iphoneos*]" = "BGS Ad Hoc";
 				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/example.app/example";
 			};
 			name = Debug;
@@ -814,11 +811,9 @@
 			buildSettings = {
 				BUNDLE_LOADER = "$(TEST_HOST)";
 				CODE_SIGN_IDENTITY = "Apple Development";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Distribution";
-				CODE_SIGN_STYLE = Manual;
+				CODE_SIGN_STYLE = Automatic;
 				COPY_PHASE_STRIP = NO;
-				DEVELOPMENT_TEAM = "";
-				"DEVELOPMENT_TEAM[sdk=iphoneos*]" = RP7C3H2395;
+				DEVELOPMENT_TEAM = L6H63T2Y64;
 				INFOPLIST_FILE = exampleTests/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 9.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
@@ -830,7 +825,6 @@
 				PRODUCT_BUNDLE_IDENTIFIER = "org.reactjs.native.example.$(PRODUCT_NAME:rfc1034identifier)";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = "";
-				"PROVISIONING_PROFILE_SPECIFIER[sdk=iphoneos*]" = "BGS Ad Hoc";
 				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/example.app/example";
 			};
 			name = Release;
@@ -841,14 +835,12 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_IDENTITY = "Apple Development";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Distribution";
-				CODE_SIGN_STYLE = Manual;
+				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				DEAD_CODE_STRIPPING = NO;
-				DEVELOPMENT_TEAM = "";
-				"DEVELOPMENT_TEAM[sdk=iphoneos*]" = RP7C3H2395;
+				DEVELOPMENT_TEAM = L6H63T2Y64;
 				INFOPLIST_FILE = example/Info.plist;
-				IPHONEOS_DEPLOYMENT_TARGET = 11.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 12.4;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				MARKETING_VERSION = 1.0.6;
 				OTHER_LDFLAGS = (
@@ -856,10 +848,9 @@
 					"-ObjC",
 					"-lc++",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = com.brightcove.rbplayer;
+				PRODUCT_BUNDLE_IDENTIFIER = com.brightcove.rbplayerw;
 				PRODUCT_NAME = example;
 				PROVISIONING_PROFILE_SPECIFIER = "";
-				"PROVISIONING_PROFILE_SPECIFIER[sdk=iphoneos*]" = "BGS Ad Hoc";
 				TARGETED_DEVICE_FAMILY = "1,2";
 				VERSIONING_SYSTEM = "apple-generic";
 			};
@@ -871,13 +862,11 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_IDENTITY = "Apple Development";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Distribution";
-				CODE_SIGN_STYLE = Manual;
+				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
-				DEVELOPMENT_TEAM = "";
-				"DEVELOPMENT_TEAM[sdk=iphoneos*]" = RP7C3H2395;
+				DEVELOPMENT_TEAM = L6H63T2Y64;
 				INFOPLIST_FILE = example/Info.plist;
-				IPHONEOS_DEPLOYMENT_TARGET = 11.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 12.4;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				MARKETING_VERSION = 1.0.6;
 				OTHER_LDFLAGS = (
@@ -885,10 +874,9 @@
 					"-ObjC",
 					"-lc++",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = com.brightcove.rbplayer;
+				PRODUCT_BUNDLE_IDENTIFIER = com.brightcove.rbplayerw;
 				PRODUCT_NAME = example;
 				PROVISIONING_PROFILE_SPECIFIER = "";
-				"PROVISIONING_PROFILE_SPECIFIER[sdk=iphoneos*]" = "BGS Ad Hoc";
 				TARGETED_DEVICE_FAMILY = "1,2";
 				VERSIONING_SYSTEM = "apple-generic";
 			};
@@ -1008,7 +996,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
-				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
+				CLANG_CXX_LANGUAGE_STANDARD = "c++17";
 				CLANG_CXX_LIBRARY = "libc++";
 				CLANG_ENABLE_MODULES = YES;
 				CLANG_ENABLE_OBJC_ARC = YES;
@@ -1036,6 +1024,7 @@
 				ENABLE_BITCODE = NO;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
 				ENABLE_TESTABILITY = YES;
+				"EXCLUDED_ARCHS[sdk=iphonesimulator*]" = i386;
 				GCC_C_LANGUAGE_STANDARD = gnu99;
 				GCC_DYNAMIC_NO_PIC = NO;
 				GCC_NO_COMMON_BLOCKS = YES;
@@ -1054,6 +1043,7 @@
 				IPHONEOS_DEPLOYMENT_TARGET = 11.0;
 				MTL_ENABLE_DEBUG_INFO = YES;
 				ONLY_ACTIVE_ARCH = YES;
+				REACT_NATIVE_PATH = "${PODS_ROOT}/../../node_modules/react-native";
 				SDKROOT = iphoneos;
 			};
 			name = Debug;
@@ -1062,7 +1052,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
-				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
+				CLANG_CXX_LANGUAGE_STANDARD = "c++17";
 				CLANG_CXX_LIBRARY = "libc++";
 				CLANG_ENABLE_MODULES = YES;
 				CLANG_ENABLE_OBJC_ARC = YES;
@@ -1090,6 +1080,7 @@
 				ENABLE_BITCODE = NO;
 				ENABLE_NS_ASSERTIONS = NO;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				"EXCLUDED_ARCHS[sdk=iphonesimulator*]" = i386;
 				GCC_C_LANGUAGE_STANDARD = gnu99;
 				GCC_NO_COMMON_BLOCKS = YES;
 				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
@@ -1100,6 +1091,7 @@
 				GCC_WARN_UNUSED_VARIABLE = YES;
 				IPHONEOS_DEPLOYMENT_TARGET = 11.0;
 				MTL_ENABLE_DEBUG_INFO = NO;
+				REACT_NATIVE_PATH = "${PODS_ROOT}/../../node_modules/react-native";
 				SDKROOT = iphoneos;
 				VALIDATE_PRODUCT = YES;
 			};

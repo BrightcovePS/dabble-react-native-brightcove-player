@@ -3,7 +3,7 @@ import BrightcovePlayerSDK
 import AVKit
 import GoogleCast
 struct SeekDuration {
-    static var timeInterval: Double = 15
+    static var timeInterval: Double = 10
 }
 fileprivate struct TitleConstants {
     static var height: Double = 24
@@ -23,8 +23,17 @@ struct ControlConstants {
     static var seekDuration: Double {
         return SeekDuration.timeInterval
     }
+    static let landscapeConstraint: Double = 900
+    static let portrainConstraint: Double = 650
 }
 class CustomOverlayControl: UIView, CustomControlViewType {
+    var ifRWhidden: Bool = false {
+        didSet {
+            hStackView.subviews[0].isHidden = ifRWhidden
+            hStackView.subviews[2].isHidden = ifRWhidden
+        }
+    }
+    
     var pictureInPictureEnabled: Bool = false {
         didSet {
             self.pictureInPicture.isEnabled = pictureInPictureEnabled
@@ -41,7 +50,12 @@ class CustomOverlayControl: UIView, CustomControlViewType {
             self.audio.isEnabled = audioEnabled
         }
     }
-    
+    var playerState: PlayerState = .unknown {
+      didSet {
+        self.addReplayView()
+      }
+    }
+    var replayTapped: ((UIButton) -> Void)?
     var isMuted: Bool = false {
         didSet {
             if isMuted {
@@ -66,6 +80,11 @@ class CustomOverlayControl: UIView, CustomControlViewType {
         didSet {
             self.addTitle()
         }
+    }
+    var playbackType: PlaybackType = .unknown {
+      didSet {
+        print("Setting Playback")
+      }
     }
     weak var currentPlayer: AVPlayer?
     var playPauseAction: ((UIButton) -> Void)?
@@ -101,8 +120,18 @@ class CustomOverlayControl: UIView, CustomControlViewType {
         stackView.translatesAutoresizingMaskIntoConstraints = false
         stackView.axis = .horizontal
         stackView.distribution = .fill
-        // stackView.spacing = RBPlayerControl.Metrics.smallSpacing
+        stackView.spacing = RBPlayerControl.Metrics.smallSpacing
         return stackView
+    }()
+    private lazy var replayView: ReplayView = {
+      let view = ReplayView()
+      return view
+    }()
+    private lazy var rightStackViewContainer:UIView = {
+        let containerView = UIView()
+        containerView.translatesAutoresizingMaskIntoConstraints = false
+        containerView.isUserInteractionEnabled = true
+        return containerView
     }()
     lazy var titleLabel: UILabel = {
         let label = UILabel()
@@ -254,7 +283,7 @@ class CustomOverlayControl: UIView, CustomControlViewType {
         fatalError("init(coder:) has not been implemented")
     }
     fileprivate func addTopControls() {
-//        addTopHStackView()
+        addTopHStackView()
         addTopLeftStackView()
         addCloseButton()
         configureControlsBasedOnOrientation()
@@ -268,19 +297,37 @@ class CustomOverlayControl: UIView, CustomControlViewType {
         /*Top controls are for other features such as PIP, Airplay etc*/
         addTopControls()
         addHStackView()
-//        addRewind()
+        addRewind()
         addPlayPause()
-//        addForward()
+        addForward()
+        addStackViewContainer()
+       
     }
+    private func addStackViewContainer(){
+        self.addSubview(rightStackViewContainer)
+        rightStackViewContainer.trailingAnchor.constraint(equalTo: self.trailingAnchor, constant: .zero).isActive = true
+        rightStackViewContainer.topAnchor.constraint(equalTo: self.topAnchor, constant: .zero).isActive = true
+        rightStackViewContainer.heightAnchor.constraint(equalToConstant: ControlConstants.topStackViewHeight).isActive = true
+        rightStackViewContainer.widthAnchor.constraint(equalToConstant: 200).isActive = true
+    }
+    
     private func addTopHStackView() {
-        self.addSubview(topControlsStackView)
-        //topControlsStackView.leadingAnchor.constraint(equalTo: self.leadingAnchor).isActive = true
-        topControlsStackView.trailingAnchor.constraint(equalTo: self.trailingAnchor).isActive = true
-        topControlsStackView.topAnchor.constraint(equalTo: self.topAnchor, constant: .zero).isActive = true
+        rightStackViewContainer.addSubview(topControlsStackView)
+        topControlsStackView.trailingAnchor.constraint(equalTo: self.rightStackViewContainer.trailingAnchor, constant: .zero).isActive = true
+        topControlsStackView.topAnchor.constraint(equalTo: self.rightStackViewContainer.topAnchor, constant: .zero).isActive = true
         topControlsStackView.heightAnchor.constraint(equalToConstant: ControlConstants.topStackViewHeight).isActive = true
         topControlsStackView.widthAnchor.constraint(greaterThanOrEqualToConstant: .zero).isActive = true
         //hStackView.bottomAnchor.constraint(equalTo: self.bottomAnchor, constant: -controlsViewHeight).isActive = true
     }
+    
+    private func addTopLeftStackView() {
+        self.addSubview(topLeftStackView)
+        //topControlsStackView.leadingAnchor.constraint(equalTo: self.leadingAnchor, constant:690).isActive = true
+        topLeftStackView.topAnchor.constraint(equalTo: self.topAnchor, constant: .zero).isActive = true
+        topLeftStackView.heightAnchor.constraint(equalToConstant: ControlConstants.topStackViewHeight).isActive = true
+        topLeftStackView.widthAnchor.constraint(equalToConstant: ControlConstants.standardButtonWidth).isActive = true
+    }
+    
     func configureControlsBasedOnOrientation() {
         if UIDevice.current.orientation == .landscapeLeft || UIDevice.current.orientation == .landscapeRight  {
             configureLandscape()
@@ -301,8 +348,10 @@ class CustomOverlayControl: UIView, CustomControlViewType {
 //        addInfoButton()
 //        addGoogleCast()
         addClosedCaptions()
-        addAudio()
-//        addMuteButton()
+        addPictureInPicture()
+        //addAudio()
+        addMuteButton()
+        addReplayView()
     }
     /* To be configured based on project requirements*/
     func configurePortrait() {
@@ -311,18 +360,63 @@ class CustomOverlayControl: UIView, CustomControlViewType {
         clearTopHStackView()
 //        addInfoButton()
 //        addGoogleCast()
-//        addPictureInPicture()
+        addPictureInPicture()
 //        addAirplay()
         addClosedCaptions()
-        addAudio()
-//        addMuteButton()
+        //addAudio()
+        addMuteButton()
+        addReplayView()
     }
-    private func addTopLeftStackView() {
-        self.addSubview(topLeftStackView)
-//        topControlsStackView.leadingAnchor.constraint(equalTo: self.leadingAnchor).isActive = true
-        topLeftStackView.topAnchor.constraint(equalTo: self.topAnchor, constant: .zero).isActive = true
-        topLeftStackView.heightAnchor.constraint(equalToConstant: ControlConstants.topStackViewHeight).isActive = true
-        topLeftStackView.widthAnchor.constraint(equalToConstant: ControlConstants.standardButtonWidth).isActive = true
+    
+    func addReplayView() {
+      guard self.playerState == .finished else {
+      replayView.isHidden = true
+      return
+      }
+      hStackView.isHidden = true
+      replayView.isHidden = false
+      if UIApplication.shared.statusBarOrientation == .landscapeLeft || UIApplication.shared.statusBarOrientation == .landscapeRight  {
+        addReplayViewLandscape()
+      } else {
+        addReplayViewPortrait()
+      }
+      replayView.replayTapped = { [weak self] sender in
+        guard let self = self else { return }
+        self.replayTapped?(sender)
+        self.replayView.isHidden = true
+      }
+    }
+    func addReplayViewPortrait() {
+      let videoRect = self.frame
+      let frame = CGRect(x: videoRect.size.width/2 - ReplayViewContansts.kVWidth/2 , y: videoRect.size.height/2 - ReplayViewContansts.kVHeight/2, width: ReplayViewContansts.kVWidth, height: ReplayViewContansts.kVHeight)
+      replayView.orientation = .portrait
+      replayView.frame = frame
+      self.addSubview(replayView)
+    }
+    
+    func addReplayViewLandscape() {
+      let videoRect = self.frame
+      let frame = CGRect(x: videoRect.size.width/2 - ReplayViewContansts.kHWidth/2 , y: videoRect.size.height/2 - ReplayViewContansts.kHHeight/2, width: ReplayViewContansts.kHWidth, height: ReplayViewContansts.kHHeight)
+      replayView.orientation = .landscape
+      replayView.frame = frame
+      self.addSubview(replayView)
+    }
+    
+    private func getLeadingAnchorConstant() -> CGFloat{
+        if UIDevice.isPad {
+            if UIDevice.current.orientation == .landscapeLeft || UIDevice.current.orientation == .landscapeRight  {
+                return ControlConstants.landscapeConstraint
+            } else {
+                return ControlConstants.portrainConstraint
+            }
+        }else {
+            if UIDevice.current.orientation == .landscapeLeft || UIDevice.current.orientation == .landscapeRight  {
+                removeTitleLandscape()
+            } else {
+                removeTitlePortrait()
+            }
+        }
+        return 0.0
     }
     private func addCloseButton() {
         closeButton.addTarget(self, action: #selector(handleCloseTapped), for: .touchUpInside)
@@ -376,7 +470,7 @@ class CustomOverlayControl: UIView, CustomControlViewType {
         topControlsStackView.addArrangedSubview(infoButton)
     }
     private func addGoogleCast() {
-        topControlsStackView.addArrangedSubview(UIView())
+        //topControlsStackView.addArrangedSubview(UIView())
         googleCastButton.widthAnchor.constraint(equalToConstant: ControlConstants.standardButtonWidth).isActive = true
         topControlsStackView.addArrangedSubview(googleCastButton)
     }

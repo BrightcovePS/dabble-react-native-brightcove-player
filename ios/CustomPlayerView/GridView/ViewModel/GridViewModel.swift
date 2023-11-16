@@ -16,25 +16,25 @@ class GridViewModel: GridViewModelProtocol {
     formOutputModel()
   }
   func connectRemote() {
-    remoteRepo.successHandler = { [weak self] response in
-      guard let self = self,
-            let response = response else { return }
-      self.requesInProgress = false
-      self.getAnyVideoFromAccount(responseObj: response)
-    }
-    remoteRepo.errorHandler = { [weak self] response in
-      guard let self = self else { return }
-      self.requesInProgress = false
-      self.handleErrorResponse()
-    }
-    if CurrentPlayerItem.shared.allVideosInAccount.count > 0 {
-      decorator?.fetchAnyBCVideo(for: CurrentPlayerItem.shared.allVideosInAccount)
-      return
-    }
-    if !requesInProgress {
-    requesInProgress = true
-    remoteRepo.connectRemote()
-    }
+//    remoteRepo.successHandler = { [weak self] response in
+//      guard let self = self,
+//            let response = response else { return }
+//      self.requesInProgress = false
+//      self.getAnyVideoFromAccount(responseObj: response)
+//    }
+//    remoteRepo.errorHandler = { [weak self] response in
+//      guard let self = self else { return }
+//      self.requesInProgress = false
+//      self.handleErrorResponse()
+//    }
+//    if CurrentPlayerItem.shared.allVideosInAccount.count > 0 {
+//      decorator?.fetchAnyBCVideo(for: CurrentPlayerItem.shared.allVideosInAccount)
+//      return
+//    }
+//    if !requesInProgress {
+//    requesInProgress = true
+//    remoteRepo.connectRemote()
+//    }
   }
   func formOutputModel() {
     guard let nextVideo = videoObj?.first else {

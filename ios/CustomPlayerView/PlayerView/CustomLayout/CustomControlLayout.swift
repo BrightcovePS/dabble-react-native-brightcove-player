@@ -96,17 +96,20 @@ class CustomControlLayout: NSObject {
         
         if let liveButton = liveLayoutView?.subviews.first as? UIButton {
           //button.imageEdgeInsets = RBPlayerControl.Metrics.forwardEdgeInset
-            liveButton.setTitleColor(.white, for: .normal)
-            liveButton.setTitleColor(.white, for: .focused)
-            liveButton.setTitleColor(.white, for: .highlighted)
-            liveButton.setTitleColor(.white, for: .selected)
-
-            liveButton.titleLabel?.font = UIFont.systemFont(ofSize: 17)
-            liveButton.setTitle("  LIVE", for: .normal)
-            let point = UILabel(frame:  CGRect(x: 5, y: 5, width: 6, height: 6))
-            point.text = "•"
-            point.textColor = .red
-            liveButton.addSubview(point)
+            if let liveLabelColor =  self.playerView?.liveLabelColor {
+                liveButton.setTitleColor(UIColor().hexStringToUIColor(hex: liveLabelColor), for: .normal)
+                liveButton.setTitleColor(UIColor().hexStringToUIColor(hex: liveLabelColor), for: .focused)
+                liveButton.setTitleColor(UIColor().hexStringToUIColor(hex: liveLabelColor), for: .highlighted)
+                liveButton.setTitleColor(UIColor().hexStringToUIColor(hex: liveLabelColor), for: .selected)
+                liveButton.titleLabel?.font = UIFont.systemFont(ofSize: 17)
+                liveButton.setTitle("   LIVE", for: .normal)
+                let point = UILabel(frame:  CGRect(x: 5, y: 5, width: 6, height: 6))
+                point.text = "•"
+                point.textColor = UIColor().hexStringToUIColor(hex: liveLabelColor)
+                liveButton.addSubview(point)
+            }
+            
+            
         }
         
         if let closedCaptions = closedCaptions {
@@ -165,7 +168,7 @@ class CustomControlLayout: NSObject {
     
     // Configure the compact layout lines.
     //compact for portrait
-        let maasCompactLayoutLine1 = isLive ? [liveLayoutView, progressLayoutView,closedCaptions, audioCaptions, screenModeLayoutView]:[currentTimeLayoutView,progressLayoutView, durationLayoutView, closedCaptions,audioCaptions,screenModeLayoutView]
+        let maasCompactLayoutLine1 = isLive ? [liveLayoutView, progressLayoutView, audioCaptions, screenModeLayoutView]:[currentTimeLayoutView,progressLayoutView, durationLayoutView, closedCaptions,audioCaptions,screenModeLayoutView]
 //    let maasCompactLayoutLine2 = [externalRouteLayoutView,spacerLayoutView,spacerLayoutView,rotateButtonLayoutView, screenModeLayoutView]
     let compactLayoutLines = [[playButtonLayoutView],maasCompactLayoutLine1,[]]
       playButtonLayoutView.isHidden = true

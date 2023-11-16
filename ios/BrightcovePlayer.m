@@ -28,9 +28,22 @@
   _playerView.backgroundColor = UIColor.blackColor;
   
   _targetVolume = 1.0;
+  [self setUpAudioSession];
   //_autoPlay = NO;
   
   [self addSubview:_playerView];
+}
+
+- (void)setUpAudioSession
+{
+    NSError *categoryError = nil;
+
+    BOOL success = [[AVAudioSession sharedInstance] setCategory:AVAudioSessionCategoryPlayback withOptions:0 error:&categoryError];
+    
+    if (!success)
+    {
+        NSLog(@"AppDelegate Debug - Error setting AVAudioSession category.  Because of this, there may be no sound. `%@`", categoryError);
+    }
 }
 
 - (void)createNewPlaybackController {
@@ -75,7 +88,7 @@
 - (void)setupService {
   if ((!_playbackService || _playbackServiceDirty) && _accountId && _policyKey) {
     _playbackServiceDirty = NO;
-    _playbackService = [[BCOVPlaybackService alloc] initWithAccountId:_accountId policyKey:_policyKey];
+    _playbackService = [[BCOVPlaybackService alloc] initWithAccountId:_accountId policyKey:nil];
   }
 }
 
@@ -92,37 +105,38 @@
     if ([self.videoId isEqual: self.playerView.videoId]) {
       return;
     }
-
-    [_playbackService findVideoWithVideoID:_videoId parameters:nil completion:^(BCOVVideo *video, NSDictionary *jsonResponse, NSError *error) {
-      if (error) {
-        if (self.onError) {
-          self.onError(@{
-            @"error":  error.localizedDescription ?: @""
-          });
-        }
-      }
-      if (video) {
-        [self setupVideoProperties: video];
-        [self.playbackController setVideos: @[ video ]];
-      }
-    }];
+      NSDictionary *configuration = @{kBCOVPlaybackServiceConfigurationKeyAssetID:_videoId};
+      [_playbackService findVideoWithConfiguration:configuration queryParameters:nil completion:^(BCOVVideo *video, NSDictionary *jsonResponse, NSError *error) {
+          if (error) {
+            if (self.onError) {
+              self.onError(@{
+                @"error":  error.userInfo
+              });
+            }
+          }
+          if (video) {
+            [self setupVideoProperties: video];
+            [self.playbackController setVideos: @[ video ]];
+          }
+        }];
   } else if (_referenceId) {
     if ([self.referenceId isEqual: self.playerView.referenceId]) {
       return;
     }
-    [_playbackService findVideoWithReferenceID:_referenceId parameters:nil completion:^(BCOVVideo *video, NSDictionary *jsonResponse, NSError *error) {
-      if (error) {
-        if (self.onError) {
-          self.onError(@{
-            @"error":  error.localizedDescription ?: @""
-          });
-        }
-      }
-      if (video) {
-        [self setupVideoProperties: video];
-        [self.playbackController setVideos: @[ video ]];
-      }
-    }];
+      NSDictionary *configuration = @{kBCOVPlaybackServiceConfigurationKeyAssetReferenceID:_referenceId};
+      [_playbackService findVideoWithConfiguration:configuration queryParameters:nil completion:^(BCOVVideo *video, NSDictionary *jsonResponse, NSError *error) {
+          if (error) {
+            if (self.onError) {
+              self.onError(@{
+                @"error":  error.userInfo
+              });
+            }
+          }
+          if (video) {
+            [self setupVideoProperties: video];
+            [self.playbackController setVideos: @[ video ]];
+          }
+        }];
   }
 }
 -(void) setupVideoProperties: (BCOVVideo*) video {

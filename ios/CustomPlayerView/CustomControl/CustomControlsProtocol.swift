@@ -6,6 +6,7 @@ protocol CustomControlsProtocol: AnyObject {
   var audioEnabled: Bool { get set }
   var isPaused: Bool { get set }
   var isMuted: Bool { get set }
+  var ifRWhidden: Bool {get set}
 }
 protocol CustomControlsActionable: AnyObject {
   var closedCaptionsTapped: ((UIButton) -> Void)? { get set }
@@ -18,6 +19,9 @@ protocol CustomControlsActionable: AnyObject {
   var closeTapped: ((UIButton) -> Void)? { get set }
   var muteTapped: ((UIButton) -> Void)? { get set }
   var infoTapped: ((UIButton) -> Void)? { get set }
+  var replayTapped: ((UIButton) -> Void)? { get set }
+  var playerState: PlayerState { get set }
+  var playbackType: PlaybackType { get set }
 }
 protocol CustomControlsObserverable: AnyObject {
   func addPlayPauseObserver()
@@ -26,4 +30,5 @@ protocol CustomControlsObserverable: AnyObject {
   func addClosedObserver()
   func addMuteObserver()
   func addInfoObserver()
+  func addReplayObserver()
 }

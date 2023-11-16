@@ -112,6 +112,8 @@
 		A56CD3ED28F6C91B006D23B9 /* CustomControlable.swift in Sources */ = {isa = PBXBuildFile; fileRef = A56CD38B28F6C91A006D23B9 /* CustomControlable.swift */; };
 		A56CD3EE28F6C91B006D23B9 /* CustomOverlayControl.swift in Sources */ = {isa = PBXBuildFile; fileRef = A56CD38C28F6C91A006D23B9 /* CustomOverlayControl.swift */; };
 		A592BDE428077E190070E878 /* RCTBrightcovePlayer.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = A592BDE328077E190070E878 /* RCTBrightcovePlayer.framework */; };
+		CB9104432AFA669E000BE265 /* ReplayView.swift in Sources */ = {isa = PBXBuildFile; fileRef = CB9104422AFA669E000BE265 /* ReplayView.swift */; };
+		CB9104452AFA69C3000BE265 /* PlayerState.swift in Sources */ = {isa = PBXBuildFile; fileRef = CB9104442AFA69C3000BE265 /* PlayerState.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXCopyFilesBuildPhase section */
@@ -243,6 +245,8 @@
 		A56CD38B28F6C91A006D23B9 /* CustomControlable.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CustomControlable.swift; sourceTree = "<group>"; };
 		A56CD38C28F6C91A006D23B9 /* CustomOverlayControl.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CustomOverlayControl.swift; sourceTree = "<group>"; };
 		A592BDE328077E190070E878 /* RCTBrightcovePlayer.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = RCTBrightcovePlayer.framework; path = ../RCTBrightcovePlayer.framework; sourceTree = "<group>"; };
+		CB9104422AFA669E000BE265 /* ReplayView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReplayView.swift; sourceTree = "<group>"; };
+		CB9104442AFA69C3000BE265 /* PlayerState.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlayerState.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -703,6 +707,8 @@
 				A56CD38A28F6C91A006D23B9 /* CustomControlsProtocol.swift */,
 				A56CD38B28F6C91A006D23B9 /* CustomControlable.swift */,
 				A56CD38C28F6C91A006D23B9 /* CustomOverlayControl.swift */,
+				CB9104422AFA669E000BE265 /* ReplayView.swift */,
+				CB9104442AFA69C3000BE265 /* PlayerState.swift */,
 			);
 			path = CustomControl;
 			sourceTree = "<group>";
@@ -774,6 +780,7 @@
 				A56CD39828F6C91A006D23B9 /* RecommendationAnyVideo.swift in Sources */,
 				A56CD3B028F6C91A006D23B9 /* OverlaySizeFactory.swift in Sources */,
 				A56CD3E328F6C91B006D23B9 /* State.swift in Sources */,
+				CB9104452AFA69C3000BE265 /* PlayerState.swift in Sources */,
 				713443E1229BDB220071B8E4 /* BrightcovePlayerPosterManager.m in Sources */,
 				A56CD3B328F6C91A006D23B9 /* CustomControlLayout.swift in Sources */,
 				A56CD3BC28F6C91A006D23B9 /* PlayerView + CustomControlAction.swift in Sources */,
@@ -826,6 +833,7 @@
 				A56CD3D028F6C91B006D23B9 /* AsyncImageLoader.swift in Sources */,
 				A56CD3BA28F6C91A006D23B9 /* PlayerView + BCOVPlaybackSessionConsumer.swift in Sources */,
 				A56CD38D28F6C91A006D23B9 /* AllVideos.swift in Sources */,
+				CB9104432AFA669E000BE265 /* ReplayView.swift in Sources */,
 				A56CD3BD28F6C91A006D23B9 /* PlayerView + Googlecast.swift in Sources */,
 				A56CD3A428F6C91A006D23B9 /* SwipeDecorator.swift in Sources */,
 				A56CD3DC28F6C91B006D23B9 /* ListViewModelProtocol.swift in Sources */,
