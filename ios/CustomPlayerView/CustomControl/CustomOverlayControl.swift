@@ -350,7 +350,7 @@ class CustomOverlayControl: UIView, CustomControlViewType {
         //addClosedCaptions()
         addPictureInPicture()
         //addAudio()
-        //addMuteButton()
+        addMuteButton()
         addReplayView()
     }
     /* To be configured based on project requirements*/
@@ -364,7 +364,7 @@ class CustomOverlayControl: UIView, CustomControlViewType {
 //        addAirplay()
         //addClosedCaptions()
         //addAudio()
-        //addMuteButton()
+        addMuteButton()
         addReplayView()
     }
     
