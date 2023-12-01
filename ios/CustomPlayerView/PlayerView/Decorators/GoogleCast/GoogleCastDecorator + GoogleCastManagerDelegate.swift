@@ -1,6 +1,6 @@
-import Foundation
-import BrightcovePlayerSDK
-import GoogleCast
+//import Foundation
+//import BrightcovePlayerSDK
+//import GoogleCast
 //extension GoogleCastDecorator: GoogleCastManagerDelegate {
 //  var playbackController: BCOVPlaybackController? {
 //    self.playerView?.playbackController

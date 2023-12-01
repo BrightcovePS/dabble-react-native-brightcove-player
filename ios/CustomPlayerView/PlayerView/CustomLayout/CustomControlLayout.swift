@@ -25,6 +25,9 @@ class CustomControlLayout: NSObject {
     let jumpBackButtonLayoutView = BCOVPUIBasicControlView.layoutViewWithControl(from: .buttonJumpBack, width: kBCOVPUILayoutUseDefaultValue, elasticity: 0.0)!
       
     let currentTimeLayoutView = BCOVPUIBasicControlView.layoutViewWithControl(from: .labelCurrentTime, width: PlayerControlConstants.durationLabelWidth, elasticity: 0.0)
+    if let currentTimeLabel = currentTimeLayoutView?.subviews.first as? UILabel {
+        currentTimeLabel.font = UIFont(name: "Helvetica", size: 14.0)
+    }
     let liveLayoutView = BCOVPUIBasicControlView.layoutViewWithControl(from: .buttonLive, width: PlayerControlConstants.durationLabelWidth, elasticity: 0.0)
 
     let progressLayoutView = BCOVPUIBasicControlView.layoutViewWithControl(from: .sliderProgress, width: kBCOVPUILayoutUseDefaultValue, elasticity: 1.0)
@@ -36,6 +39,9 @@ class CustomControlLayout: NSObject {
       progressSlider.setThumbImage(UIImage(named: RBPlayerControl.Assets.slider, in: Bundle(for: CustomControlLayout.self), compatibleWith: nil)?.withRenderingMode(.alwaysTemplate).withColor(.white), for: .normal)
     }
     let durationLayoutView = BCOVPUIBasicControlView.layoutViewWithControl(from: .labelDuration, width: PlayerControlConstants.durationLabelWidth, elasticity: 0.0)
+    if let durationLabel = durationLayoutView?.subviews.first as? UILabel {
+        durationLabel.font = UIFont(name: "Helvetica", size: 14.0)
+    }
     let closedCaptionLayoutView = BCOVPUIBasicControlView.layoutViewWithControl(from: .buttonClosedCaption, width: kBCOVPUILayoutUseDefaultValue, elasticity: 0.0)!
     //closedCaptionLayoutView?.isRemoved = true // Hide until it's explicitly needed.
     let screenModeLayoutView = BCOVPUIBasicControlView.layoutViewWithControl(from: .buttonScreenMode, width: kBCOVPUILayoutUseDefaultValue, elasticity: 0.0)!
@@ -101,8 +107,8 @@ class CustomControlLayout: NSObject {
                 liveButton.setTitleColor(UIColor().hexStringToUIColor(hex: liveLabelColor), for: .focused)
                 liveButton.setTitleColor(UIColor().hexStringToUIColor(hex: liveLabelColor), for: .highlighted)
                 liveButton.setTitleColor(UIColor().hexStringToUIColor(hex: liveLabelColor), for: .selected)
-                liveButton.titleLabel?.font = UIFont.systemFont(ofSize: 17)
-                liveButton.setTitle("   LIVE", for: .normal)
+                liveButton.titleLabel?.font = UIFont(name: "Helvetica", size: 15.0)
+                liveButton.setTitle("  LIVE", for: .normal)
                 let point = UILabel(frame:  CGRect(x: 5, y: 5, width: 6, height: 6))
                 point.text = "•"
                 point.textColor = UIColor().hexStringToUIColor(hex: liveLabelColor)

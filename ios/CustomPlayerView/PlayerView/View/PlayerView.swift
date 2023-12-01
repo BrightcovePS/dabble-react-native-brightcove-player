@@ -1,8 +1,8 @@
 import Foundation
 import BrightcovePlayerSDK
 import AVKit
-import GoogleCast
-import BrightcoveGoogleCast;
+//import GoogleCast
+//import BrightcoveGoogleCast;
 @objc public protocol RCTPlayerProtocol: AnyObject {
   func nextVideoPlayer(_ dictionary: [String: String])
   func videoSize(_ width: CGFloat, height: CGFloat)
@@ -11,8 +11,8 @@ struct TimerControlConstants {
   static let hideControlsInterval: Double = 5
 }
 @objcMembers public class PlayerView: BCOVPUIPlayerView {
-  private var miniMediaControlsViewController: GCKUIMiniMediaControlsViewController!
-  let castContext = GCKCastContext.sharedInstance()
+  //private var miniMediaControlsViewController: GCKUIMiniMediaControlsViewController!
+  //let castContext = GCKCastContext.sharedInstance()
   var mediaView: UIView!
   // MARK: - Abstract interfaces
   lazy var airplayDecorator: AirPlayableDecoratorType = {
@@ -31,10 +31,10 @@ struct TimerControlConstants {
     let decorator = MPRemoteCommandCenterDecorator(self)
     return decorator
   }()
-  lazy var googleCastDecorator: GoogleCastDecoratorType = {
-    let decorator = BCGoogleCastDecorator(self)
-    return decorator
-  }()
+//  lazy var googleCastDecorator: GoogleCastDecoratorType = {
+//    let decorator = BCGoogleCastDecorator(self)
+//    return decorator
+//  }()
   lazy var overlayDecorator: ViewDecoratorType = {
     let decorator = OverlayDecorator(self)
     return decorator
@@ -238,16 +238,16 @@ struct TimerControlConstants {
     self.playlistAutoPlay = false
     super.init(playbackController: playbackController, options: options, controlsView: BCOVPUIBasicControlView.withVODLayout())
     configurePlayerView()
-    NotificationCenter.default.addObserver(self, selector: #selector(self.castStateDidChange),
-                                           name: NSNotification.Name.gckCastStateDidChange,
-                                           object: GCKCastContext.sharedInstance())
-    configureCastDecorator()
-    addMediaView()
-    updateControlBarsVisibility(shouldAppear: false)
-    let castContext = GCKCastContext.sharedInstance()
-    miniMediaControlsViewController = castContext.createMiniMediaControlsViewController()
-    miniMediaControlsViewController.delegate = self
-    installViewController(miniMediaControlsViewController, inContainerView: mediaView!)
+//    NotificationCenter.default.addObserver(self, selector: #selector(self.castStateDidChange),
+//                                           name: NSNotification.Name.gckCastStateDidChange,
+//                                           object: GCKCastContext.sharedInstance())
+    //configureCastDecorator()
+   // addMediaView()
+    //updateControlBarsVisibility(shouldAppear: false)
+//    let castContext = GCKCastContext.sharedInstance()
+//    miniMediaControlsViewController = castContext.createMiniMediaControlsViewController()
+//    miniMediaControlsViewController.delegate = self
+//    installViewController(miniMediaControlsViewController, inContainerView: mediaView!)
   }
   // MARK: - Configuring UI
   fileprivate func configurePlayerView() {
@@ -421,18 +421,18 @@ struct TimerControlConstants {
     (overlayDecorator as? OverlayDecorator)?.resetConstraintsOnScreenModeChange()
   }
   @objc private func castStateDidChange(_ notification: Notification) {
-      let state = GCKCastContext.sharedInstance().castState
-      
-      switch state {
-      case .noDevicesAvailable:
-          print("No cast devices available")
-      case .connected:
-          print("Cast device connected")
-      case .connecting:
-          print("Cast device connecting")
-      case .notConnected:
-          print("Cast device not connected")
-      }
+//      let state = GCKCastContext.sharedInstance().castState
+//      
+//      switch state {
+//      case .noDevicesAvailable:
+//          print("No cast devices available")
+//      case .connected:
+//          print("Cast device connected")
+//      case .connecting:
+//          print("Cast device connecting")
+//      case .notConnected:
+//          print("Cast device not connected")
+//      }
   }
   @objc public func clearSubscriber() {
     OverlayReducer.shared.store?.removeSubscriber(self)
@@ -444,19 +444,19 @@ struct TimerControlConstants {
     NotificationCenter.default.removeObserver(self)
     UIDevice.current.endGeneratingDeviceOrientationNotifications()
   }
-  func updateControlBarsVisibility(shouldAppear: Bool = false) {
-      if shouldAppear {
-          mediaView!.isHidden = false
-      } else {
-            mediaView!.isHidden = true
-      }
-      UIView.animate(withDuration: 1, animations: { () -> Void in
-          self.layoutIfNeeded()
-      })
-      setNeedsLayout()
-  }
+//  func updateControlBarsVisibility(shouldAppear: Bool = false) {
+//      if shouldAppear {
+//          mediaView!.isHidden = false
+//      } else {
+//            mediaView!.isHidden = true
+//      }
+//      UIView.animate(withDuration: 1, animations: { () -> Void in
+//          self.layoutIfNeeded()
+//      })
+//      setNeedsLayout()
+//  }
   func setCastDecoratorProps() {
-    self.googleCastDecorator.accountId = self.accountId
-    self.googleCastDecorator.policyKey = self.policyKey
+//    self.googleCastDecorator.accountId = self.accountId
+//    self.googleCastDecorator.policyKey = self.policyKey
   }
 }
