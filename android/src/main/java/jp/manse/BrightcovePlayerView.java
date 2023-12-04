@@ -4,6 +4,7 @@ import android.content.res.Configuration;
 import android.graphics.Color;
 import android.os.Handler;
 import android.util.Log;
+import android.view.View;
 import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.RelativeLayout;
@@ -493,6 +494,7 @@ public class BrightcovePlayerView extends RelativeLayout implements LifecycleEve
         TextView titleTV = mediaController.getBrightcoveControlBar().findViewById(R.id.title);
         titleTV.setText(video.getName());
         titleTV.setBackgroundColor(getResources().getColor(R.color.transparent));
+        titleTV.setVisibility(View.GONE);
         BrightcovePlayerView.this.playerVideoView.setOnPreparedListener(mp -> {
             if (!playerVideoView.isPlaying() && BrightcovePlayerView.this.autoPlay) {
                 BrightcovePlayerView.this.playerVideoView.start();
