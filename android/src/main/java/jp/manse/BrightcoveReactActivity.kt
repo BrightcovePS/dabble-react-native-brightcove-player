@@ -9,6 +9,7 @@ abstract class BrightcoveReactActivity : ReactActivity() {
     override fun onPictureInPictureModeChanged(isInPictureInPictureMode: Boolean, newConfig: Configuration?) {
         super.onPictureInPictureModeChanged(isInPictureInPictureMode, newConfig)
         try {
+            hideShowActionBar(isInPictureInPictureMode)
             PictureInPictureManager.getInstance().onPictureInPictureModeChanged(isInPictureInPictureMode, newConfig)
         } catch (e: Exception) {
             Log.e(TAG, "PiP onPictureInPictureModeChanged Error: ${e.localizedMessage}")
@@ -33,6 +34,12 @@ abstract class BrightcoveReactActivity : ReactActivity() {
         }
     }
 
+    private fun hideShowActionBar(isInPictureInPictureMode: Boolean) {
+        if (isInPictureInPictureMode)
+            supportActionBar?.hide();
+        else
+            supportActionBar?.show()
+    }
     companion object {
         const val TAG = "BrightcoveReactActivity"
     }
