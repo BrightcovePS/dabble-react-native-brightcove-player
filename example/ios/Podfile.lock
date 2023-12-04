@@ -3,14 +3,6 @@ PODS:
   - Brightcove-Player-Core (6.12.2):
     - Brightcove-Player-Core/Framework (= 6.12.2)
   - Brightcove-Player-Core/Framework (6.12.2)
-  - Brightcove-Player-GoogleCast (6.12.2):
-    - Brightcove-Player-GoogleCast/Bluetooth (= 6.12.2)
-  - Brightcove-Player-GoogleCast/Bluetooth (6.12.2):
-    - Brightcove-Player-GoogleCast/Bluetooth/Framework (= 6.12.2)
-    - google-cast-sdk (= 4.6.1)
-  - Brightcove-Player-GoogleCast/Bluetooth/Framework (6.12.2):
-    - Brightcove-Player-Core (= 6.12.2)
-    - google-cast-sdk (= 4.6.1)
   - DoubleConversion (1.1.6)
   - FBLazyVector (0.69.12)
   - FBReactNativeSpec (0.69.12):
@@ -22,12 +14,6 @@ PODS:
     - ReactCommon/turbomodule/core (= 0.69.12)
   - fmt (6.2.1)
   - glog (0.3.5)
-  - google-cast-sdk (4.6.1):
-    - google-cast-sdk/Core (= 4.6.1)
-    - Protobuf (~> 3.13)
-  - google-cast-sdk/Core (4.6.1):
-    - Protobuf (~> 3.13)
-  - Protobuf (3.23.4)
   - RCT-Folly (2021.06.28.00-v2):
     - boost
     - DoubleConversion
@@ -237,8 +223,8 @@ PODS:
   - React-jsinspector (0.69.12)
   - React-logger (0.69.12):
     - glog
-  - react-native-brightcove-player (1.0.0):
-    - Brightcove-Player-GoogleCast
+  - react-native-brightcove-player (1.0.4):
+    - Brightcove-Player-Core (= 6.12.2)
     - React
   - react-native-orientation (3.1.3):
     - React
@@ -357,11 +343,8 @@ DEPENDENCIES:
 SPEC REPOS:
   https://github.com/brightcove/BrightcoveSpecs.git:
     - Brightcove-Player-Core
-    - Brightcove-Player-GoogleCast
   https://github.com/CocoaPods/Specs:
     - fmt
-    - google-cast-sdk
-    - Protobuf
 
 EXTERNAL SOURCES:
   boost:
@@ -440,14 +423,11 @@ EXTERNAL SOURCES:
 SPEC CHECKSUMS:
   boost: a7c83b31436843459a1961bfd74b96033dc77234
   Brightcove-Player-Core: 8bc204f1d40d0cea4170e289e54f14cd3af6b1d6
-  Brightcove-Player-GoogleCast: 3863a210f21af4ceda9fbdac26b351cf364c718d
   DoubleConversion: 5189b271737e1565bdce30deb4a08d647e3f5f54
   FBLazyVector: 6fab494fa11340bd4206edaebed07279a6bafad4
   FBReactNativeSpec: 76d7b03876b0ad0b86bc5c84d23af8e64db8e096
   fmt: ff9d55029c625d3757ed641535fd4a75fedc7ce9
-  glog: 04b94705f318337d7ead9e6d17c019bd9b1f6b1b
-  google-cast-sdk: 9fc76175641bc24ef2515e0263344bd2c5c4e75c
-  Protobuf: c6bc59bbab3d38a71c67f62d7cb7ca8f8ea4eca1
+  glog: 3d02b25ca00c2d456734d0bcff864cbc62f6ae1a
   RCT-Folly: b9d9fe1fc70114b751c076104e52f3b1b5e5a95a
   RCTRequired: b9e53f0512019150020156fa0dacd6583ab838be
   RCTTypeSafety: 04b72202bef8302802610dee70bb9407a245b64c
@@ -462,7 +442,7 @@ SPEC CHECKSUMS:
   React-jsiexecutor: ce0b9aa647bdf94126eb2ee1f235d329eb8c0aec
   React-jsinspector: f275698149311abc8c32ebb97797d6b97c44adde
   React-logger: da69d7f1c9501c78cd60776d52a60d7fa5e4d9c2
-  react-native-brightcove-player: 776b4a0622d35fa66722df5603fb7ae43eae033a
+  react-native-brightcove-player: f2bf5160fd43b967a0cef3a0c24bf4825123d506
   react-native-orientation: f1caf84d65f1a4fd4511a18f2b924e634ad7a628
   react-native-safe-area-context: 2cd91d532de12acdb0a9cbc8d43ac72a8e4c897c
   React-perflogger: 5ade0a1627352f1647d283e78331819bb46cceae
@@ -480,6 +460,6 @@ SPEC CHECKSUMS:
   RNScreens: 2b19e2471db8a581c83f381f4ea5d43071c9a3bf
   Yoga: 8a90b50af67eaa9fe94fd03e550bfeab06096873
 
-PODFILE CHECKSUM: 4b718701f77abaf7d027b11833c97a330546c28b
+PODFILE CHECKSUM: 68706429c3cf9e620e5a8f682aced2c35bef05d4
 
 COCOAPODS: 1.11.2

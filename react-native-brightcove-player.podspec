@@ -17,7 +17,7 @@ Pod::Spec.new do |s|
   s.swift_version       =  '4.2'
 
   s.dependency          'React'
-  s.dependency          'Brightcove-Player-GoogleCast'
+  s.dependency          'Brightcove-Player-Core', '6.12.2'
   s.static_framework    = false
   s.pod_target_xcconfig = { 'EXCLUDED_ARCHS[sdk=iphonesimulator*]' => 'arm64' }
   s.user_target_xcconfig = { 'EXCLUDED_ARCHS[sdk=iphonesimulator*]' => 'arm64' }

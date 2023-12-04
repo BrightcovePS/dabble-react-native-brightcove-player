@@ -1,7 +1,7 @@
 import UIKit
 import BrightcovePlayerSDK
 import AVKit
-import GoogleCast
+//import GoogleCast
 struct SeekDuration {
     static var timeInterval: Double = 10
 }
@@ -104,7 +104,7 @@ class CustomOverlayControl: UIView, CustomControlViewType {
     }
     var titleText: String = StringConstants.kEmptyString {
         didSet {
-            self.titleLabel.text = " " + titleText
+            self.titleLabel.text = ""
         }
     }
     private lazy var topLeftStackView: UIStackView = {
@@ -154,12 +154,12 @@ class CustomOverlayControl: UIView, CustomControlViewType {
         button.isEnabled = true
         return button
     }()
-    lazy var googleCastButton: GCKUICastButton = {
-        let button = GCKUICastButton()
-        button.tintColor = UIColor.white
-        button.translatesAutoresizingMaskIntoConstraints = false
-        return button
-    }()
+//    lazy var googleCastButton: GCKUICastButton = {
+//        let button = GCKUICastButton()
+//        button.tintColor = UIColor.white
+//        button.translatesAutoresizingMaskIntoConstraints = false
+//        return button
+//    }()
     lazy var closeButton: UIButton = {
         let button = UIButton()
         button.translatesAutoresizingMaskIntoConstraints = false
@@ -343,11 +343,11 @@ class CustomOverlayControl: UIView, CustomControlViewType {
     /* To be configured based on project requirements*/
     func configureLandscape() {
         hStackView.isHidden = session == nil
-        addTitle()
+        //addTitle()
         clearTopHStackView()
 //        addInfoButton()
 //        addGoogleCast()
-        addClosedCaptions()
+        //addClosedCaptions()
         addPictureInPicture()
         //addAudio()
         addMuteButton()
@@ -356,13 +356,13 @@ class CustomOverlayControl: UIView, CustomControlViewType {
     /* To be configured based on project requirements*/
     func configurePortrait() {
         hStackView.isHidden = session == nil
-        addTitle()
+        //addTitle()
         clearTopHStackView()
 //        addInfoButton()
 //        addGoogleCast()
         addPictureInPicture()
 //        addAirplay()
-        addClosedCaptions()
+        //addClosedCaptions()
         //addAudio()
         addMuteButton()
         addReplayView()
@@ -471,8 +471,8 @@ class CustomOverlayControl: UIView, CustomControlViewType {
     }
     private func addGoogleCast() {
         //topControlsStackView.addArrangedSubview(UIView())
-        googleCastButton.widthAnchor.constraint(equalToConstant: ControlConstants.standardButtonWidth).isActive = true
-        topControlsStackView.addArrangedSubview(googleCastButton)
+//        googleCastButton.widthAnchor.constraint(equalToConstant: ControlConstants.standardButtonWidth).isActive = true
+//        topControlsStackView.addArrangedSubview(googleCastButton)
     }
     private func addPictureInPicture() {
         pictureInPicture.addTarget(self, action: #selector(handlePictureInPictureTapped), for: .touchUpInside)
