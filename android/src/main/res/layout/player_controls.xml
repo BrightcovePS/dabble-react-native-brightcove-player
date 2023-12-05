@@ -27,7 +27,7 @@
             app:layout_constraintStart_toEndOf="@+id/rewind_guideline"
             app:layout_constraintTop_toTopOf="parent" />
 
-        <ImageButton
+       <ImageButton
             android:id="@+id/close_btn"
             android:layout_width="@dimen/action_icon_size"
             android:layout_height="@dimen/action_icon_size"
@@ -48,6 +48,7 @@
             android:textColor="@android:color/white"
             android:textSize="16sp"
             android:textStyle="bold"
+            android:visibility="invisible"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.0"
             app:layout_constraintStart_toStartOf="parent"
