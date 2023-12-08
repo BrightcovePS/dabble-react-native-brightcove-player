@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		00E356F31AD99517003FC87E /* exampleTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 00E356F21AD99517003FC87E /* exampleTests.m */; };
 		12C3B5EFA36EA642E166D142 /* libPods-example-tvOS.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 02C3E89D82343542416759DB /* libPods-example-tvOS.a */; };
 		13B07FBC1A68108700A75B9A /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 13B07FB01A68108700A75B9A /* AppDelegate.m */; };
 		13B07FBD1A68108700A75B9A /* LaunchScreen.xib in Resources */ = {isa = PBXBuildFile; fileRef = 13B07FB11A68108700A75B9A /* LaunchScreen.xib */; };
@@ -15,10 +16,18 @@
 		2D02E4BF1E0B4AB3006451C7 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 13B07FB71A68108700A75B9A /* main.m */; };
 		2DCD954D1E0B4F2C00145EB5 /* exampleTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 00E356F21AD99517003FC87E /* exampleTests.m */; };
 		B8DC47A914490CB0B746B751 /* libPods-example-tvOSTests.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 6E2406325ADA4133F316A256 /* libPods-example-tvOSTests.a */; };
+		D304C2ACA8AB97E9B3FCB9A6 /* libPods-example-exampleTests.a in Frameworks */ = {isa = PBXBuildFile; fileRef = C6B180A7C57FC1F14F03A1CA /* libPods-example-exampleTests.a */; };
 		F3DF27F7F377BC33FB50BB65 /* libPods-example.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 1AD39ABF760C2EBBDA55D827 /* libPods-example.a */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
+		00E356F41AD99517003FC87E /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 83CBB9F71A601CBA00E9B192 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 13B07F861A680F5B00A75B9A;
+			remoteInfo = example;
+		};
 		2D02E4911E0B4A5D006451C7 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = 83CBB9F71A601CBA00E9B192 /* Project object */;
@@ -30,6 +39,7 @@
 
 /* Begin PBXFileReference section */
 		008F07F21AC5B25A0029DE68 /* main.jsbundle */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = main.jsbundle; sourceTree = "<group>"; };
+		00E356EE1AD99517003FC87E /* exampleTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = exampleTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		00E356F11AD99517003FC87E /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		00E356F21AD99517003FC87E /* exampleTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = exampleTests.m; sourceTree = "<group>"; };
 		02C3E89D82343542416759DB /* libPods-example-tvOS.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-example-tvOS.a"; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -58,6 +68,14 @@
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
+		00E356EB1AD99517003FC87E /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				D304C2ACA8AB97E9B3FCB9A6 /* libPods-example-exampleTests.a in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		13B07F8C1A680F5B00A75B9A /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
@@ -155,6 +173,7 @@
 			isa = PBXGroup;
 			children = (
 				13B07F961A680F5B00A75B9A /* example.app */,
+				00E356EE1AD99517003FC87E /* exampleTests.xctest */,
 				2D02E47B1E0B4A5D006451C7 /* example-tvOS.app */,
 				2D02E4901E0B4A5D006451C7 /* example-tvOSTests.xctest */,
 			);
@@ -179,6 +198,27 @@
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
+		00E356ED1AD99517003FC87E /* exampleTests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 00E357021AD99517003FC87E /* Build configuration list for PBXNativeTarget "exampleTests" */;
+			buildPhases = (
+				3858547334E1949EB53182D6 /* [CP] Check Pods Manifest.lock */,
+				00E356EA1AD99517003FC87E /* Sources */,
+				00E356EB1AD99517003FC87E /* Frameworks */,
+				00E356EC1AD99517003FC87E /* Resources */,
+				5B0CAF730EDCDBD4A5874F01 /* [CP] Embed Pods Frameworks */,
+				53A78E945AEAAD3CE319704D /* [CP] Copy Pods Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				00E356F51AD99517003FC87E /* PBXTargetDependency */,
+			);
+			name = exampleTests;
+			productName = exampleTests;
+			productReference = 00E356EE1AD99517003FC87E /* exampleTests.xctest */;
+			productType = "com.apple.product-type.bundle.unit-test";
+		};
 		13B07F861A680F5B00A75B9A /* example */ = {
 			isa = PBXNativeTarget;
 			buildConfigurationList = 13B07F931A680F5B00A75B9A /* Build configuration list for PBXNativeTarget "example" */;
@@ -189,8 +229,8 @@
 				13B07F8C1A680F5B00A75B9A /* Frameworks */,
 				13B07F8E1A680F5B00A75B9A /* Resources */,
 				00DD1BFF1BD5951E006B06BC /* Bundle React Native code and images */,
+				BCDA6C1D7BAED99416DAA3A8 /* [CP] Embed Pods Frameworks */,
 				41ED79C03CBB5AD9D15473AB /* [CP] Copy Pods Resources */,
-				40D327F30A93C11CBCBD4515 /* [CP] Embed Pods Frameworks */,
 			);
 			buildRules = (
 			);
@@ -249,6 +289,12 @@
 				LastUpgradeCheck = 0940;
 				ORGANIZATIONNAME = Facebook;
 				TargetAttributes = {
+					00E356ED1AD99517003FC87E = {
+						CreatedOnToolsVersion = 6.2;
+						DevelopmentTeam = L6H63T2Y64;
+						ProvisioningStyle = Automatic;
+						TestTargetID = 13B07F861A680F5B00A75B9A;
+					};
 					13B07F861A680F5B00A75B9A = {
 						DevelopmentTeam = L6H63T2Y64;
 						ProvisioningStyle = Automatic;
@@ -279,6 +325,7 @@
 			projectRoot = "";
 			targets = (
 				13B07F861A680F5B00A75B9A /* example */,
+				00E356ED1AD99517003FC87E /* exampleTests */,
 				2D02E47A1E0B4A5D006451C7 /* example-tvOS */,
 				2D02E48F1E0B4A5D006451C7 /* example-tvOSTests */,
 			);
@@ -286,6 +333,13 @@
 /* End PBXProject section */
 
 /* Begin PBXResourcesBuildPhase section */
+		00E356EC1AD99517003FC87E /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		13B07F8E1A680F5B00A75B9A /* Resources */ = {
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
@@ -361,22 +415,26 @@
 			shellPath = /bin/sh;
 			shellScript = "export NODE_BINARY=node\n../node_modules/react-native/scripts/react-native-xcode.sh";
 		};
-		40D327F30A93C11CBCBD4515 /* [CP] Embed Pods Frameworks */ = {
+		3858547334E1949EB53182D6 /* [CP] Check Pods Manifest.lock */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
 			);
-			inputPaths = (
-				"${PODS_ROOT}/Target Support Files/Pods-example/Pods-example-frameworks.sh",
-				"${PODS_ROOT}/Brightcove-Player-Core/ios/dynamic/BrightcovePlayerSDK.framework",
+			inputFileListPaths = (
 			);
-			name = "[CP] Embed Pods Frameworks";
+			inputPaths = (
+				"${PODS_PODFILE_DIR_PATH}/Podfile.lock",
+				"${PODS_ROOT}/Manifest.lock",
+			);
+			name = "[CP] Check Pods Manifest.lock";
+			outputFileListPaths = (
+			);
 			outputPaths = (
-				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/BrightcovePlayerSDK.framework",
+				"$(DERIVED_FILE_DIR)/Pods-example-exampleTests-checkManifestLockResult.txt",
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-example/Pods-example-frameworks.sh\"\n";
+			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
 			showEnvVarsInLog = 0;
 		};
 		41ED79C03CBB5AD9D15473AB /* [CP] Copy Pods Resources */ = {
@@ -450,6 +508,115 @@
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
 			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-example/Pods-example-resources.sh\"\n";
+			showEnvVarsInLog = 0;
+		};
+		53A78E945AEAAD3CE319704D /* [CP] Copy Pods Resources */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+				"${PODS_ROOT}/Target Support Files/Pods-example-exampleTests/Pods-example-exampleTests-resources.sh",
+				"${PODS_ROOT}/Brightcove-Player-Core/ios/dynamic/BrightcovePlayerSDK.framework/BCOVPUIResources.bundle",
+				"${PODS_CONFIGURATION_BUILD_DIR}/React-Core/AccessibilityResources.bundle",
+				"${PODS_ROOT}/../../node_modules/react-native-brightcove-player/ios/CustomPlayerView/Images.xcassets/airplay.imageset/airplay.png",
+				"${PODS_ROOT}/../../node_modules/react-native-brightcove-player/ios/CustomPlayerView/Images.xcassets/airplay.imageset/Contents.json",
+				"${PODS_ROOT}/../../node_modules/react-native-brightcove-player/ios/CustomPlayerView/Images.xcassets/AppIcon.appiconset/Contents.json",
+				"${PODS_ROOT}/../../node_modules/react-native-brightcove-player/ios/CustomPlayerView/Images.xcassets/audio.imageset/audio.png",
+				"${PODS_ROOT}/../../node_modules/react-native-brightcove-player/ios/CustomPlayerView/Images.xcassets/audio.imageset/Contents.json",
+				"${PODS_ROOT}/../../node_modules/react-native-brightcove-player/ios/CustomPlayerView/Images.xcassets/close.imageset/close 2.png",
+				"${PODS_ROOT}/../../node_modules/react-native-brightcove-player/ios/CustomPlayerView/Images.xcassets/close.imageset/Contents.json",
+				"${PODS_ROOT}/../../node_modules/react-native-brightcove-player/ios/CustomPlayerView/Images.xcassets/closedcaptions.imageset/closed_caption.png",
+				"${PODS_ROOT}/../../node_modules/react-native-brightcove-player/ios/CustomPlayerView/Images.xcassets/closedcaptions.imageset/Contents.json",
+				"${PODS_ROOT}/../../node_modules/react-native-brightcove-player/ios/CustomPlayerView/Images.xcassets/Contents.json",
+				"${PODS_ROOT}/../../node_modules/react-native-brightcove-player/ios/CustomPlayerView/Images.xcassets/forward.imageset/3.png",
+				"${PODS_ROOT}/../../node_modules/react-native-brightcove-player/ios/CustomPlayerView/Images.xcassets/forward.imageset/Contents.json",
+				"${PODS_ROOT}/../../node_modules/react-native-brightcove-player/ios/CustomPlayerView/Images.xcassets/fullscreen.imageset/Contents.json",
+				"${PODS_ROOT}/../../node_modules/react-native-brightcove-player/ios/CustomPlayerView/Images.xcassets/fullscreen.imageset/fullscreen.png",
+				"${PODS_ROOT}/../../node_modules/react-native-brightcove-player/ios/CustomPlayerView/Images.xcassets/fullscreenexit.imageset/Contents.json",
+				"${PODS_ROOT}/../../node_modules/react-native-brightcove-player/ios/CustomPlayerView/Images.xcassets/fullscreenexit.imageset/fullscreen_exit.png",
+				"${PODS_ROOT}/../../node_modules/react-native-brightcove-player/ios/CustomPlayerView/Images.xcassets/info.imageset/Contents.json",
+				"${PODS_ROOT}/../../node_modules/react-native-brightcove-player/ios/CustomPlayerView/Images.xcassets/info.imageset/info_circle.png",
+				"${PODS_ROOT}/../../node_modules/react-native-brightcove-player/ios/CustomPlayerView/Images.xcassets/mute.imageset/Contents.json",
+				"${PODS_ROOT}/../../node_modules/react-native-brightcove-player/ios/CustomPlayerView/Images.xcassets/mute.imageset/volume_off.png",
+				"${PODS_ROOT}/../../node_modules/react-native-brightcove-player/ios/CustomPlayerView/Images.xcassets/pause.imageset/Contents.json",
+				"${PODS_ROOT}/../../node_modules/react-native-brightcove-player/ios/CustomPlayerView/Images.xcassets/pause.imageset/Pause Fill.png",
+				"${PODS_ROOT}/../../node_modules/react-native-brightcove-player/ios/CustomPlayerView/Images.xcassets/pictureinpicture.imageset/Contents.json",
+				"${PODS_ROOT}/../../node_modules/react-native-brightcove-player/ios/CustomPlayerView/Images.xcassets/pictureinpicture.imageset/picture_in_picture_alt.png",
+				"${PODS_ROOT}/../../node_modules/react-native-brightcove-player/ios/CustomPlayerView/Images.xcassets/play.imageset/Contents.json",
+				"${PODS_ROOT}/../../node_modules/react-native-brightcove-player/ios/CustomPlayerView/Images.xcassets/play.imageset/Play Fill.png",
+				"${PODS_ROOT}/../../node_modules/react-native-brightcove-player/ios/CustomPlayerView/Images.xcassets/replay.imageset/Contents.json",
+				"${PODS_ROOT}/../../node_modules/react-native-brightcove-player/ios/CustomPlayerView/Images.xcassets/replay.imageset/replay.png",
+				"${PODS_ROOT}/../../node_modules/react-native-brightcove-player/ios/CustomPlayerView/Images.xcassets/rewind.imageset/4.png",
+				"${PODS_ROOT}/../../node_modules/react-native-brightcove-player/ios/CustomPlayerView/Images.xcassets/rewind.imageset/Contents.json",
+				"${PODS_ROOT}/../../node_modules/react-native-brightcove-player/ios/CustomPlayerView/Images.xcassets/slider.imageset/Contents.json",
+				"${PODS_ROOT}/../../node_modules/react-native-brightcove-player/ios/CustomPlayerView/Images.xcassets/slider.imageset/slider.png",
+				"${PODS_ROOT}/../../node_modules/react-native-brightcove-player/ios/CustomPlayerView/Images.xcassets/unmute.imageset/Contents.json",
+				"${PODS_ROOT}/../../node_modules/react-native-brightcove-player/ios/CustomPlayerView/Images.xcassets/unmute.imageset/volume_up.png",
+				"${PODS_ROOT}/../../node_modules/react-native-brightcove-player/ios/CustomPlayerView/Images.xcassets",
+			);
+			name = "[CP] Copy Pods Resources";
+			outputPaths = (
+				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/BCOVPUIResources.bundle",
+				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/AccessibilityResources.bundle",
+				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/airplay.png",
+				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/Contents.json",
+				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/audio.png",
+				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/close 2.png",
+				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/closed_caption.png",
+				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/3.png",
+				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/fullscreen.png",
+				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/fullscreen_exit.png",
+				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/info_circle.png",
+				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/volume_off.png",
+				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/Pause Fill.png",
+				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/picture_in_picture_alt.png",
+				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/Play Fill.png",
+				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/replay.png",
+				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/4.png",
+				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/slider.png",
+				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/volume_up.png",
+				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/Assets.car",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-example-exampleTests/Pods-example-exampleTests-resources.sh\"\n";
+			showEnvVarsInLog = 0;
+		};
+		5B0CAF730EDCDBD4A5874F01 /* [CP] Embed Pods Frameworks */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+				"${PODS_ROOT}/Target Support Files/Pods-example-exampleTests/Pods-example-exampleTests-frameworks.sh",
+				"${PODS_ROOT}/Brightcove-Player-Core/ios/dynamic/BrightcovePlayerSDK.framework",
+			);
+			name = "[CP] Embed Pods Frameworks";
+			outputPaths = (
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/BrightcovePlayerSDK.framework",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-example-exampleTests/Pods-example-exampleTests-frameworks.sh\"\n";
+			showEnvVarsInLog = 0;
+		};
+		BCDA6C1D7BAED99416DAA3A8 /* [CP] Embed Pods Frameworks */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+				"${PODS_ROOT}/Target Support Files/Pods-example/Pods-example-frameworks.sh",
+				"${PODS_ROOT}/Brightcove-Player-Core/ios/dynamic/BrightcovePlayerSDK.framework",
+			);
+			name = "[CP] Embed Pods Frameworks";
+			outputPaths = (
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/BrightcovePlayerSDK.framework",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-example/Pods-example-frameworks.sh\"\n";
 			showEnvVarsInLog = 0;
 		};
 		D1FBC7A4B1BE9397530D53EF /* [CP] Check Pods Manifest.lock */ = {
@@ -537,6 +704,14 @@
 /* End PBXShellScriptBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
+		00E356EA1AD99517003FC87E /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				00E356F31AD99517003FC87E /* exampleTests.m in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		13B07F871A680F5B00A75B9A /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
@@ -566,6 +741,11 @@
 /* End PBXSourcesBuildPhase section */
 
 /* Begin PBXTargetDependency section */
+		00E356F51AD99517003FC87E /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 13B07F861A680F5B00A75B9A /* example */;
+			targetProxy = 00E356F41AD99517003FC87E /* PBXContainerItemProxy */;
+		};
 		2D02E4921E0B4A5D006451C7 /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
 			target = 2D02E47A1E0B4A5D006451C7 /* example-tvOS */;
@@ -586,6 +766,57 @@
 /* End PBXVariantGroup section */
 
 /* Begin XCBuildConfiguration section */
+		00E356F61AD99517003FC87E /* Debug */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = E5E9462B4DA0521EFAAF6633 /* Pods-example-exampleTests.debug.xcconfig */;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				CODE_SIGN_IDENTITY = "Apple Development";
+				CODE_SIGN_STYLE = Automatic;
+				DEVELOPMENT_TEAM = L6H63T2Y64;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				INFOPLIST_FILE = exampleTests/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 9.0;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
+				OTHER_LDFLAGS = (
+					"-ObjC",
+					"-lc++",
+					"$(inherited)",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = "org.reactjs.native.example.$(PRODUCT_NAME:rfc1034identifier)";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				PROVISIONING_PROFILE_SPECIFIER = "";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/example.app/example";
+			};
+			name = Debug;
+		};
+		00E356F71AD99517003FC87E /* Release */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = BDE6F6A0F82C1083BCEA5FA2 /* Pods-example-exampleTests.release.xcconfig */;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				CODE_SIGN_IDENTITY = "Apple Development";
+				CODE_SIGN_STYLE = Automatic;
+				COPY_PHASE_STRIP = NO;
+				DEVELOPMENT_TEAM = L6H63T2Y64;
+				INFOPLIST_FILE = exampleTests/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 9.0;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
+				OTHER_LDFLAGS = (
+					"-ObjC",
+					"-lc++",
+					"$(inherited)",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = "org.reactjs.native.example.$(PRODUCT_NAME:rfc1034identifier)";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				PROVISIONING_PROFILE_SPECIFIER = "";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/example.app/example";
+			};
+			name = Release;
+		};
 		13B07F941A680F5B00A75B9A /* Debug */ = {
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = B1BDDF7D50703474119385E1 /* Pods-example.debug.xcconfig */;
@@ -857,6 +1088,15 @@
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
+		00E357021AD99517003FC87E /* Build configuration list for PBXNativeTarget "exampleTests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				00E356F61AD99517003FC87E /* Debug */,
+				00E356F71AD99517003FC87E /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
 		13B07F931A680F5B00A75B9A /* Build configuration list for PBXNativeTarget "example" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
