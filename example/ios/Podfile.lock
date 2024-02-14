@@ -223,7 +223,7 @@ PODS:
   - React-jsinspector (0.69.12)
   - React-logger (0.69.12):
     - glog
-  - react-native-brightcove-player (1.0.4):
+  - react-native-brightcove-player (1.0.5):
     - Brightcove-Player-Core (= 6.12.2)
     - React
   - react-native-orientation (3.1.3):
@@ -442,7 +442,7 @@ SPEC CHECKSUMS:
   React-jsiexecutor: ce0b9aa647bdf94126eb2ee1f235d329eb8c0aec
   React-jsinspector: f275698149311abc8c32ebb97797d6b97c44adde
   React-logger: da69d7f1c9501c78cd60776d52a60d7fa5e4d9c2
-  react-native-brightcove-player: f2bf5160fd43b967a0cef3a0c24bf4825123d506
+  react-native-brightcove-player: 22e4d604bc235b427a08f3374255c699158cf544
   react-native-orientation: f1caf84d65f1a4fd4511a18f2b924e634ad7a628
   react-native-safe-area-context: 2cd91d532de12acdb0a9cbc8d43ac72a8e4c897c
   React-perflogger: 5ade0a1627352f1647d283e78331819bb46cceae
